@@ -251,6 +251,36 @@ class InteractionTest(unittest.TestCase):
             with self.subTest(phrase=phrase):
                 self.assertNotIn(phrase, JS)
 
+    def test_motion_toggle_logic(self):
+        for marker in ('const motionToggle', 'function setMotionPaused',
+                       "classList.toggle('motion-paused'", 'Resume motion',
+                       "setAttribute('aria-pressed'", "setAttribute('aria-label'"):
+            with self.subTest(marker=marker):
+                self.assertIn(marker, JS)
+
+    def test_scroll_progress_logic(self):
+        for marker in ('#scroll-progress-bar', 'function updateProgress', 'scrollHeight',
+                       'innerHeight', 'scrollY', 'passive: true'):
+            with self.subTest(marker=marker):
+                self.assertIn(marker, JS)
+
+    def test_magnetic_button_logic(self):
+        for marker in ('--mag-x', '--mag-y', 'pointermove', 'pointerleave',
+                       "matchMedia('(prefers-reduced-motion: reduce)')"):
+            with self.subTest(marker=marker):
+                self.assertIn(marker, JS)
+
+    def test_project_reveal_logic(self):
+        for marker in ('IntersectionObserver', 'reveal-pending', 'is-revealed', 'threshold'):
+            with self.subTest(marker=marker):
+                self.assertIn(marker, JS)
+
+    def test_no_timers_or_forbidden_liveness_copy(self):
+        self.assertNotIn('setInterval', JS)
+        for phrase in ('Buka menu', 'Tutup menu', 'Jeda animasi', 'Lanjut animasi'):
+            with self.subTest(phrase=phrase):
+                self.assertNotIn(phrase, JS)
+
 
 class DeliveryTest(unittest.TestCase):
     def test_readme_has_no_forbidden_contacts(self):

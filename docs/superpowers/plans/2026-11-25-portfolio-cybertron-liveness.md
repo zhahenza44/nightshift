@@ -248,7 +248,7 @@ git commit -m "feat: style cybertron liveness"
 - Consumes: `#motion-toggle`, `#scroll-progress-bar`, `.btn`, and `#project-grid` from Task 1.
 - Produces: one pause toggle, one scroll listener, one pointer-feedback listener set, and one finite IntersectionObserver reveal.
 
-- [ ] **Step 1: Write failing JS tests**
+- [x] **Step 1: Write failing JS tests**
 
 Add to `InteractionTest`:
 
@@ -284,13 +284,13 @@ def test_no_timers_or_forbidden_liveness_copy(self):
             self.assertNotIn(phrase, JS)
 ```
 
-- [ ] **Step 2: Run the tests and watch them fail**
+- [x] **Step 2: Run the tests and watch them fail**
 
 Run: `python3 -m unittest discover -s tests -v`
 
 Expected: FAIL on the four new behavior tests.
 
-- [ ] **Step 3: Add behavior to `js/main.js`**
+- [x] **Step 3: Add behavior to `js/main.js`**
 
 Append the following, keeping the existing filter and menu code unchanged. Use exact strings `Pause motion` and `Resume motion`.
 
@@ -362,13 +362,13 @@ if (projectGrid && 'IntersectionObserver' in window) {
 }
 ```
 
-- [ ] **Step 4: Run the tests and watch them pass**
+- [x] **Step 4: Run the tests and watch them pass**
 
 Run: `python3 -m unittest discover -s tests -v`
 
 Expected: all static tests PASS.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add js/main.js tests/test_portfolio.py
