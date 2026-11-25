@@ -583,7 +583,7 @@ In `README.md`:
 
 In the spec file, change `Status:` from `drafted for approval` to `approved`.
 
-- [ ] **Step 4: Run the full verification set**
+- [x] **Step 4: Run the full verification set**
 
 Run from the repository root:
 
@@ -614,11 +614,11 @@ git hook run pre-commit
 
 Expected: all unit tests PASS, all rendered checks PASS, `xmllint` exit 0, ten HTTP `200` lines, all contrast ratios at least 4.5:1, and the pre-commit hook exit 0.
 
-- [ ] **Step 5: Run the antislop Delivery Gate**
+- [x] **Step 5: Run the antislop Delivery Gate**
 
 Use the `antislop` core skill checklist. Report a PASS or FAIL line for every item with concrete evidence. If any item FAILS, fix it and rerun the gate before delivery. Record the final PASS or FAIL report in the delivery message, not in a new repo file.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add PRODUCT.md README.md docs/superpowers/specs/2026-11-25-portfolio-cybertron-liveness-design.md tests/test_portfolio.py
