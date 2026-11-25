@@ -7,7 +7,7 @@
   --cyan-soft: rgba(0, 229, 255, 0.14);
   --orange: #ff7a1a;
   --line: rgba(0, 229, 255, 0.18);
-  --line-strong: rgba(0, 229, 255, 0.42);
+  --line-strong: rgba(0, 229, 255, 0.45);
   --text: #e9f7ff;
   --muted: #93a9b6;
   --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
@@ -218,6 +218,13 @@ button:focus-visible {
   right: 0;
 }
 
+.header-links a:active,
+.card-link:active,
+.site-footer a:active {
+  text-decoration: underline;
+  text-underline-offset: 0.25rem;
+}
+
 .menu-toggle {
   display: none;
   width: 2.75rem;
@@ -234,6 +241,11 @@ button:focus-visible {
   height: 1px;
   margin: 0.32rem auto;
   background: currentColor;
+}
+
+.menu-toggle:active {
+  background: var(--cyan-soft);
+  border-color: var(--cyan);
 }
 
 .mobile-menu {
@@ -382,6 +394,12 @@ h2 {
   box-shadow: 0 0 0 1px var(--cyan), 0 14px 36px rgba(0, 229, 255, 0.3);
 }
 
+.btn--primary:active {
+  transform: translateY(0);
+  background: #00b8cc;
+  box-shadow: 0 0 0 1px var(--cyan);
+}
+
 .btn--ghost {
   border-color: var(--line-strong);
   color: var(--cyan);
@@ -390,6 +408,11 @@ h2 {
 
 .btn--ghost:hover {
   background: rgba(0, 229, 255, 0.1);
+}
+
+.btn--ghost:active {
+  transform: translateY(0);
+  background: rgba(0, 229, 255, 0.18);
 }
 
 .hero-panel {
@@ -555,7 +578,7 @@ h2 {
 .filter-bar button {
   min-height: 44px;
   padding: 0.55rem 1rem;
-  border: 1px solid var(--line);
+  border: 1px solid var(--line-strong);
   background: transparent;
   color: var(--muted);
   font-family: var(--mono);
@@ -571,6 +594,12 @@ h2 {
 }
 
 .filter-bar button[aria-pressed="true"] {
+  border-color: var(--cyan);
+  background: var(--cyan-soft);
+  color: var(--cyan);
+}
+
+.filter-bar button:active {
   border-color: var(--cyan);
   background: var(--cyan-soft);
   color: var(--cyan);
@@ -707,7 +736,7 @@ h2 {
   gap: 0.35rem;
   min-width: 0;
   padding: 1.25rem;
-  border: 1px solid var(--line);
+  border: 1px solid var(--line-strong);
   background: var(--panel);
   text-decoration: none;
   transition: border-color 160ms ease, transform 160ms ease;
@@ -716,6 +745,12 @@ h2 {
 .contact-links a:hover {
   transform: translateY(-2px);
   border-color: var(--cyan);
+}
+
+.contact-links a:active {
+  transform: translateY(0);
+  border-color: var(--cyan);
+  background: var(--cyan-soft);
 }
 
 .contact-links span {

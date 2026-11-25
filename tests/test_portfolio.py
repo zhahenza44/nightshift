@@ -85,6 +85,13 @@ class CssContractTest(unittest.TestCase):
         self.assertNotIn("@keyframes", CSS)
         self.assertNotIn("infinite", CSS)
 
+    def test_interactive_states_and_boundaries(self):
+        self.assertTrue(CSS)
+        self.assertIn("--line-strong: rgba(0, 229, 255, 0.45)", CSS)
+        self.assertIn(".filter-bar button:active", CSS)
+        self.assertIn(".contact-links a:active", CSS)
+        self.assertIn(".menu-toggle:active", CSS)
+
     def test_responsive_reflow(self):
         for marker in ("@media (max-width: 900px)", "@media (max-width: 560px)", "grid-template-columns"):
             self.assertIn(marker, CSS)
