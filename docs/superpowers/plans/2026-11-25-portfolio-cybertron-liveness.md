@@ -43,7 +43,7 @@
 - Consumes: existing header, `.hero-copy`, `.hero-panel`, and section boundaries from the current shell.
 - Produces: `.hero-orb`, `.ticker`, `#motion-toggle`, and `#scroll-progress-bar`. No existing ID, URL, `data-track`, or demo path changes.
 
-- [ ] **Step 1: Write failing markup tests**
+- [x] **Step 1: Write failing markup tests**
 
 Add to `ContentTest`:
 
@@ -72,13 +72,13 @@ def test_no_invented_liveness_claims(self):
 
 Keep `test_counts_match_cards` and add `self.assertIn("SIX LIVE DEMOS", HTML)` to it so the orb text is tied to six real cards.
 
-- [ ] **Step 2: Run the tests and watch them fail**
+- [x] **Step 2: Run the tests and watch them fail**
 
 Run: `python3 -m unittest discover -s tests -v`
 
 Expected: FAIL on `test_liveness_markup`, `test_ticker_uses_real_service_labels`, and the extended count test.
 
-- [ ] **Step 3: Add the structure to `index.html`**
+- [x] **Step 3: Add the structure to `index.html`**
 
 Inside `.site-header`, place this button between the `.header-links` nav and `.menu-toggle`:
 
@@ -132,13 +132,13 @@ Place this ticker immediately after the closing `</section>` of `.hero` and befo
 
 Do not change any existing text, link, card, ID, or demo path.
 
-- [ ] **Step 4: Run the tests and watch them pass**
+- [x] **Step 4: Run the tests and watch them pass**
 
 Run: `python3 -m unittest discover -s tests -v`
 
 Expected: all static tests PASS. The rendered smoke script still passes because its checks do not yet exercise the new controls.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add index.html tests/test_portfolio.py

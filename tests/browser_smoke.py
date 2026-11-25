@@ -58,6 +58,7 @@ new Promise((resolve) => {
       check('no horizontal overflow', scrollWidth <= viewport, 'scrollWidth=' + scrollWidth);
 
       const overflowing = Array.from(doc.querySelectorAll('body *')).filter((el) => {
+        if (el.ownerSVGElement) return false;
         const rect = el.getBoundingClientRect();
         const style = win.getComputedStyle(el);
         return rect.width > 0 && style.position !== 'fixed' &&

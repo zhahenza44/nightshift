@@ -35,6 +35,27 @@ class ContentTest(unittest.TestCase):
             with self.subTest(phrase=phrase):
                 self.assertNotIn(phrase, HTML)
 
+    def test_liveness_markup(self):
+        for marker in ('class="hero-orb"', '<textPath', 'ALAN NAWA / WEB &amp; AI AUTOMATION / SIX LIVE DEMOS',
+                       'class="ticker" aria-hidden="true"', 'id="motion-toggle"',
+                       '>Pause motion<', 'aria-pressed="false"', 'class="scroll-progress"',
+                       'id="scroll-progress-bar"'):
+            with self.subTest(marker=marker):
+                self.assertIn(marker, HTML)
+
+    def test_ticker_uses_real_service_labels(self):
+        for label in ('WEB DEVELOPMENT', 'LANDING PAGES', 'AI AUTOMATION', 'N8N'):
+            with self.subTest(label=label):
+                self.assertIn(label, HTML)
+        self.assertEqual(HTML.count('WEB DEVELOPMENT'), 2)
+        self.assertEqual(HTML.count('LANDING PAGES'), 2)
+
+    def test_no_invented_liveness_claims(self):
+        for phrase in ('40+', '98.2%', '6+ thn', 'OPEN FOR Q1 2027', 'SYSTEM ONLINE',
+                       'BOOT SEQUENCE', 'ghost-cursor'):
+            with self.subTest(phrase=phrase):
+                self.assertNotIn(phrase, HTML)
+
     def test_six_project_cards(self):
         self.assertEqual(HTML.count('class="project-card'), 6)
         for title in ("AI Lead Capture", "Servis AC", "Ruang Rapi", "Kedai Kopi Oak",
@@ -65,6 +86,7 @@ class ContentTest(unittest.TestCase):
     def test_counts_match_cards(self):
         self.assertIn("6 project", HTML)
         self.assertNotIn("7 project", HTML)
+        self.assertIn("SIX LIVE DEMOS", HTML)
 
     def test_job_prefixes_removed_and_heading_hidden(self):
         self.assertNotIn("JOB 1 /", HTML)

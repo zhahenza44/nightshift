@@ -31,6 +31,11 @@
       <a href="mailto:zhahenza666@proton.me">Email</a>
     </nav>
 
+    <button class="motion-toggle" id="motion-toggle" type="button" aria-pressed="false" aria-label="Pause motion">
+      <span class="motion-toggle-icon" aria-hidden="true"></span>
+      <span class="motion-toggle-label">Pause motion</span>
+    </button>
+
     <button class="menu-toggle" id="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="Open menu">
       <span></span><span></span>
     </button>
@@ -44,6 +49,8 @@
         <a href="mailto:zhahenza666@proton.me">Email</a>
       </nav>
     </div>
+
+    <div class="scroll-progress" aria-hidden="true"><i id="scroll-progress-bar"></i></div>
   </header>
 
   <main id="main">
@@ -64,9 +71,34 @@
         <div class="panel-line"><span>web</span><b>6 projects</b></div>
         <div class="panel-line"><span>automation</span><b>n8n + AI</b></div>
         <div class="panel-line"><span>contact</span><b>3 channels</b></div>
-        <div class="panel-bars"><i></i><i></i><i></i><i></i><i></i></div>
+        <svg class="hero-orb" viewBox="0 0 240 240" aria-hidden="true" focusable="false">
+          <defs>
+            <path id="orb-path" d="M120,120 m-88,0 a88,88 0 1,1 176,0 a88,88 0 1,1 -176,0"></path>
+          </defs>
+          <g class="orb-rings">
+            <circle class="orb-ring orb-ring--outer" cx="120" cy="120" r="106"></circle>
+            <circle class="orb-ring orb-ring--text" cx="120" cy="120" r="88"></circle>
+            <circle class="orb-ring orb-ring--inner" cx="120" cy="120" r="68"></circle>
+            <text class="orb-text" textLength="540" lengthAdjust="spacingAndGlyphs">
+              <textPath href="#orb-path">ALAN NAWA / WEB &amp; AI AUTOMATION / SIX LIVE DEMOS / </textPath>
+            </text>
+          </g>
+          <circle class="orb-core" cx="120" cy="120" r="38"></circle>
+          <path class="orb-axis" d="M12 120 H228 M120 12 V228"></path>
+        </svg>
       </div>
     </section>
+
+    <div class="ticker" aria-hidden="true">
+      <div class="ticker-track">
+        <div class="ticker-group">
+          <span>WEB DEVELOPMENT</span><span>LANDING PAGES</span><span>AI AUTOMATION</span><span>N8N</span>
+        </div>
+        <div class="ticker-group">
+          <span>WEB DEVELOPMENT</span><span>LANDING PAGES</span><span>AI AUTOMATION</span><span>N8N</span>
+        </div>
+      </div>
+    </div>
 
     <section class="services" aria-labelledby="services-title">
       <div class="section-head">
