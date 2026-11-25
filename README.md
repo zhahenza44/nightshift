@@ -1,45 +1,47 @@
-# Portofolio Alan Nawa
+# Alan Nawa portfolio
 
-Halaman CV digital statis untuk Alan Nawa: web development, landing page, dan otomasi AI. Tema visual TRON dengan grid cyan di atas latar gelap. Enam demo disimpan lokal di folder `demos/` dan dibuka langsung dari kartu project.
+A static one-page CV for Alan Nawa: web development, landing pages, and AI workflow automation. The shell copy is in English. The visual system is cyberpunk x TRON: cyan actions, a magenta technical accent, clipped corners, a thin horizon grid, and one short entrance motion. The motion is finite and stops under `prefers-reduced-motion`. Six demos live in `demos/` and open directly from the project cards.
 
-## Membuka halaman
+## Open the page
 
-Buka `index.html` langsung di browser. Tidak ada dependency, build step, atau server yang perlu dijalankan.
+Open `index.html` in a browser. There is no dependency, build step, or server requirement.
 
-Kalau ingin memakai server lokal:
+To use a local server:
 
 ```bash
 cd /home/asnodt/Projects/Portofolio
 python3 -m http.server 8080
 ```
 
-Lalu buka `http://localhost:8080`.
+Then open `http://localhost:8080`.
 
-## Struktur
+## Structure
 
 ```text
 Portofolio/
-├── index.html          # seluruh konten halaman
-├── css/styles.css      # tema TRON, layout, responsif
-├── js/main.js          # filter project dan menu mobile
+├── index.html          # all page content
+├── css/styles.css      # cyberpunk TRON theme, layout, responsive rules
+├── js/main.js          # project filter and mobile menu
 ├── assets/favicon.svg
-├── demos/              # enam landing page demo, salinan lokal
+├── PRODUCT.md          # product truth and constraints
+├── demos/              # six local demo pages, unchanged contents
 ├── tests/test_portfolio.py
+├── docs/superpowers/   # approved design and implementation plan
 └── README.md
 ```
 
-## Mengubah data
+## Change the data
 
-- Nama dan peran: header serta bagian pembuka di `index.html`.
+- Name and role: the header and opening section in `index.html`.
 - Instagram: `https://instagram.com/zhahenzar` (`@zhahenzar`).
 - GitHub: `https://github.com/zhahenza44`.
 - Email: `zhahenza666@proton.me`.
-- Kartu project: bagian `#project-grid` di `index.html`. Setiap kartu punya `data-track="job1"` atau `data-track="job2"` untuk filter.
-- Demo: folder di dalam `demos/`. Kalau demo di repo asli berubah, salin ulang folder yang bersangkutan ke sini.
+- Project cards: the `#project-grid` section in `index.html`. Each card has `data-track="job1"` or `data-track="job2"` for filtering.
+- Demos: folders inside `demos/`. If a demo in the source repo changes, copy that folder here again. Demo contents stay as they are, including their own fonts, images, and buttons.
 
-## Project yang ditampilkan
+## Projects shown
 
-| Kartu | Halaman demo |
+| Card | Demo page |
 |---|---|
 | AI Lead Capture | `demos/ai-lead-capture/dashboard/index.html` |
 | Servis AC | `demos/servis-ac/index.html` |
@@ -48,13 +50,13 @@ Portofolio/
 | Rental Mobil | `demos/rental-mobil/index.html` |
 | NIGHT//SHIFT | `demos/nightshift/index.html` |
 
-Kartu membuka halaman demo di tab baru tanpa melewati GitHub. Tautan GitHub di header dan footer hanya untuk source code. Isi tiap demo dibiarkan apa adanya, termasuk aset dan tautan yang dipakai demo itu sendiri.
+Cards open the demo pages in a new tab without going through GitHub. The GitHub links in the header and footer point to source code. Each demo keeps its own assets and links.
 
-## Tes
+## Tests
 
 ```bash
 cd /home/asnodt/Projects/Portofolio
 python3 -m unittest discover -s tests -v
 ```
 
-Tes membaca `index.html`, `css/styles.css`, dan `js/main.js` sebagai teks, lalu memeriksa struktur, kontak, keberadaan enam file demo, dan aturan tampilan responsif.
+The tests read `index.html`, `css/styles.css`, and `js/main.js` as text. They check structure, contacts, the six demo files, English copy, the cyberpunk TRON tokens, finite motion, and responsive rules.

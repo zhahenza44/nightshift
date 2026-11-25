@@ -19,7 +19,7 @@ filterButtons.forEach((button) => {
 
 function setMenuOpen(isOpen) {
   menuToggle.setAttribute("aria-expanded", String(isOpen));
-  menuToggle.setAttribute("aria-label", isOpen ? "Tutup menu" : "Buka menu");
+  menuToggle.setAttribute("aria-label", isOpen ? "Close menu" : "Open menu");
   mobileMenu.toggleAttribute("inert", !isOpen);
 }
 

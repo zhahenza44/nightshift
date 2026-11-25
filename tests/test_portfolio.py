@@ -182,6 +182,13 @@ class InteractionTest(unittest.TestCase):
         self.assertTrue(JS)
         self.assertNotIn("whatsapp", JS.lower())
 
+    def test_shell_js_copy_is_english(self):
+        self.assertTrue(JS)
+        self.assertIn('isOpen ? "Close menu" : "Open menu"', JS)
+        for phrase in ("Buka menu", "Tutup menu"):
+            with self.subTest(phrase=phrase):
+                self.assertNotIn(phrase, JS)
+
 
 class DeliveryTest(unittest.TestCase):
     def test_readme_has_no_forbidden_contacts(self):
@@ -198,6 +205,13 @@ class DeliveryTest(unittest.TestCase):
         readme = read("README.md")
         self.assertIn("demos/", readme)
         self.assertNotIn("tujuh demo", readme)
+
+    def test_readme_describes_english_cybertron_shell(self):
+        readme = read("README.md")
+        self.assertIn("English", readme)
+        self.assertIn("cyberpunk", readme.lower())
+        self.assertIn("demos/", readme)
+        self.assertNotIn("Omegamoto", readme)
 
 
 if __name__ == "__main__":
