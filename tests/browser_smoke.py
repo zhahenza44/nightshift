@@ -51,6 +51,12 @@ new Promise((resolve) => {
       pass: Number(immediateStyle.opacity) === 1 && immediateStyle.animationName === 'none',
       detail: 'opacity=' + immediateStyle.opacity + ' animation=' + immediateStyle.animationName
     });
+    const firstHeroStyle = immediateWin.getComputedStyle(immediateDoc.querySelector('.hero-copy > *'));
+    checks.push({
+      name: 'hero entrance animation is applied',
+      pass: firstHeroStyle.animationName === 'hero-in' && firstHeroStyle.animationDuration === '0.7s',
+      detail: firstHeroStyle.animationName + ' ' + firstHeroStyle.animationDuration
+    });
     setTimeout(() => {
       const win = frame.contentWindow;
       const doc = win.document;
@@ -59,22 +65,32 @@ new Promise((resolve) => {
       check('390px iframe viewport', viewport === 390, String(viewport));
       check('no horizontal overflow', scrollWidth <= viewport, 'scrollWidth=' + scrollWidth);
 
-      const isClipped = (el) => {
-        let parent = el.parentElement;
-        while (parent && parent !== doc.body && parent !== doc.documentElement) {
-          if (win.getComputedStyle(parent).overflow !== 'visible') return true;
-          parent = parent.parentElement;
-        }
-        return false;
-      };
-      const overflowing = Array.from(doc.querySelectorAll('body *')).filter((el) => {
-        if (el.ownerSVGElement || isClipped(el)) return false;
+      const tickerRoot = doc.querySelector('.ticker');
+      const orbRoot = doc.querySelector('.hero-orb');
+      const inSubtree = (root, el) => Boolean(root) && el !== root && root.contains(el);
+      const findEscapes = () => Array.from(doc.querySelectorAll('body *')).filter((el) => {
+        if (el.ownerSVGElement && inSubtree(orbRoot, el)) return false;
+        if (inSubtree(tickerRoot, el)) return false;
         const rect = el.getBoundingClientRect();
         const style = win.getComputedStyle(el);
         return rect.width > 0 && style.position !== 'fixed' &&
           (rect.right > viewport + 1 || rect.left < -1);
       }).map((el) => el.tagName.toLowerCase() + '.' + el.className);
+      const overflowing = findEscapes();
       check('no element escapes viewport', overflowing.length === 0, overflowing.slice(0, 5).join(' | ') || 'none');
+
+      const probeHost = doc.querySelector('.sr-only');
+      const probe = doc.createElement('div');
+      probe.className = 'overflow-probe';
+      probe.style.position = 'absolute';
+      probe.style.left = '-500px';
+      probe.style.width = '10px';
+      probe.style.height = '10px';
+      probeHost.appendChild(probe);
+      const probeFound = findEscapes().some((item) => item.includes('overflow-probe'));
+      check('overflow scan catches escaped content inside clipped container', probeFound,
+        probeFound ? 'flagged' : 'missed');
+      probe.remove();
 
       const heroOpacity = Array.from(doc.querySelectorAll('.hero-copy > *'))
         .map((el) => win.getComputedStyle(el).opacity);
@@ -114,6 +130,21 @@ new Promise((resolve) => {
       doc.getElementById('filter-all').click();
       check('All filter restores six cards', cards() === 6, 'visible=' + cards());
 
+      win.scrollTo({top: 200, behavior: 'instant'});
+      win.dispatchEvent(new win.Event('scroll'));
+      const widthBeforeFilter = Number.parseFloat(doc.getElementById('scroll-progress-bar').style.width);
+      doc.getElementById('filter-job1').click();
+      const filteredMax = doc.documentElement.scrollHeight - win.innerHeight;
+      const expectedFiltered = filteredMax > 0
+        ? Math.min(100, Math.max(0, win.scrollY / filteredMax * 100))
+        : 0;
+      const widthAfterFilter = Number.parseFloat(doc.getElementById('scroll-progress-bar').style.width);
+      check('scroll progress follows filter height change',
+        Math.abs(widthAfterFilter - expectedFiltered) < 1,
+        'was=' + widthBeforeFilter.toFixed(2) + '% now=' + widthAfterFilter.toFixed(2) +
+        '% expected=' + expectedFiltered.toFixed(2) + '%');
+      doc.getElementById('filter-all').click();
+
       const toggle = doc.getElementById('menu-toggle');
       const menu = doc.getElementById('mobile-menu');
       toggle.click();
@@ -132,14 +163,18 @@ new Promise((resolve) => {
         toggle.getAttribute('aria-label'));
 
       const motionToggle = doc.getElementById('motion-toggle');
+      const toggleText = () => motionToggle.querySelector('.motion-toggle-label').textContent.trim();
       check('pause control starts English and unpaused',
         motionToggle.getAttribute('aria-label') === 'Pause motion' &&
+        toggleText() === 'Pause motion' &&
         motionToggle.getAttribute('aria-pressed') === 'false',
-        motionToggle.getAttribute('aria-label') + ' pressed=' + motionToggle.getAttribute('aria-pressed'));
+        motionToggle.getAttribute('aria-label') + '/' + toggleText() + ' pressed=' + motionToggle.getAttribute('aria-pressed'));
       motionToggle.click();
+      check('pause control keeps its name while pressed',
+        motionToggle.getAttribute('aria-label') === 'Pause motion' && toggleText() === 'Pause motion',
+        motionToggle.getAttribute('aria-label') + '/' + toggleText());
       check('pause control pauses both loops',
         doc.documentElement.classList.contains('motion-paused') &&
-        motionToggle.getAttribute('aria-label') === 'Resume motion' &&
         motionToggle.getAttribute('aria-pressed') === 'true' &&
         win.getComputedStyle(orb).animationPlayState === 'paused' &&
         win.getComputedStyle(ticker).animationPlayState === 'paused',
@@ -147,6 +182,8 @@ new Promise((resolve) => {
       motionToggle.click();
       check('pause control resumes both loops',
         !doc.documentElement.classList.contains('motion-paused') &&
+        motionToggle.getAttribute('aria-pressed') === 'false' &&
+        toggleText() === 'Pause motion' &&
         win.getComputedStyle(orb).animationPlayState === 'running' &&
         win.getComputedStyle(ticker).animationPlayState === 'running',
         win.getComputedStyle(orb).animationPlayState + ' / ' + win.getComputedStyle(ticker).animationPlayState);
@@ -159,7 +196,8 @@ new Promise((resolve) => {
       }));
       const magX = Math.abs(Number.parseFloat(magnetic.style.getPropertyValue('--mag-x')) || 0);
       const magY = Math.abs(Number.parseFloat(magnetic.style.getPropertyValue('--mag-y')) || 0);
-      check('magnetic offset is capped at 2px', magX <= 2.01 && magY <= 2.01,
+      check('magnetic offset responds and stays capped at 2px',
+        magX >= 1.5 && magY >= 1.5 && magX <= 2.01 && magY <= 2.01,
         'x=' + magX.toFixed(2) + ' y=' + magY.toFixed(2));
       magnetic.dispatchEvent(new win.PointerEvent('pointerleave', {bubbles: true}));
       magnetic.focus();

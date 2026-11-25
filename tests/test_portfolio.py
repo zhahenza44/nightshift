@@ -253,8 +253,7 @@ class InteractionTest(unittest.TestCase):
 
     def test_motion_toggle_logic(self):
         for marker in ('const motionToggle', 'function setMotionPaused',
-                       "classList.toggle('motion-paused'", 'Resume motion',
-                       "setAttribute('aria-pressed'", "setAttribute('aria-label'"):
+                       "classList.toggle('motion-paused'", "setAttribute('aria-pressed'"):
             with self.subTest(marker=marker):
                 self.assertIn(marker, JS)
 

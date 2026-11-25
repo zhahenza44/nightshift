@@ -1,6 +1,6 @@
 # Alan Nawa portfolio
 
-A static one-page CV for Alan Nawa: web development, landing pages, and AI workflow automation. The shell copy is in English. The visual system is cyberpunk x TRON: cyan actions, a magenta technical accent, clipped corners, a thin horizon grid, a rotating text orb, and a real-label ticker. Two loops run unless reduced motion is enabled or the visitor presses the Pause motion button, which reports its state with `aria-pressed`. Six demos live in `demos/` and open directly from the project cards.
+A static one-page CV for Alan Nawa: web development, landing pages, and AI workflow automation. The shell copy is in English. The visual system is cyberpunk x TRON: cyan actions, a magenta technical accent, clipped corners, a thin horizon grid, a rotating text orb, and a real-label ticker. Two loops run unless reduced motion is enabled or the visitor presses the Pause motion button, whose label stays fixed while `aria-pressed` reports the state. Six demos live in `demos/` and open directly from the project cards.
 
 ## Open the page
 

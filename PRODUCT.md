@@ -43,7 +43,7 @@ Design dials: ENERGY 3 / RHYTHM 2 / MOTION 3. The page is direct rather than sho
 
 Visual reasons: cyan marks the single primary action and links. Magenta marks only indexes and technical labels. Gradients and the thin grid are the approved TRON identity, not decoration by default. System monospace gives the technical labels their voice without a network font. The two service cards share weight because they are two equal ways to help. The arrow on the footer source link is the only arrow; it marks an off-site GitHub destination. Near-black is the approved TRON base, not a deferred light theme.
 
-Motion reasons: the orb is the TRON identity motif because it turns the hero panel into a rotating ring of real facts. The ticker carries only real service labels, never a slogan. The pause control gives visitors a real stop for both loops. The scroll progress rule gives orientation on a long CV. Magnetic feedback answers the pointer within 2px and never triggers on focus. The single reveal directs attention to the real work once. The tighter action row closes the reported gap above the Instagram button.
+Motion reasons: the orb is the TRON identity motif because it turns the hero panel into a rotating ring of real facts. The ticker carries only real service labels, never a slogan. The pause control gives visitors a real stop for both loops, keeps one visible label, and lets `aria-pressed` carry the state. The scroll progress rule gives orientation on a long CV. Magnetic feedback answers the pointer within 2px and never triggers on focus. The single reveal directs attention to the real work once. The tighter action row closes the reported gap above the Instagram button.
 
 ## Evidence on Hand
 

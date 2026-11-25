@@ -11,6 +11,7 @@ function applyFilter(track) {
   filterButtons.forEach((button) => {
     button.setAttribute('aria-pressed', String(button.dataset.filter === track));
   });
+  updateProgress();
 }
 
 filterButtons.forEach((button) => {
@@ -43,14 +44,10 @@ document.addEventListener("keydown", (event) => {
 });
 
 const motionToggle = document.querySelector('#motion-toggle');
-const motionLabel = motionToggle.querySelector('.motion-toggle-label');
 
 function setMotionPaused(isPaused) {
   document.documentElement.classList.toggle('motion-paused', isPaused);
   motionToggle.setAttribute('aria-pressed', String(isPaused));
-  const label = isPaused ? 'Resume motion' : 'Pause motion';
-  motionToggle.setAttribute('aria-label', label);
-  motionLabel.textContent = label;
 }
 
 motionToggle.addEventListener('click', () => {
