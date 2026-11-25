@@ -1,8 +1,11 @@
 # NIGHT//SHIFT landing page
 
-The main portfolio page is the `NIGHT//SHIFT` demo copied to the repository root and translated into English. It keeps the studio identity, fictional case studies, boot sequence, ghost cursor, scanline, ticker, magnetic buttons, scroll reveals, process fill, project dialogs, copy-email toast, clock, and mobile menu. The old Alan Nawa CV shell is gone from the landing page.
+The main portfolio page keeps the `NIGHT//SHIFT` identity and adds Alan Nawa's real CV after the manifesto. The page has two clearly separated parts:
 
-The studio, names, metrics, status, email address, and phone number are fictional. The contact section discloses this. Type comes from Google Fonts, with local fallbacks when the network is unavailable. The `demos/` folder is still present, but the landing page no longer links to it.
+- The NightShift showcase: fictional case studies, metrics, status, email address, phone number, boot sequence, ghost cursor, scanline, ticker, magnetic buttons, scroll reveals, process fill, project dialogs, copy-email toast, clock, and mobile menu. The contact section discloses that this part is fictional.
+- The CV section: Alan Nawa, Web & AI Automation, two services, six demo links, and three real contact channels. A note in the section says it is the owner's real CV and that the case studies below it are fictional.
+
+All visitor copy is English. Type comes from Google Fonts, with local fallbacks when the network is unavailable.
 
 ## Open the page
 
@@ -21,12 +24,12 @@ Then open `http://localhost:8080`.
 
 ```text
 Portofolio/
-├── index.html            # NightShift markup, English visitor copy, lang="en"
-├── css/styles.css        # NightShift visual system, copied byte-for-byte
+├── index.html            # NightShift markup plus the real CV section, lang="en"
+├── css/styles.css        # NightShift visual system plus additive CV rules
 ├── js/main.js            # NightShift behavior, English visitor strings
-├── assets/favicon.svg    # NightShift favicon, copied byte-for-byte
-├── demos/                # all six demos, unchanged and unlinked
-├── docs/superpowers/     # approved design and implementation plan
+├── assets/favicon.svg    # NightShift favicon
+├── demos/                # all six demos, unchanged and linked from the CV section
+├── docs/superpowers/     # approved design docs and implementation plans
 ├── tests/test_portfolio.py
 ├── tests/browser_smoke.py
 ├── .githooks/pre-commit  # runs both test commands before each commit
@@ -34,7 +37,20 @@ Portofolio/
 └── README.md
 ```
 
-The four root files are the demo files from `demos/nightshift/`. The only differences are translated visitor-facing text and the document language. No file inside `demos/` was changed.
+`index.html`, `js/main.js`, and the favicon come from `demos/nightshift/`. Their differences are translated visitor strings, the document language, and the CV section. The stylesheet keeps every demo rule and adds a CV block that uses the same tokens. No file inside `demos/` was changed.
+
+## The CV section
+
+The section sits between the manifesto and Selected Work. It links to these demos:
+
+- AI Lead Capture → `demos/ai-lead-capture/dashboard/index.html`
+- Servis AC → `demos/servis-ac/index.html`
+- Ruang Rapi → `demos/ruang-rapi/index.html`
+- Kedai Kopi Oak → `demos/kedai-kopi/index.html`
+- Rental Mobil → `demos/rental-mobil/index.html`
+- NIGHT//SHIFT → `demos/nightshift/index.html`
+
+The real contact channels are Instagram `@zhahenzar`, GitHub `zhahenza44`, and `zhahenza666@proton.me`.
 
 ## Tests
 
@@ -45,7 +61,7 @@ cd /home/asnodt/Projects/Portofolio
 python3 -m unittest discover -s tests -v
 ```
 
-They read `index.html`, `css/styles.css`, `js/main.js`, and the favicon. They pin the English NightShift copy, the disclosure, the preserved effects, and the absence of the old CV shell.
+They read `index.html`, `css/styles.css`, `js/main.js`, and the favicon. They pin the English NightShift copy, the fictional disclosure, the CV content and links, the section numbering, and the preserved effects.
 
 Run the rendered checks with Firefox installed:
 

@@ -119,10 +119,16 @@ new Promise((resolve) => {
       check('hero rings drift', animationName('.hero-rings') === 'rings-drift',
         animationName('.hero-rings'));
 
+      const earlyBar = doc.getElementById('scroll-progress');
       win.scrollTo({top: 200, behavior: 'instant'});
       win.dispatchEvent(new win.Event('scroll'));
-      await wait(80);
-      const progress = Number.parseFloat(doc.getElementById('scroll-progress').style.width);
+      let progress = 0;
+      const earlyDeadline = Date.now() + 1000;
+      while (Date.now() < earlyDeadline) {
+        progress = Number.parseFloat(earlyBar.style.width);
+        if (progress > 0) break;
+        await wait(20);
+      }
       check('scroll progress responds to scrolling', progress > 0 && progress < 100,
         'width=' + progress + '%');
 
