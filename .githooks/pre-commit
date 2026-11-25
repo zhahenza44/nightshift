@@ -1,0 +1,5 @@
+#!/bin/sh
+set -e
+
+python3 -m unittest discover -s tests
+python3 tests/browser_smoke.py

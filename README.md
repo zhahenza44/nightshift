@@ -26,6 +26,8 @@ Portofolio/
 ├── PRODUCT.md          # product truth and constraints
 ├── demos/              # six local demo pages, unchanged contents
 ├── tests/test_portfolio.py
+├── tests/browser_smoke.py # rendered Firefox check at 390px
+├── .githooks/pre-commit   # runs both checks before each commit
 ├── docs/superpowers/   # approved design and implementation plan
 └── README.md
 ```
@@ -68,3 +70,9 @@ python3 tests/browser_smoke.py
 ```
 
 It serves the page locally, clicks the filters and menu, checks focus outlines and overflow, and repeats with reduced motion enabled.
+
+Both checks run before each commit through `.githooks/pre-commit`. Enable the hook once after cloning:
+
+```bash
+git config core.hooksPath .githooks
+```
