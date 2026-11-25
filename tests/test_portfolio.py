@@ -58,6 +58,13 @@ class ContentTest(unittest.TestCase):
                        'id="mobile-menu"', 'id="contact"', "<main", "<footer"):
             self.assertIn(marker, HTML)
 
+    def test_honest_copy_and_no_em_dash(self):
+        self.assertTrue(HTML)
+        self.assertNotIn("\u2014", HTML)
+        self.assertNotIn("TERSEDIA UNTUK PROJECT", HTML)
+        self.assertNotIn("status-dot", HTML)
+        self.assertNotIn("<b>online</b>", HTML)
+
 
 class CssContractTest(unittest.TestCase):
     def test_tron_tokens(self):
@@ -65,8 +72,18 @@ class CssContractTest(unittest.TestCase):
             self.assertIn(token, CSS)
 
     def test_grid_and_scanline(self):
-        for marker in (".tron-grid", ".scanline", "@keyframes"):
+        for marker in (".tron-grid", ".scanline", "mask-image"):
             self.assertIn(marker, CSS)
+
+    def test_tap_targets_and_cursor(self):
+        self.assertTrue(CSS)
+        self.assertIn("cursor: pointer", CSS)
+        self.assertIn("min-height: 44px", CSS)
+
+    def test_no_endless_motion(self):
+        self.assertTrue(CSS)
+        self.assertNotIn("@keyframes", CSS)
+        self.assertNotIn("infinite", CSS)
 
     def test_responsive_reflow(self):
         for marker in ("@media (max-width: 900px)", "@media (max-width: 560px)", "grid-template-columns"):
