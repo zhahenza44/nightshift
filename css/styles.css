@@ -381,6 +381,12 @@ h2 {
 .hero-copy > *:nth-child(4) { animation-delay: 240ms; }
 .hero-copy > *:nth-child(5) { animation-delay: 240ms; }
 
+.hero-actions:focus-within {
+  animation: none;
+  opacity: 1;
+  transform: none;
+}
+
 .sr-only {
   position: absolute;
   width: 1px;

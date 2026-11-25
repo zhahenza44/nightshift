@@ -131,6 +131,16 @@ class CssContractTest(unittest.TestCase):
         block = CSS.split('@media (prefers-reduced-motion: reduce)')[1]
         self.assertIn('animation: none', block)
         self.assertIn('transform: none', block)
+        for selector in ('.hero-copy > *', '.btn--primary:active', '.card-link',
+                         '.contact-links a:hover'):
+            with self.subTest(selector=selector):
+                self.assertIn(selector, block)
+
+    def test_entrance_focus_is_visible(self):
+        self.assertIn('.hero-actions:focus-within', CSS)
+        focus_block = CSS.split('.hero-actions:focus-within')[1].split('}')[0]
+        self.assertIn('animation: none', focus_block)
+        self.assertIn('opacity: 1', focus_block)
 
     def test_interactive_states_and_boundaries(self):
         self.assertTrue(CSS)

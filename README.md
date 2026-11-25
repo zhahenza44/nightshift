@@ -60,3 +60,11 @@ python3 -m unittest discover -s tests -v
 ```
 
 The tests read `index.html`, `css/styles.css`, and `js/main.js` as text. They check structure, contacts, the six demo files, English copy, the cyberpunk TRON tokens, finite motion, and responsive rules.
+
+For a rendered check at 390px, run the Firefox smoke script. It needs no third-party package:
+
+```bash
+python3 tests/browser_smoke.py
+```
+
+It serves the page locally, clicks the filters and menu, checks focus outlines and overflow, and repeats with reduced motion enabled.
