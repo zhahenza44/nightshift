@@ -314,10 +314,16 @@ new Promise((resolve) => {
           Math.round(rect.left) + '..' + Math.round(rect.right));
       }
 
+      const progressBar = doc.getElementById('scroll-progress');
       win.scrollTo({top: doc.documentElement.scrollHeight, behavior: 'instant'});
       win.dispatchEvent(new win.Event('scroll'));
-      await wait(120);
-      const bottomProgress = Number.parseFloat(doc.getElementById('scroll-progress').style.width);
+      let bottomProgress = 0;
+      const progressDeadline = Date.now() + 1000;
+      while (Date.now() < progressDeadline) {
+        bottomProgress = Number.parseFloat(progressBar.style.width);
+        if (bottomProgress >= 99) break;
+        await wait(20);
+      }
       check('footer progress reaches bottom', bottomProgress >= 99, 'width=' + bottomProgress + '%');
       check('footer disclosure is English',
         doc.querySelector('.site-footer').textContent.includes('DEMO CONCEPT / FICTIONAL STUDIO'),
