@@ -1,6 +1,6 @@
 # Portfolio Cyberpunk x TRON Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** Restyle the static portfolio shell as cyberpunk x TRON with finite motion and translate all shell copy into English, while keeping six local demos and the three approved contact channels.
 
@@ -41,7 +41,7 @@
 - Consumes: existing IDs, classes, `data-track` values, and local demo hrefs from the current page.
 - Produces: English strings and `lang="en"`; no class or ID renames.
 
-- [ ] **Step 1: Write failing tests for English copy**
+- [x] **Step 1: Write failing tests for English copy**
 
 Add to `ContentTest`:
 
@@ -61,12 +61,12 @@ def test_shell_copy_is_english(self):
 
 Update `test_identity_and_copy` so the opening line assertion uses the English sentence.
 
-- [ ] **Step 2: Run the tests and watch them fail**
+- [x] **Step 2: Run the tests and watch them fail**
 
 Run: `python3 -m unittest discover -s tests -v`
 Expected: FAIL on the new English assertions.
 
-- [ ] **Step 3: Translate `index.html`**
+- [x] **Step 3: Translate `index.html`**
 
 Use these exact visitor-facing strings:
 - `lang="en"`; title `Alan Nawa: Web & AI Automation`.
@@ -90,12 +90,12 @@ Use these exact visitor-facing strings:
 
 Keep all URLs, handles, `data-project` values, `data-track` values, IDs, and `demos/...` hrefs byte-identical.
 
-- [ ] **Step 4: Run the tests and watch them pass**
+- [x] **Step 4: Run the tests and watch them pass**
 
 Run: `python3 -m unittest discover -s tests -v`
 Expected: all tests PASS.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add index.html tests/test_portfolio.py
@@ -112,7 +112,7 @@ git commit -m "feat: translate portfolio shell to English"
 - Consumes: existing class names from `index.html`: `.tron-grid`, `.scanline`, `.site-header`, `.hero`, `.hero-panel`, `.service`, `.project-card`, `.filter-bar`, `.contact-links`, `.site-footer`.
 - Produces: `--magenta` token, horizon layer, angular corner treatment, magenta technical accents.
 
-- [ ] **Step 1: Write failing tests for the visual tokens**
+- [x] **Step 1: Write failing tests for the visual tokens**
 
 Add to `CssContractTest`:
 
@@ -128,12 +128,12 @@ def test_technical_accent_uses_magenta(self):
     self.assertGreaterEqual(CSS.count('var(--magenta)'), 3)
 ```
 
-- [ ] **Step 2: Run the tests and watch them fail**
+- [x] **Step 2: Run the tests and watch them fail**
 
 Run: `python3 -m unittest discover -s tests -v`
 Expected: FAIL on the missing magenta and horizon markers.
 
-- [ ] **Step 3: Update `css/styles.css`**
+- [x] **Step 3: Update `css/styles.css`**
 
 - Replace `--orange: #ff7a1a;` with `--magenta: #ff3d8d;`. Replace all three `var(--orange)` uses with `var(--magenta)`.
 - Add a static horizon layer via `.hero::before`: `pointer-events: none`, `perspective(240px) rotateX(62deg)`, `transform-origin: bottom`, `background: repeating-linear-gradient(90deg, rgba(0, 229, 255, 0.10) 0 1px, transparent 1px 72px), repeating-linear-gradient(0deg, rgba(0, 229, 255, 0.10) 0 1px, transparent 1px 48px)`, anchored to the bottom of `.hero`.
@@ -141,12 +141,12 @@ Expected: FAIL on the missing magenta and horizon markers.
 - Give `.project-card` a drawn corner notch with a pseudo-element rather than clipping the card box itself, so keyboard focus remains visible.
 - Keep cyan as the primary action color and magenta only on indexes, section indexes, and the panel label.
 
-- [ ] **Step 4: Run the tests and watch them pass**
+- [x] **Step 4: Run the tests and watch them pass**
 
 Run: `python3 -m unittest discover -s tests -v`
 Expected: all tests PASS.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add css/styles.css tests/test_portfolio.py
@@ -163,7 +163,7 @@ git commit -m "feat: apply cyberpunk TRON visual system"
 - Consumes: the visual tokens from Task 2 and the existing `:focus-visible`, `:hover`, `:active`, and `prefers-reduced-motion` blocks.
 - Produces: one finite keyframe animation, capped motion budget, stronger hover/press feedback.
 
-- [ ] **Step 1: Write failing motion tests**
+- [x] **Step 1: Write failing motion tests**
 
 Replace `test_no_endless_motion` with:
 
@@ -181,24 +181,24 @@ def test_motion_stops_under_reduced_motion(self):
     self.assertIn('transform: none', block)
 ```
 
-- [ ] **Step 2: Run the tests and watch them fail**
+- [x] **Step 2: Run the tests and watch them fail**
 
 Run: `python3 -m unittest discover -s tests -v`
 Expected: FAIL because no `hero-in` keyframe exists.
 
-- [ ] **Step 3: Add finite motion in `css/styles.css`**
+- [x] **Step 3: Add finite motion in `css/styles.css`**
 
 - Define one `@keyframes hero-in` using opacity and a small `translateY` (at most 14px), duration 700ms, `both` fill mode.
 - Apply it to `.hero-copy > *` with delays `0ms`, `80ms`, `160ms`, `240ms` for children 1 to 4 and `240ms` for child 5. No JavaScript class toggle, no loop.
 - Add a 2px card hover lift and a 1px control press offset using `transform`, with transitions under 250ms.
 - In the existing `@media (prefers-reduced-motion: reduce)` block, set `animation: none` and `transform: none` for the animated selectors.
 
-- [ ] **Step 4: Run the tests and watch them pass**
+- [x] **Step 4: Run the tests and watch them pass**
 
 Run: `python3 -m unittest discover -s tests -v`
 Expected: all tests PASS.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add css/styles.css tests/test_portfolio.py
@@ -215,7 +215,7 @@ git commit -m "feat: add finite cyberpunk entrance motion"
 - Consumes: English strings, `--magenta`, finite motion, and the six local demos from Tasks 1 to 3.
 - Produces: README that matches the shipped page.
 
-- [ ] **Step 1: Write a failing README test**
+- [x] **Step 1: Write a failing README test**
 
 Add to `DeliveryTest`:
 
@@ -228,16 +228,16 @@ def test_readme_describes_english_cybertron_shell(self):
     self.assertNotIn('Omegamoto', readme)
 ```
 
-- [ ] **Step 2: Run the tests and watch them fail**
+- [x] **Step 2: Run the tests and watch them fail**
 
 Run: `python3 -m unittest discover -s tests -v`
 Expected: FAIL on the missing README terms.
 
-- [ ] **Step 3: Update `README.md`**
+- [x] **Step 3: Update `README.md`**
 
 State that the shell copy is English, describe the cyberpunk x TRON palette and finite motion, keep the folder map and local demo table, and keep the note that demo contents are unchanged.
 
-- [ ] **Step 4: Run the full verification set**
+- [x] **Step 4: Run the full verification set**
 
 Run:
 
@@ -263,7 +263,7 @@ python3 /home/asnodt/.config/opencode/skills/antislop-human/contrast-check.py '#
 
 Expected: tests all PASS, `xmllint` exit 0, ten HTTP `200` lines, and both contrast ratios at least 4.5:1.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add README.md

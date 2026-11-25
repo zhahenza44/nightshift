@@ -39,6 +39,16 @@ new Promise((resolve) => {
   const checks = [];
   const check = (name, pass, detail) => checks.push({name, pass: Boolean(pass), detail});
   const run = () => {
+    const immediateWin = frame.contentWindow;
+    const immediateDoc = immediateWin.document;
+    const heroActions = immediateDoc.querySelector('.hero-actions');
+    immediateDoc.querySelector('.hero-actions .btn--primary').focus();
+    const immediateStyle = immediateWin.getComputedStyle(heroActions);
+    checks.push({
+      name: 'focused hero actions are visible immediately',
+      pass: Number(immediateStyle.opacity) === 1 && immediateStyle.animationName === 'none',
+      detail: 'opacity=' + immediateStyle.opacity + ' animation=' + immediateStyle.animationName
+    });
     setTimeout(() => {
       const win = frame.contentWindow;
       const doc = win.document;
@@ -94,9 +104,31 @@ new Promise((resolve) => {
         toggle.getAttribute('aria-label'));
 
       const links = Array.from(doc.querySelectorAll('a'));
-      links.forEach((link) => link.addEventListener('click', (event) => event.preventDefault(), true));
+      let clicked = 0;
+      links.forEach((link) => link.addEventListener('click', (event) => {
+        event.preventDefault();
+        clicked += 1;
+      }, true));
       links.forEach((link) => link.click());
-      check('all links dispatch click', links.length === 22, 'links=' + links.length);
+      check('all links dispatch click', clicked === links.length,
+        'clicked=' + clicked + '/' + links.length);
+      const hrefs = links.map((link) => link.getAttribute('href'));
+      const required = [
+        '#main', '#top', '#project-grid', '#contact',
+        'https://instagram.com/zhahenzar',
+        'https://github.com/zhahenza44',
+        'mailto:zhahenza666@proton.me',
+        'https://github.com/zhahenza44/otomasi-web',
+        'demos/ai-lead-capture/dashboard/index.html',
+        'demos/servis-ac/index.html',
+        'demos/ruang-rapi/index.html',
+        'demos/kedai-kopi/index.html',
+        'demos/rental-mobil/index.html',
+        'demos/nightshift/index.html'
+      ];
+      const missing = required.filter((href) => !hrefs.includes(href));
+      check('all required link destinations present', missing.length === 0,
+        missing.join(',') || 'all present');
 
       [
         ['filter-all', 'All filter'],
@@ -340,8 +372,8 @@ def run_check(firefox, url, expression, reduced):
 def main():
     firefox = shutil.which("firefox")
     if not firefox:
-        print("SKIP: firefox not installed")
-        return 0
+        print("FAIL: firefox not installed")
+        return 1
 
     http_port = free_port()
     server = http.server.ThreadingHTTPServer(("127.0.0.1", http_port), Handler)
