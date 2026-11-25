@@ -98,8 +98,18 @@ class ContentTest(unittest.TestCase):
 
 class CssContractTest(unittest.TestCase):
     def test_tron_tokens(self):
-        for token in ("--bg:", "--cyan:", "--orange:", "--line:", "color-scheme: dark"):
+        for token in ("--bg:", "--cyan:", "--magenta:", "--line:", "color-scheme: dark"):
             self.assertIn(token, CSS)
+
+    def test_cybertron_tokens(self):
+        self.assertIn('--magenta: #ff3d8d', CSS)
+        self.assertNotIn('--orange', CSS)
+        self.assertIn('.hero::before', CSS)
+        self.assertIn('perspective(', CSS)
+        self.assertIn('clip-path: polygon(', CSS)
+
+    def test_technical_accent_uses_magenta(self):
+        self.assertGreaterEqual(CSS.count('var(--magenta)'), 3)
 
     def test_grid_and_scanline(self):
         for marker in (".tron-grid", ".scanline", "mask-image"):

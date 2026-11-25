@@ -5,7 +5,7 @@
   --panel-strong: #0d1522;
   --cyan: #00e5ff;
   --cyan-soft: rgba(0, 229, 255, 0.14);
-  --orange: #ff7a1a;
+  --magenta: #ff3d8d;
   --line: rgba(0, 229, 255, 0.18);
   --line-strong: rgba(0, 229, 255, 0.45);
   --text: #e9f7ff;
@@ -32,7 +32,7 @@ body {
   min-width: 0;
   background:
     radial-gradient(90rem 50rem at 80% -10%, rgba(0, 229, 255, 0.09), transparent 60%),
-    radial-gradient(60rem 40rem at 0% 30%, rgba(255, 122, 26, 0.05), transparent 55%),
+    radial-gradient(60rem 40rem at 0% 30%, rgba(255, 61, 141, 0.05), transparent 55%),
     var(--bg);
   color: var(--text);
   font-family: var(--sans);
@@ -320,12 +320,36 @@ h2 {
 }
 
 .hero {
+  position: relative;
+  isolation: isolate;
   display: grid;
   grid-template-columns: minmax(0, 1.25fr) minmax(17rem, 0.75fr);
   align-items: center;
   gap: clamp(2rem, 6vw, 5rem);
   min-height: calc(100vh - var(--header-h));
   padding-block: clamp(3rem, 8vh, 6rem);
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 0;
+  height: 42%;
+  pointer-events: none;
+  transform: perspective(240px) rotateX(62deg);
+  transform-origin: bottom;
+  background:
+    repeating-linear-gradient(90deg, rgba(0, 229, 255, 0.10) 0 1px, transparent 1px 72px),
+    repeating-linear-gradient(0deg, rgba(0, 229, 255, 0.10) 0 1px, transparent 1px 48px);
+  mask-image: linear-gradient(to top, #000 0%, transparent 85%);
+}
+
+.hero > * {
+  position: relative;
+  z-index: 1;
 }
 
 .hero-copy {
@@ -419,41 +443,38 @@ h2 {
 
 .hero-panel {
   position: relative;
+  isolation: isolate;
   display: grid;
   gap: 0.9rem;
   min-width: 0;
   padding: 1.5rem;
+  background: transparent;
+}
+
+.hero-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
   border: 1px solid var(--line-strong);
   background:
     linear-gradient(135deg, rgba(0, 229, 255, 0.08), transparent 55%),
     var(--panel);
+  clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
 }
 
-.hero-panel::before,
 .hero-panel::after {
   content: "";
   position: absolute;
-  width: 1.1rem;
-  height: 1.1rem;
-  border: 1px solid var(--cyan);
-}
-
-.hero-panel::before {
-  top: -1px;
-  left: -1px;
-  border-right: 0;
-  border-bottom: 0;
-}
-
-.hero-panel::after {
-  right: -1px;
-  bottom: -1px;
-  border-left: 0;
-  border-top: 0;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(45deg, transparent calc(50% - 0.5px), var(--cyan) calc(50% - 0.5px), var(--cyan) calc(50% + 0.5px), transparent calc(50% + 0.5px)) top right / 1.25rem 1.25rem no-repeat,
+    linear-gradient(45deg, transparent calc(50% - 0.5px), var(--cyan) calc(50% - 0.5px), var(--cyan) calc(50% + 0.5px), transparent calc(50% + 0.5px)) bottom left / 1.25rem 1.25rem no-repeat;
 }
 
 .panel-label {
-  color: var(--orange);
+  color: var(--magenta);
   font-family: var(--mono);
   font-size: 0.66rem;
   letter-spacing: 0.2em;
@@ -525,7 +546,7 @@ h2 {
 }
 
 .service-index {
-  color: var(--orange);
+  color: var(--magenta);
   font-family: var(--mono);
   font-size: 0.72rem;
   letter-spacing: 0.18em;
@@ -626,6 +647,29 @@ h2 {
   transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
 }
 
+.project-card::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  right: -1px;
+  width: 14px;
+  height: 14px;
+  background: var(--bg);
+  clip-path: polygon(0 0, 100% 0, 100% 100%);
+  pointer-events: none;
+}
+
+.project-card::after {
+  content: "";
+  position: absolute;
+  top: -1px;
+  right: -1px;
+  width: 14px;
+  height: 14px;
+  pointer-events: none;
+  background: linear-gradient(45deg, transparent calc(50% - 0.5px), var(--line-strong) calc(50% - 0.5px), var(--line-strong) calc(50% + 0.5px), transparent calc(50% + 0.5px));
+}
+
 .project-card:hover,
 .project-card:focus-within {
   transform: translateY(-2px);
@@ -652,7 +696,7 @@ h2 {
 }
 
 .card-index {
-  color: var(--orange);
+  color: var(--magenta);
 }
 
 .project-card h3 {
