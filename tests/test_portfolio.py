@@ -87,5 +87,25 @@ class CssContractTest(unittest.TestCase):
         self.assertNotIn("http", CSS)
 
 
+class InteractionTest(unittest.TestCase):
+    def test_filter_controls_semantics(self):
+        for marker in ('aria-pressed="true"', 'data-filter="all"', 'data-filter="job1"',
+                       'data-filter="job2"', 'role="group"'):
+            self.assertIn(marker, HTML)
+
+    def test_filter_logic_markers(self):
+        for marker in ("function applyFilter", "card.dataset.track", "card.hidden",
+                       "setAttribute('aria-pressed'", "filterButtons"):
+            self.assertIn(marker, JS)
+
+    def test_mobile_menu_markers(self):
+        for marker in ("menuToggle", "aria-expanded", "event.key === 'Escape'", "inert"):
+            self.assertIn(marker, JS)
+
+    def test_no_whatsapp_in_js(self):
+        self.assertTrue(JS)
+        self.assertNotIn("whatsapp", JS.lower())
+
+
 if __name__ == "__main__":
     unittest.main()
