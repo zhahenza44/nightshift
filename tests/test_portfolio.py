@@ -48,6 +48,7 @@ class ContentTest(unittest.TestCase):
                 self.assertIn(f"https://github.com/zhahenza44/otomasi-web/tree/main/{path}", HTML)
 
     def test_forbidden_contact(self):
+        self.assertTrue(HTML)
         for phrase in ("wa.me", "whatsapp", "projects.co.id"):
             self.assertNotIn(phrase, HTML.lower())
 
@@ -56,6 +57,34 @@ class ContentTest(unittest.TestCase):
                        'id="filter-job1"', 'id="filter-job2"', 'id="menu-toggle"',
                        'id="mobile-menu"', 'id="contact"', "<main", "<footer"):
             self.assertIn(marker, HTML)
+
+
+class CssContractTest(unittest.TestCase):
+    def test_tron_tokens(self):
+        for token in ("--bg:", "--cyan:", "--orange:", "--line:", "color-scheme: dark"):
+            self.assertIn(token, CSS)
+
+    def test_grid_and_scanline(self):
+        for marker in (".tron-grid", ".scanline", "@keyframes"):
+            self.assertIn(marker, CSS)
+
+    def test_responsive_reflow(self):
+        for marker in ("@media (max-width: 900px)", "@media (max-width: 560px)", "grid-template-columns"):
+            self.assertIn(marker, CSS)
+        self.assertIn(".project-grid {", CSS)
+
+    def test_narrow_viewport_guard(self):
+        self.assertIn("overflow-wrap: anywhere", CSS)
+        self.assertIn("min-width: 0", CSS)
+
+    def test_reduced_motion_and_focus(self):
+        self.assertIn("@media (prefers-reduced-motion: reduce)", CSS)
+        self.assertIn("animation: none", CSS)
+        self.assertIn(":focus-visible", CSS)
+
+    def test_no_external_assets(self):
+        self.assertTrue(CSS)
+        self.assertNotIn("http", CSS)
 
 
 if __name__ == "__main__":
