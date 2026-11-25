@@ -142,12 +142,42 @@ class CssContractTest(unittest.TestCase):
         self.assertIn("cursor: pointer", CSS)
         self.assertIn("min-height: 44px", CSS)
 
-    def test_motion_is_finite_and_capped(self):
-        self.assertTrue(CSS)
-        self.assertNotIn('infinite', CSS)
-        self.assertLessEqual(CSS.count('@keyframes'), 2)
-        self.assertIn('@keyframes hero-in', CSS)
-        self.assertIn('animation: hero-in', CSS)
+    def test_motion_budget_is_explicit(self):
+        self.assertEqual(CSS.count('@keyframes'), 4)
+        for name in ('hero-in', 'project-reveal', 'orb-spin', 'ticker-scroll'):
+            with self.subTest(name=name):
+                self.assertIn('@keyframes ' + name, CSS)
+        self.assertEqual(CSS.count('infinite'), 2)
+        for selector in ('.orb-rings', '.ticker-track'):
+            block = CSS.split(selector + ' {')[1].split('}')[0]
+            with self.subTest(selector=selector):
+                self.assertIn('infinite', block)
+
+    def test_liveness_styles(self):
+        for marker in ('.hero-orb', '.orb-rings', '.orb-ring--text', '.orb-core',
+                       '.ticker', '.ticker-track', '.ticker-group', '.scroll-progress',
+                       'transform-box: view-box', 'drop-shadow'):
+            with self.subTest(marker=marker):
+                self.assertIn(marker, CSS)
+
+    def test_pause_and_reduced_motion_rules(self):
+        self.assertIn('.motion-paused .orb-rings', CSS)
+        self.assertIn('.motion-paused .ticker-track', CSS)
+        self.assertIn('animation-play-state: paused', CSS)
+        block = CSS.split('@media (prefers-reduced-motion: reduce)')[1]
+        for marker in ('.orb-rings', '.ticker-track', '.project-grid.reveal-pending',
+                       '.scroll-progress i'):
+            with self.subTest(marker=marker):
+                self.assertIn(marker, block)
+
+    def test_instagram_actions_are_tight(self):
+        actions = CSS.split('.hero-actions {')[1].split('}')[0]
+        copy = CSS.split('.hero-copy {')[1].split('}')[0]
+        self.assertNotIn('margin-top', actions)
+        self.assertIn('gap: 0.9rem', copy)
+
+    def test_no_dead_panel_bars(self):
+        self.assertNotIn('panel-bars', CSS)
 
     def test_motion_stops_under_reduced_motion(self):
         block = CSS.split('@media (prefers-reduced-motion: reduce)')[1]

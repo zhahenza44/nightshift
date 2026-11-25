@@ -155,7 +155,7 @@ git commit -m "feat: add cybertron liveness structure"
 - Consumes: the new classes from Task 1 and the existing cyan, magenta, focus, hover, active, and reduced-motion blocks.
 - Produces: four named keyframes, two governed infinite loops, a pause class, magnetic custom properties, and the tightened action row.
 
-- [ ] **Step 1: Write failing CSS tests**
+- [x] **Step 1: Write failing CSS tests**
 
 Replace `test_motion_is_finite_and_capped` with:
 
@@ -202,13 +202,13 @@ def test_no_dead_panel_bars(self):
     self.assertNotIn('panel-bars', CSS)
 ```
 
-- [ ] **Step 2: Run the tests and watch them fail**
+- [x] **Step 2: Run the tests and watch them fail**
 
 Run: `python3 -m unittest discover -s tests -v`
 
 Expected: FAIL on the new motion budget, liveness style, pause, spacing, and dead-bar assertions.
 
-- [ ] **Step 3: Update `css/styles.css`**
+- [x] **Step 3: Update `css/styles.css`**
 
 - Change `.hero-copy` to `gap: 0.9rem` and remove the `margin-top` line from `.hero-actions`. Keep `display: flex`, `flex-wrap: wrap`, `gap: 0.85rem`, and the 560px `flex: 1` rule.
 - Remove the `.panel-bars` and `.panel-bars i` rules. Add `.hero-orb` at `width: min(100%, 14rem)`, `aspect-ratio: 1`, `display: block`, and `margin-inline: auto`.
@@ -225,13 +225,13 @@ Expected: FAIL on the new motion budget, liveness style, pause, spacing, and dea
 - Change the nav breakpoint from `@media (max-width: 560px)` to `@media (max-width: 680px)` for `.header-links` and `.menu-toggle`. Keep the other 560px rules. Add `@media (max-width: 400px) { .brand-copy { display: none; } }`.
 - In the reduced-motion block, set `.orb-rings`, `.ticker-track`, and `.project-grid` to `animation: none !important`, `transform: none !important`, and `opacity: 1 !important`. Add `.project-grid.reveal-pending` to that block. Set `.scroll-progress i { transition: none !important; }`, `.motion-toggle { display: none; }`, and keep the universal animation and transition kill switch.
 
-- [ ] **Step 4: Run the tests and watch them pass**
+- [x] **Step 4: Run the tests and watch them pass**
 
 Run: `python3 -m unittest discover -s tests -v`
 
 Expected: all static tests PASS.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add css/styles.css tests/test_portfolio.py

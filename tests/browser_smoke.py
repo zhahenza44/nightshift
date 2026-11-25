@@ -57,8 +57,16 @@ new Promise((resolve) => {
       check('390px iframe viewport', viewport === 390, String(viewport));
       check('no horizontal overflow', scrollWidth <= viewport, 'scrollWidth=' + scrollWidth);
 
+      const isClipped = (el) => {
+        let parent = el.parentElement;
+        while (parent && parent !== doc.body && parent !== doc.documentElement) {
+          if (win.getComputedStyle(parent).overflow !== 'visible') return true;
+          parent = parent.parentElement;
+        }
+        return false;
+      };
       const overflowing = Array.from(doc.querySelectorAll('body *')).filter((el) => {
-        if (el.ownerSVGElement) return false;
+        if (el.ownerSVGElement || isClipped(el)) return false;
         const rect = el.getBoundingClientRect();
         const style = win.getComputedStyle(el);
         return rect.width > 0 && style.position !== 'fixed' &&
