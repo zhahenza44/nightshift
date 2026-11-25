@@ -41,7 +41,7 @@ class ContentTest(unittest.TestCase):
             'id="cursor-ring"', 'class="cursor-label"', 'class="fx-noise"',
             'class="fx-scan"', 'id="scroll-progress"', 'id="site-header"',
             'id="mobile-menu"', 'class="hero" id="top"', 'class="ticker"',
-            'id="studio"', 'id="work"', 'id="services"', 'id="process"',
+            'id="studio"', 'id="cv"', 'id="work"', 'id="services"', 'id="process"',
             'id="contact"', 'class="site-footer"', 'id="project-dialog"', 'id="toast"',
         ):
             with self.subTest(marker=marker):
@@ -124,22 +124,98 @@ class ContentTest(unittest.TestCase):
 
     def test_old_shell_contract_is_absent(self):
         for phrase in (
-            "Alan Nawa",
-            "not-a-dev",
-            "https://instagram.com/zhahenzar",
-            "zhahenza666@proton.me",
-            'href="https://github.com/zhahenza44"',
-            'href="demos/',
             "motion-toggle",
             "Pause motion",
             "id=\"project-grid\"",
             "id=\"filter-all\"",
             "class=\"sr-only\"",
-            "SIX LIVE DEMOS",
+            "data-track=",
+            "filterButtons",
         ):
             with self.subTest(phrase=phrase):
                 self.assertNotIn(phrase, HTML)
         self.assertNotIn("data-track=", HTML)
+
+    def test_section_numbering_and_nav(self):
+        for marker in (
+            '<a href="#cv"><span>02</span>CV</a>',
+            '<a href="#work"><span>03</span>Work</a>',
+            '<a href="#services"><span>04</span>Services</a>',
+            '<a href="#process"><span>05</span>Process</a>',
+            '<a href="#contact"><span>06</span>Contact</a>',
+            '<span class="section-index">02</span>',
+            '>MANIFESTO</span>',
+        ):
+            with self.subTest(marker=marker):
+                self.assertIn(marker, HTML)
+        studio = HTML.find('id="studio"')
+        cv = HTML.find('id="cv"')
+        work = HTML.find('id="work"')
+        self.assertGreater(cv, -1)
+        self.assertLess(studio, cv)
+        self.assertLess(cv, work)
+
+    def test_cv_identity_and_services(self):
+        for marker in (
+            "Alan Nawa",
+            "Web &amp; AI Automation",
+            "Hi, I'm Alan Nawa",
+            "I build clean websites and automated workflows",
+            "AI &amp; workflow automation",
+            "Websites &amp; landing pages",
+            "Webhooks &amp; API integrations",
+            "Google Sheets / CRM",
+            "Company profiles &amp; catalogs",
+            "Responsive and easy to maintain",
+        ):
+            with self.subTest(marker=marker):
+                self.assertIn(marker, HTML)
+
+    def test_cv_demo_links(self):
+        paths = (
+            "demos/ai-lead-capture/dashboard/index.html",
+            "demos/servis-ac/index.html",
+            "demos/ruang-rapi/index.html",
+            "demos/kedai-kopi/index.html",
+            "demos/rental-mobil/index.html",
+            "demos/nightshift/index.html",
+        )
+        names = (
+            "AI Lead Capture",
+            "Servis AC",
+            "Ruang Rapi",
+            "Kedai Kopi Oak",
+            "Rental Mobil",
+            "NIGHT//SHIFT",
+        )
+        for path in paths:
+            with self.subTest(path=path):
+                self.assertIn('href="' + path + '"', HTML)
+        for name in names:
+            with self.subTest(name=name):
+                self.assertIn(name, HTML)
+        self.assertEqual(HTML.count('href="demos/'), len(paths))
+        anchors = re.findall(r'<a[^>]+href="demos/[^"]+"[^>]*>', HTML)
+        for anchor in anchors:
+            with self.subTest(anchor=anchor):
+                self.assertIn('target="_blank"', anchor)
+                self.assertIn('rel="noopener noreferrer"', anchor)
+
+    def test_cv_contacts(self):
+        for marker in (
+            'href="https://instagram.com/zhahenzar"',
+            'href="https://github.com/zhahenza44"',
+            'href="mailto:zhahenza666@proton.me"',
+            "@zhahenzar",
+            "zhahenza44",
+            "zhahenza666@proton.me",
+        ):
+            with self.subTest(marker=marker):
+                self.assertIn(marker, HTML)
+
+    def test_cv_note_and_fictional_disclosure(self):
+        self.assertIn("This section is my real CV", HTML)
+        self.assertIn("names, metrics, email, and phone number are fictional", HTML)
 
     def test_no_indonesian_visitor_copy_in_html(self):
         words = (
@@ -160,8 +236,16 @@ class ContentTest(unittest.TestCase):
 
 class CssContractTest(unittest.TestCase):
     def test_stylesheet_is_copied_from_demo(self):
+        demo_css = read("demos/nightshift/css/styles.css")
         self.assertTrue(CSS)
-        self.assertEqual(CSS, read("demos/nightshift/css/styles.css"))
+        self.assertTrue(demo_css)
+        markers = sorted(set(re.findall(r"@keyframes\s+[\w-]+|[.#][A-Za-z][\w-]*", demo_css)))
+        for marker in markers:
+            with self.subTest(marker=marker):
+                self.assertIn(marker, CSS)
+        for marker in (".cv-grid", ".cv-service", ".cv-demo-list"):
+            with self.subTest(cv_marker=marker):
+                self.assertIn(marker, CSS)
 
     def test_nightshift_visual_markers(self):
         for marker in (
@@ -172,6 +256,15 @@ class CssContractTest(unittest.TestCase):
         ):
             with self.subTest(marker=marker):
                 self.assertIn(marker, CSS)
+
+    def test_cv_styles_use_existing_tokens(self):
+        start = CSS.find(".cv-grid")
+        self.assertGreater(start, -1)
+        end = CSS.find("@media (prefers-reduced-motion", start)
+        block = CSS[start:end] if end > start else CSS[start:]
+        for token in ("var(--cyan)", "var(--muted)"):
+            with self.subTest(token=token):
+                self.assertIn(token, block)
 
     def test_external_font_request_is_present(self):
         self.assertIn("https://fonts.googleapis.com", HTML)

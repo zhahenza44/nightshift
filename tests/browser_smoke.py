@@ -240,16 +240,60 @@ new Promise((resolve) => {
       check('all links dispatch click', clicked === links.length,
         'clicked=' + clicked + '/' + links.length);
       const hrefs = links.map((link) => link.getAttribute('href'));
+
+      const cvSection = doc.querySelector('section#cv');
+      const sectionIds = Array.from(doc.querySelectorAll('section')).map((section) => section.id);
+      check('cv section follows manifesto',
+        Boolean(cvSection) && sectionIds.indexOf('studio') < sectionIds.indexOf('cv') &&
+          sectionIds.indexOf('cv') < sectionIds.indexOf('work'), sectionIds.join(','));
+      const cvText = cvSection ? cvSection.textContent.replace(/\s+/g, ' ').trim() : '';
+      check('cv identity is visible',
+        cvText.includes('Alan Nawa') && cvText.includes('Web & AI Automation'),
+        cvText.slice(0, 120) || 'missing');
+      const footerNote = doc.querySelector('.demo-note');
+      check('cv note separates real CV from fictional case files',
+        cvText.includes('This section is my real CV') &&
+          Boolean(footerNote && footerNote.textContent.includes('fictional')),
+        cvText.includes('This section is my real CV') ? 'both notes present' : 'cv note missing');
+      const cvNav = doc.querySelectorAll('a[href="#cv"]');
+      check('CV nav anchor reaches the CV section', cvNav.length === 2, 'anchors=' + cvNav.length);
+      const cvContactParts = [
+        'instagram.com/zhahenzar', 'github.com/zhahenza44', 'mailto:zhahenza666@proton.me',
+      ];
+      check('three CV contact links present',
+        cvContactParts.every((part) => hrefs.some((href) => href && href.includes(part))),
+        cvContactParts.filter((part) => !hrefs.some((href) => href && href.includes(part)))
+          .join(',') || 'all present');
+      const cvVisibleAnchors = Array.from(doc.querySelectorAll('.cv-demo-list a'));
+      check('CV demo links are visible',
+        cvVisibleAnchors.length === 6 && cvVisibleAnchors.every((link) => {
+          const rect = link.getBoundingClientRect();
+          return rect.width > 0 && rect.height > 0;
+        }), 'visible=' + cvVisibleAnchors.filter((link) => {
+          const rect = link.getBoundingClientRect();
+          return rect.width > 0 && rect.height > 0;
+        }).length + '/6');
+
       const required = [
-        '#main', '#top', '#studio', '#work', '#services', '#process', '#contact',
+        '#main', '#top', '#studio', '#cv', '#work', '#services', '#process', '#contact',
         'mailto:hello@nightshift.studio', 'https://wa.me/6281234567890',
         'https://github.com/zhahenza44/otomasi-web',
+        'demos/ai-lead-capture/dashboard/index.html', 'demos/servis-ac/index.html',
+        'demos/ruang-rapi/index.html', 'demos/kedai-kopi/index.html',
+        'demos/rental-mobil/index.html', 'demos/nightshift/index.html',
+        'https://instagram.com/zhahenzar', 'https://github.com/zhahenza44',
+        'mailto:zhahenza666@proton.me',
       ];
       const missing = required.filter((href) => !hrefs.includes(href));
       check('required hrefs present', missing.length === 0, missing.join(',') || 'all present');
-      check('no local demo links on landing page',
-        !hrefs.some((href) => href && href.includes('demos/')),
-        hrefs.filter((href) => href && href.includes('demos/')).join(',') || 'none');
+      const demoHrefs = required.filter((href) => href && href.startsWith('demos/'));
+      const demoLinks = Array.from(doc.querySelectorAll('a[href^="demos/"]'));
+      const badDemoLinks = demoLinks.filter((link) => link.getAttribute('target') !== '_blank' ||
+        !(link.getAttribute('rel') || '').includes('noopener') ||
+        !demoHrefs.includes(link.getAttribute('href')));
+      check('six CV demo links open in a new tab',
+        demoLinks.length === 6 && badDemoLinks.length === 0,
+        'links=' + demoLinks.length + ' bad=' + badDemoLinks.length);
 
       for (const [selector, label] of [
         ['#menu-btn', 'menu button'],
@@ -305,6 +349,14 @@ new Promise((resolve) => {
       check('320px iframe viewport', win.innerWidth === 320, String(win.innerWidth));
       check('320px has no horizontal overflow', doc.documentElement.scrollWidth <= 320,
         'scrollWidth=' + doc.documentElement.scrollWidth);
+      const cvBlocks = [doc.querySelector('.cv-grid'), doc.querySelector('.cv-demo-list')];
+      check('cv section fits 320px', cvBlocks.every(Boolean) && cvBlocks.every((el) => {
+        const rect = el.getBoundingClientRect();
+        return rect.left >= -1 && rect.right <= 321;
+      }), cvBlocks.filter(Boolean).map((el) => {
+        const rect = el.getBoundingClientRect();
+        return Math.round(rect.left) + '..' + Math.round(rect.right);
+      }).join(' | ') || 'missing');
       for (const selector of [
         '.brand', '#menu-btn', '.hero-actions .btn--primary', '.hero-actions .btn--ghost',
         '#copy-email', '.contact-actions .btn--primary',
