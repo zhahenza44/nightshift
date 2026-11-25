@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Alan Nawa — Web & Otomasi AI</title>
+  <meta name="description" content="Portfolio Alan Nawa: website, landing page, dan otomasi workflow untuk bisnis. Lihat tujuh demo dan hubungi lewat Instagram, GitHub, atau email.">
+  <meta name="theme-color" content="#05070c">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="js/main.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Langsung ke konten</a>
+
+  <div class="tron-grid" aria-hidden="true"></div>
+  <div class="scanline" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <a class="brand" href="#top" aria-label="Alan Nawa — kembali ke atas">
+      <span class="brand-mark">AN</span>
+      <span class="brand-copy">
+        <strong>Alan Nawa</strong>
+        <span>Web &amp; Otomasi AI</span>
+      </span>
+    </a>
+
+    <nav class="header-links" aria-label="Kontak utama">
+      <a href="https://instagram.com/zhahenzar" target="_blank" rel="noopener noreferrer">Instagram</a>
+      <a href="https://github.com/zhahenza44" target="_blank" rel="noopener noreferrer">GitHub</a>
+      <a href="mailto:zhahenza666@proton.me">Email</a>
+    </nav>
+
+    <button class="menu-toggle" id="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="Buka menu">
+      <span></span><span></span>
+    </button>
+
+    <div class="mobile-menu" id="mobile-menu" inert>
+      <nav aria-label="Menu mobile">
+        <a href="#project-grid">Project</a>
+        <a href="#contact">Kontak</a>
+        <a href="https://instagram.com/zhahenzar" target="_blank" rel="noopener noreferrer">Instagram</a>
+        <a href="https://github.com/zhahenza44" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="mailto:zhahenza666@proton.me">Email</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero" id="top">
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="status-dot"></span>TERSEDIA UNTUK PROJECT</p>
+        <h1>Alan Nawa</h1>
+        <p class="hero-role">Web development &amp; otomasi AI</p>
+        <p class="hero-intro">Halo, saya Alan Nawa, not-a-dev :) Saya bisa bantu bikin website yang rapi dan workflow yang otomatis, supaya bisnis Anda lebih cepat merespons pelanggan.</p>
+        <div class="hero-actions">
+          <a class="btn btn--primary" href="#project-grid">Lihat project</a>
+          <a class="btn btn--ghost" href="https://instagram.com/zhahenzar" target="_blank" rel="noopener noreferrer">Instagram</a>
+        </div>
+      </div>
+
+      <div class="hero-panel" aria-hidden="true">
+        <span class="panel-label">SYS / PORTFOLIO</span>
+        <div class="panel-line"><span>web</span><b>7 project</b></div>
+        <div class="panel-line"><span>otomasi</span><b>n8n + AI</b></div>
+        <div class="panel-line"><span>status</span><b>online</b></div>
+        <div class="panel-bars"><i></i><i></i><i></i><i></i><i></i></div>
+      </div>
+    </section>
+
+    <section class="services" aria-labelledby="services-title">
+      <div class="section-head">
+        <p class="eyebrow">01 / JASA</p>
+        <h2 id="services-title">Dua cara saya membantu</h2>
+      </div>
+
+      <div class="service-grid">
+        <article class="service">
+          <span class="service-index">01</span>
+          <h3>Otomasi AI &amp; workflow</h3>
+          <p>Lead masuk, data dirapikan, AI mengklasifikasi, lalu tim Anda dapat notifikasi dan follow-up. Alur dibuat di n8n dan disambungkan ke tools yang sudah dipakai.</p>
+          <ul>
+            <li>Webhook &amp; integrasi API</li>
+            <li>Google Sheets / CRM</li>
+            <li>Klasifikasi dan draft balasan AI</li>
+          </ul>
+        </article>
+
+        <article class="service">
+          <span class="service-index">02</span>
+          <h3>Website &amp; landing page</h3>
+          <p>Halaman yang menjelaskan jasa dengan jelas, memuat cepat, dan mengarahkan pengunjung ke langkah berikutnya. Dari landing page satu halaman sampai situs multi-halaman.</p>
+          <ul>
+            <li>Company profile &amp; katalog</li>
+            <li>Filter, pencarian, dan detail</li>
+            <li>Responsif dan mudah dirawat</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="projects" aria-labelledby="projects-title">
+      <div class="section-head">
+        <p class="eyebrow">02 / PROJECT</p>
+        <h2 id="projects-title">Yang sudah saya bangun</h2>
+      </div>
+
+      <div class="filter-bar" role="group" aria-label="Filter project">
+        <button type="button" id="filter-all" data-filter="all" aria-pressed="true">Semua</button>
+        <button type="button" id="filter-job1" data-filter="job1" aria-pressed="false">Otomasi AI</button>
+        <button type="button" id="filter-job2" data-filter="job2" aria-pressed="false">Web</button>
+      </div>
+
+      <div class="project-grid" id="project-grid">
+        <article class="project-card" data-track="job1" data-project="ai-lead-capture">
+          <div class="card-top">
+            <span class="card-track">JOB 1 / OTOMASI</span>
+            <span class="card-index">01</span>
+          </div>
+          <h3>AI Lead Capture</h3>
+          <p>Webhook n8n menerima lead, menyimpannya ke Google Sheets, mengklasifikasi prioritas dengan AI, lalu mengirim notifikasi dan follow-up otomatis.</p>
+          <ul class="tags"><li>n8n</li><li>OpenAI</li><li>Sheets</li><li>Slack</li></ul>
+          <a class="card-link" href="https://github.com/zhahenza44/otomasi-web/tree/main/job1-otomasi-ai-workflow/workspace/demo-ai-lead-capture" target="_blank" rel="noopener noreferrer">Lihat demo <span aria-hidden="true">↗</span></a>
+        </article>
+
+        <article class="project-card" data-track="job2" data-project="servis-ac">
+          <div class="card-top">
+            <span class="card-track">JOB 2 / WEB</span>
+            <span class="card-index">02</span>
+          </div>
+          <h3>Servis AC</h3>
+          <p>Landing page jasa servis AC dengan daftar layanan, estimasi harga, FAQ, dan alur konsultasi yang jelas.</p>
+          <ul class="tags"><li>Landing page</li><li>Responsif</li><li>FAQ</li></ul>
+          <a class="card-link" href="https://github.com/zhahenza44/otomasi-web/tree/main/job2-web-landing-maintenance/workspace/demo-landingpage-servis-ac" target="_blank" rel="noopener noreferrer">Lihat demo <span aria-hidden="true">↗</span></a>
+        </article>
+
+        <article class="project-card" data-track="job2" data-project="ruang-rapi">
+          <div class="card-top">
+            <span class="card-track">JOB 2 / WEB</span>
+            <span class="card-index">03</span>
+          </div>
+          <h3>Ruang Rapi</h3>
+          <p>Company profile studio interior dengan filter portofolio, slider before/after, dan formulir konsultasi.</p>
+          <ul class="tags"><li>Company profile</li><li>Galeri</li><li>Form</li></ul>
+          <a class="card-link" href="https://github.com/zhahenza44/otomasi-web/tree/main/job2-web-landing-maintenance/workspace/demo-company-profile-ruang-rapi" target="_blank" rel="noopener noreferrer">Lihat demo <span aria-hidden="true">↗</span></a>
+        </article>
+
+        <article class="project-card" data-track="job2" data-project="kedai-kopi">
+          <div class="card-top">
+            <span class="card-track">JOB 2 / WEB</span>
+            <span class="card-index">04</span>
+          </div>
+          <h3>Kedai Kopi Oak</h3>
+          <p>Landing page kedai kopi dengan menu, cerita brand, suasana tempat, dan ajakan berkunjung.</p>
+          <ul class="tags"><li>Landing page</li><li>Menu</li><li>Brand</li></ul>
+          <a class="card-link" href="https://github.com/zhahenza44/otomasi-web/tree/main/job2-web-landing-maintenance/workspace/demo-landingpage-kedai-kopi" target="_blank" rel="noopener noreferrer">Lihat demo <span aria-hidden="true">↗</span></a>
+        </article>
+
+        <article class="project-card" data-track="job2" data-project="rental-mobil">
+          <div class="card-top">
+            <span class="card-track">JOB 2 / WEB</span>
+            <span class="card-index">05</span>
+          </div>
+          <h3>Rental Mobil</h3>
+          <p>Website multi-halaman dengan katalog, filter, detail unit, dan kalkulasi booking otomatis.</p>
+          <ul class="tags"><li>Multi-page</li><li>Katalog</li><li>Booking</li></ul>
+          <a class="card-link" href="https://github.com/zhahenza44/otomasi-web/tree/main/job2-web-landing-maintenance/workspace/demo-rental-mobil-multipage" target="_blank" rel="noopener noreferrer">Lihat demo <span aria-hidden="true">↗</span></a>
+        </article>
+
+        <article class="project-card" data-track="job2" data-project="omegamoto">
+          <div class="card-top">
+            <span class="card-track">JOB 2 / WEB</span>
+            <span class="card-index">06</span>
+          </div>
+          <h3>Omegamoto</h3>
+          <p>Landing page katalog motor dengan daftar harga, ajakan konsultasi, dan layout responsif.</p>
+          <ul class="tags"><li>Katalog</li><li>Landing page</li><li>Lokal</li></ul>
+          <p class="card-note">Demo lokal, tidak dipublikasikan.</p>
+        </article>
+
+        <article class="project-card" data-track="job2" data-project="nightshift">
+          <div class="card-top">
+            <span class="card-track">JOB 2 / WEB</span>
+            <span class="card-index">07</span>
+          </div>
+          <h3>NIGHT//SHIFT</h3>
+          <p>Eksplorasi portfolio bertema cyberpunk dengan animasi antarmuka dan tipografi teknis.</p>
+          <ul class="tags"><li>Eksperimen</li><li>Animasi</li><li>Visual</li></ul>
+          <a class="card-link" href="https://github.com/zhahenza44/otomasi-web/tree/main/job2-web-landing-maintenance/workspace/demo-portfolio-cyberpunk" target="_blank" rel="noopener noreferrer">Lihat demo <span aria-hidden="true">↗</span></a>
+        </article>
+      </div>
+    </section>
+
+    <section class="contact" id="contact" aria-labelledby="contact-title">
+      <div class="section-head">
+        <p class="eyebrow">03 / KONTAK</p>
+        <h2 id="contact-title">Punya project yang cocok?</h2>
+      </div>
+
+      <p class="contact-copy">Ceritakan kebutuhan Anda lewat salah satu kanal di bawah. Saya biasanya membalas dalam satu hari kerja.</p>
+
+      <div class="contact-links">
+        <a href="https://instagram.com/zhahenzar" target="_blank" rel="noopener noreferrer">
+          <span>Instagram</span>
+          <strong>@zhahenzar</strong>
+        </a>
+        <a href="https://github.com/zhahenza44" target="_blank" rel="noopener noreferrer">
+          <span>GitHub</span>
+          <strong>zhahenza44</strong>
+        </a>
+        <a href="mailto:zhahenza666@proton.me">
+          <span>Email</span>
+          <strong>zhahenza666@proton.me</strong>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Alan Nawa — web &amp; otomasi AI.</p>
+    <a href="https://github.com/zhahenza44/otomasi-web" target="_blank" rel="noopener noreferrer">Lihat source &amp; demo <span aria-hidden="true">↗</span></a>
+  </footer>
+</body>
+</html>
