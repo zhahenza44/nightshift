@@ -115,7 +115,6 @@ class ContentTest(unittest.TestCase):
             "<span>Send brief</span>",
             "<span>Copy email</span>",
             "names, metrics, email, and phone number are fictional",
-            "fictional case study for portfolio use",
             'aria-label="Case file details"',
             'aria-label="Close case file"',
             ">CLOSE ×</button>",
@@ -140,7 +139,7 @@ class ContentTest(unittest.TestCase):
         ):
             with self.subTest(phrase=phrase):
                 self.assertNotIn(phrase, HTML)
-        self.assertNotIn('class="project-card', HTML)
+        self.assertNotIn("data-track=", HTML)
 
     def test_no_indonesian_visitor_copy_in_html(self):
         words = (
@@ -212,6 +211,7 @@ class InteractionTest(unittest.TestCase):
             'kicker: "CASE FILE 03 / HOSPITALITY"',
             '["YEAR", "2026"]', '["ROLE",', '["STACK",',
             "<h4>Challenge</h4>", "<h4>Approach</h4>",
+            "fictional case study for portfolio use",
         ):
             with self.subTest(marker=marker):
                 self.assertIn(marker, JS)

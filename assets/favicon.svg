@@ -1,8 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <rect width="64" height="64" rx="10" fill="#05070c"/>
-  <g stroke="#00e5ff" stroke-width="2" opacity=".55">
-    <path d="M10 22h44M10 32h44M10 42h44M22 10v44M32 10v44M42 10v44"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="NIGHT SHIFT">
+  <rect width="64" height="64" rx="7" fill="#04060a"/>
+  <rect x="1.5" y="1.5" width="61" height="61" rx="6" fill="none" stroke="#63f5ff" stroke-opacity=".55"/>
+  <g fill="none" stroke="#eaf7ff" stroke-width="3.4" stroke-linecap="square" stroke-linejoin="miter">
+    <path d="M13 47V17l12 30V17"/>
+    <path d="M39 17l13 30" stroke="#63f5ff"/>
+    <path d="M45 17L32 47" stroke="#63f5ff" stroke-opacity=".55"/>
   </g>
-  <path d="M22 42V22h8a10 10 0 0 1 0 20z" fill="none" stroke="#00e5ff" stroke-width="3"/>
-  <path d="M40 22v20M40 32l10 10M50 32l-10 10" fill="none" stroke="#ff7a1a" stroke-width="3"/>
+  <circle cx="52" cy="12" r="2" fill="#ff3d8d"/>
 </svg>
