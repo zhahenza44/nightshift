@@ -111,6 +111,11 @@ class CssContractTest(unittest.TestCase):
         self.assertTrue(CSS)
         self.assertNotIn("http", CSS)
 
+    def test_glow_dose_cap(self):
+        self.assertTrue(CSS)
+        self.assertNotIn("box-shadow: inset", CSS)
+        self.assertEqual(CSS.count("text-shadow:"), 1)
+
 
 class InteractionTest(unittest.TestCase):
     def test_filter_controls_semantics(self):
