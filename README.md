@@ -1,6 +1,6 @@
 # Portofolio Alan Nawa
 
-Halaman CV digital satu file untuk Alan Nawa: web development, landing page, dan otomasi AI. Tema visual TRON dengan grid cyan di atas latar gelap.
+Halaman CV digital statis untuk Alan Nawa: web development, landing page, dan otomasi AI. Tema visual TRON dengan grid cyan di atas latar gelap. Enam demo disimpan lokal di folder `demos/` dan dibuka langsung dari kartu project.
 
 ## Membuka halaman
 
@@ -23,6 +23,7 @@ Portofolio/
 ├── css/styles.css      # tema TRON, layout, responsif
 ├── js/main.js          # filter project dan menu mobile
 ├── assets/favicon.svg
+├── demos/              # enam landing page demo, salinan lokal
 ├── tests/test_portfolio.py
 └── README.md
 ```
@@ -34,20 +35,20 @@ Portofolio/
 - GitHub: `https://github.com/zhahenza44`.
 - Email: `zhahenza666@proton.me`.
 - Kartu project: bagian `#project-grid` di `index.html`. Setiap kartu punya `data-track="job1"` atau `data-track="job2"` untuk filter.
+- Demo: folder di dalam `demos/`. Kalau demo di repo asli berubah, salin ulang folder yang bersangkutan ke sini.
 
 ## Project yang ditampilkan
 
-| Kartu | Folder demo |
+| Kartu | Halaman demo |
 |---|---|
-| AI Lead Capture | `job1-otomasi-ai-workflow/workspace/demo-ai-lead-capture` |
-| Servis AC | `job2-web-landing-maintenance/workspace/demo-landingpage-servis-ac` |
-| Ruang Rapi | `job2-web-landing-maintenance/workspace/demo-company-profile-ruang-rapi` |
-| Kedai Kopi Oak | `job2-web-landing-maintenance/workspace/demo-landingpage-kedai-kopi` |
-| Rental Mobil | `job2-web-landing-maintenance/workspace/demo-rental-mobil-multipage` |
-| Omegamoto | Demo lokal, tidak dipublikasikan |
-| NIGHT//SHIFT | `job2-web-landing-maintenance/workspace/demo-portfolio-cyberpunk` |
+| AI Lead Capture | `demos/ai-lead-capture/dashboard/index.html` |
+| Servis AC | `demos/servis-ac/index.html` |
+| Ruang Rapi | `demos/ruang-rapi/index.html` |
+| Kedai Kopi Oak | `demos/kedai-kopi/index.html` |
+| Rental Mobil | `demos/rental-mobil/index.html` |
+| NIGHT//SHIFT | `demos/nightshift/index.html` |
 
-Semua tautan mengarah ke repo `zhahenza44/otomasi-web`.
+Kartu membuka halaman demo di tab baru tanpa melewati GitHub. Tautan GitHub di header dan footer hanya untuk source code. Isi tiap demo dibiarkan apa adanya, termasuk aset dan tautan yang dipakai demo itu sendiri.
 
 ## Tes
 
@@ -56,4 +57,4 @@ cd /home/asnodt/Projects/Portofolio
 python3 -m unittest discover -s tests -v
 ```
 
-Tes membaca `index.html`, `css/styles.css`, dan `js/main.js` sebagai teks, lalu memeriksa struktur, kontak, tautan project, dan aturan tampilan responsif.
+Tes membaca `index.html`, `css/styles.css`, dan `js/main.js` sebagai teks, lalu memeriksa struktur, kontak, keberadaan enam file demo, dan aturan tampilan responsif.

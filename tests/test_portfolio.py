@@ -23,29 +23,46 @@ class ContentTest(unittest.TestCase):
         self.assertIn("zhahenza666@proton.me", HTML)
         self.assertIn("https://github.com/zhahenza44", HTML)
 
-    def test_seven_project_cards(self):
-        self.assertEqual(HTML.count('class="project-card'), 7)
+    def test_six_project_cards(self):
+        self.assertEqual(HTML.count('class="project-card'), 6)
         for title in ("AI Lead Capture", "Servis AC", "Ruang Rapi", "Kedai Kopi Oak",
-                      "Rental Mobil", "Omegamoto", "NIGHT//SHIFT"):
+                      "Rental Mobil", "NIGHT//SHIFT"):
             with self.subTest(title=title):
                 self.assertIn(title, HTML)
+        self.assertNotIn("Omegamoto", HTML)
 
-    def test_omegamoto_has_no_link(self):
-        card = re.search(r'<article class="project-card"[^>]*data-project="omegamoto".*?</article>', HTML, re.S)
-        self.assertIsNotNone(card)
-        self.assertNotIn("href=", card.group(0))
+    def test_local_demo_links(self):
+        expected = {
+            "ai-lead-capture": "demos/ai-lead-capture/dashboard/index.html",
+            "servis-ac": "demos/servis-ac/index.html",
+            "ruang-rapi": "demos/ruang-rapi/index.html",
+            "kedai-kopi": "demos/kedai-kopi/index.html",
+            "rental-mobil": "demos/rental-mobil/index.html",
+            "nightshift": "demos/nightshift/index.html",
+        }
+        for project, path in expected.items():
+            with self.subTest(project=project):
+                card = re.search(
+                    rf'<article class="project-card"[^>]*data-project="{project}".*?</article>',
+                    HTML, re.S)
+                self.assertIsNotNone(card)
+                self.assertIn(f'href="{path}"', card.group(0))
+                self.assertTrue((ROOT / path).is_file(), f"missing {path}")
+        self.assertNotIn("github.com/zhahenza44/otomasi-web/tree/main", HTML)
 
-    def test_link_targets(self):
-        for path in (
-            "job1-otomasi-ai-workflow/workspace/demo-ai-lead-capture",
-            "job2-web-landing-maintenance/workspace/demo-landingpage-servis-ac",
-            "job2-web-landing-maintenance/workspace/demo-company-profile-ruang-rapi",
-            "job2-web-landing-maintenance/workspace/demo-landingpage-kedai-kopi",
-            "job2-web-landing-maintenance/workspace/demo-rental-mobil-multipage",
-            "job2-web-landing-maintenance/workspace/demo-portfolio-cyberpunk",
-        ):
-            with self.subTest(path=path):
-                self.assertIn(f"https://github.com/zhahenza44/otomasi-web/tree/main/{path}", HTML)
+    def test_counts_match_cards(self):
+        self.assertIn("6 project", HTML)
+        self.assertNotIn("7 project", HTML)
+
+    def test_job_prefixes_removed_and_heading_hidden(self):
+        self.assertNotIn("JOB 1 /", HTML)
+        self.assertNotIn("JOB 2 /", HTML)
+        self.assertIn('<h1 class="sr-only">Alan Nawa</h1>', HTML)
+        self.assertIn(".sr-only", CSS)
+
+    def test_footer_source_label(self):
+        self.assertIn("Lihat source", HTML)
+        self.assertNotIn("Lihat source &amp; demo", HTML)
 
     def test_forbidden_contact(self):
         self.assertTrue(HTML)
@@ -146,7 +163,12 @@ class DeliveryTest(unittest.TestCase):
         self.assertIn("index.html", readme)
 
     def test_full_content(self):
-        self.assertEqual(HTML.count('class="project-card'), 7)
+        self.assertEqual(HTML.count('class="project-card'), 6)
+
+    def test_readme_lists_local_demos(self):
+        readme = read("README.md")
+        self.assertIn("demos/", readme)
+        self.assertNotIn("tujuh demo", readme)
 
 
 if __name__ == "__main__":
