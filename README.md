@@ -1,10 +1,12 @@
-# Alan Nawa portfolio
+# NIGHT//SHIFT landing page
 
-A static one-page CV for Alan Nawa: web development, landing pages, and AI workflow automation. The shell copy is in English. The visual system is cyberpunk x TRON: cyan actions, a magenta technical accent, clipped corners, a thin horizon grid, a rotating text orb, and a real-label ticker. Two loops run unless reduced motion is enabled or the visitor presses the Pause motion button, whose label stays fixed while `aria-pressed` reports the state. Six demos live in `demos/` and open directly from the project cards.
+The main portfolio page is the `NIGHT//SHIFT` demo copied to the repository root and translated into English. It keeps the studio identity, fictional case studies, boot sequence, ghost cursor, scanline, ticker, magnetic buttons, scroll reveals, process fill, project dialogs, copy-email toast, clock, and mobile menu. The old Alan Nawa CV shell is gone from the landing page.
+
+The studio, names, metrics, status, email address, and phone number are fictional. The contact section discloses this. Type comes from Google Fonts, with local fallbacks when the network is unavailable. The `demos/` folder is still present, but the landing page no longer links to it.
 
 ## Open the page
 
-Open `index.html` in a browser. There is no dependency, build step, or server requirement.
+Open `index.html` in a browser. There is no build step or server requirement.
 
 To use a local server:
 
@@ -15,63 +17,45 @@ python3 -m http.server 8080
 
 Then open `http://localhost:8080`.
 
-## Structure
+## What is in the root
 
 ```text
 Portofolio/
-├── index.html          # all page content
-├── css/styles.css      # cyberpunk TRON theme, layout, responsive rules
-├── js/main.js          # filters, menu, motion pause, scroll progress, reveal
-├── assets/favicon.svg
-├── PRODUCT.md          # product truth and constraints
-├── demos/              # six local demo pages, unchanged contents
+├── index.html            # NightShift markup, English visitor copy, lang="en"
+├── css/styles.css        # NightShift visual system, copied byte-for-byte
+├── js/main.js            # NightShift behavior, English visitor strings
+├── assets/favicon.svg    # NightShift favicon, copied byte-for-byte
+├── demos/                # all six demos, unchanged and unlinked
+├── docs/superpowers/     # approved design and implementation plan
 ├── tests/test_portfolio.py
-├── tests/browser_smoke.py # rendered Firefox checks at 390px and 320px
-├── .githooks/pre-commit   # runs both checks before each commit
-├── docs/superpowers/   # approved design and implementation plan
+├── tests/browser_smoke.py
+├── .githooks/pre-commit  # runs both test commands before each commit
+├── PRODUCT.md            # product truth and owner-directed decisions
 └── README.md
 ```
 
-## Change the data
-
-- Name and role: the header and opening section in `index.html`.
-- Instagram: `https://instagram.com/zhahenzar` (`@zhahenzar`).
-- GitHub: `https://github.com/zhahenza44`.
-- Email: `zhahenza666@proton.me`.
-- Project cards: the `#project-grid` section in `index.html`. Each card has `data-track="job1"` or `data-track="job2"` for filtering.
-- Demos: folders inside `demos/`. If a demo in the source repo changes, copy that folder here again. Demo contents stay as they are, including their own fonts, images, and buttons.
-
-## Projects shown
-
-| Card | Demo page |
-|---|---|
-| AI Lead Capture | `demos/ai-lead-capture/dashboard/index.html` |
-| Servis AC | `demos/servis-ac/index.html` |
-| Ruang Rapi | `demos/ruang-rapi/index.html` |
-| Kedai Kopi Oak | `demos/kedai-kopi/index.html` |
-| Rental Mobil | `demos/rental-mobil/index.html` |
-| NIGHT//SHIFT | `demos/nightshift/index.html` |
-
-Cards open the demo pages in a new tab without going through GitHub. The GitHub links in the header and footer point to source code. Each demo keeps its own assets and links.
+The four root files are the demo files from `demos/nightshift/`. The only differences are translated visitor-facing text and the document language. No file inside `demos/` was changed.
 
 ## Tests
+
+Run the static contract checks:
 
 ```bash
 cd /home/asnodt/Projects/Portofolio
 python3 -m unittest discover -s tests -v
 ```
 
-The tests read `index.html`, `css/styles.css`, and `js/main.js` as text. They check structure, contacts, the six demo files, English copy, the cyberpunk TRON tokens, the governed motion budget, and responsive rules.
+They read `index.html`, `css/styles.css`, `js/main.js`, and the favicon. They pin the English NightShift copy, the disclosure, the preserved effects, and the absence of the old CV shell.
 
-For rendered checks at 390px and 320px, run the Firefox smoke script. It requires Firefox but no third-party package:
+Run the rendered checks with Firefox installed:
 
 ```bash
 python3 tests/browser_smoke.py
 ```
 
-It serves the page locally, clicks the filters, menu, and Pause motion button, checks the action gap, magnetic cap, scroll progress, project reveal, focus outlines, and overflow at both widths, then repeats with reduced motion enabled.
+The script serves the page over HTTP and checks a 390px pass, a 320px pass, and a reduced-motion pass. It uses `/index.html?noboot` for interaction, sends a real Escape key to close the case-file dialog, and reports console errors in every pass. No third-party Python package is needed.
 
-Both checks run before each commit through `.githooks/pre-commit`. Enable the hook once after cloning:
+Both commands run through `.githooks/pre-commit`. Enable the hook once after cloning:
 
 ```bash
 git config core.hooksPath .githooks

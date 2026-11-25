@@ -8,55 +8,66 @@ web
 
 ## Stack
 
-Static HTML, CSS, and vanilla JavaScript. No build step, no dependency, and no external font or image on the portfolio shell.
+Static HTML, CSS, and vanilla JavaScript. No build step. The page loads Google Fonts from the network and keeps local fallbacks.
 
 ## Users
 
-Someone opening the owner's link from an Instagram bio, usually on a phone, scanning six work samples and looking for a way to get in touch.
+Someone opening the owner's link, usually on a phone, who wants a full visual and interaction statement instead of a list of résumé entries.
 
 ## Product Purpose
 
-A one-page CV that introduces Alan Nawa's web development and AI automation work, proves it with six local demos, and gives visitors three real contact channels.
+A literal English copy of the `NIGHT//SHIFT` demo as the owner's main landing page. It shows the studio's art direction, layout rhythm, and browser behavior, then offers a fictional contact path that is disclosed on the page.
 
 ## Positioning
 
-An honest, dependency-free portfolio: real work samples, real contact links, no fabricated availability or status claims.
+Demo fidelity over claim making. The page presents a fictional studio, fictional work, and fictional metrics as a visual demo. It does not present them as real client results.
 
 ## Operating Context
 
-The shell is a single static page that can be opened from disk or any static host. The six demo pages live in `demos/` as local copies and open directly from project cards.
+The page is one static document that can be opened from disk or any static host. `demos/` remains on disk with all six demos unchanged. The landing page does not link to them. External fonts are part of the copied design.
+
+## Owner-directed decisions
+
+- Use the NightShift demo literally, not the previous Alan Nawa CV shell.
+- Translate every visitor-facing string into English and set `lang="en"`.
+- Keep the fictional studio, case studies, metrics, status, email address, and phone number. Disclose them in the contact section.
+- Keep the Google Fonts requests.
+- Keep the boot sequence, ghost cursor, ticker, magnetic buttons, and other demo motion with no pause control.
+- Leave every file inside `demos/` unchanged.
+- Keep the demo stylesheet byte-for-byte, including its low-contrast `muted-2` technical labels. The contrast shortfall is an accepted consequence of the literal-copy decision.
 
 ## Capabilities and Constraints
 
-- Six project cards link to existing local demo files.
-- Three contact channels: Instagram `@zhahenzar`, GitHub `zhahenza44`, and `zhahenza666@proton.me`.
-- All shell copy is English; names, handles, URLs, and demo paths stay unchanged.
-- Demo contents are out of scope and stay unchanged.
-- No WhatsApp or marketplace link; no made-up response-time or availability claim.
-- WCAG AA text contrast, 44px tap targets, visible focus, keyboard-operable controls, and reduced-motion support.
+- Root `index.html`, `css/styles.css`, `js/main.js`, and `assets/favicon.svg` come from `demos/nightshift/`. The only differences are translated visitor strings and the document language.
+- The stylesheet is byte-for-byte identical to the demo stylesheet.
+- All visitor copy is English. Brand tokens such as `NIGHT//SHIFT`, `N//S`, technical labels, and code-like strings stay as designed.
+- Fictional data stays visible and is labeled as fictional on the page.
+- The `demos/` folder is kept intact and is not linked from the landing page.
+- Motion loops run without a pause control. Reduced-motion users get static content, a hidden cursor and ghost layer, and a skipped boot overlay.
+- Keyboard controls keep visible focus. Header controls use the demo's 38px and 40px sizes, above the WCAG 2.2 AA 24px minimum; that is an accepted override of the 44px preference.
 
 ## Brand Commitments
 
-Name: Alan Nawa. The owner pinned a cyberpunk x TRON direction inspired by the `NIGHT//SHIFT` demo: cyan primary, magenta technical accent, clipped corners, a thin horizon grid, and two governed loops.
+Name: NIGHT//SHIFT. The demo supplies the visual direction. Dark near-black is the base, cyan marks the primary actions and links, magenta marks technical accents, and the grid, horizon line, orb, and ticker are the studio's identity motifs. The copied stylesheet carries those decisions without revision.
 
-Design dials: ENERGY 3 / RHYTHM 2 / MOTION 3. The page is direct rather than shouting. It keeps a consistent CV rhythm with a distinct hero panel, paired services, card grid, and contact row. Motion is one 700ms entrance, one orb spin, one service-label ticker, one project reveal, and pointer feedback. Both loops have a real pause control and stop completely under reduced motion.
+Design dials: ENERGY 3 / RHYTHM 3 / MOTION 3. That describes the shipped demo, not a new proposal. The page leads with a full-height hero, shifts between manifesto, work, services, process, and contact compositions, and uses motion to guide attention through each section.
 
-Visual reasons: cyan marks the single primary action and links. Magenta marks only indexes and technical labels. Gradients and the thin grid are the approved TRON identity, not decoration by default. System monospace gives the technical labels their voice without a network font. The two service cards share weight because they are two equal ways to help. The arrow on the footer source link is the only arrow; it marks an off-site GitHub destination. Near-black is the approved TRON base, not a deferred light theme.
+Visual reasons: cyan carries the main action because it is the highest-contrast accent on the dark base. Magenta stays on technical labels so it never competes with the primary action. The grid and horizon belong to the NightShift identity copied from the demo. The orb repeats real studio facts as the hero motif. The ticker repeats service labels. The disclosure sits with the contact details so fictional data is never mistaken for a real offer.
 
-Motion reasons: the orb is the TRON identity motif because it turns the hero panel into a rotating ring of real facts. The ticker carries only real service labels, never a slogan. The pause control gives visitors a real stop for both loops, keeps one visible label, and lets `aria-pressed` carry the state. The scroll progress rule gives orientation on a long CV. Magnetic feedback answers the pointer within 2px and never triggers on focus. The single reveal directs attention to the real work once. The tighter action row closes the reported gap above the Instagram button.
+Motion reasons: the boot sequence frames the page as a NightShift system, the ghost cursor follows the pointer, the ticker and marquee carry labels, the process fill tracks reading position, and magnetic buttons answer the pointer within the demo's cap. Reduced motion removes the pointer layers and loop animations while keeping all content visible.
 
 ## Evidence on Hand
 
-Six demo folders under `demos/`, three live contact destinations, and the existing one-page CV at `index.html`. No customer logos, testimonials, benchmarks, or pricing are available; none may be invented.
+The source of truth is `demos/nightshift/`. There are no real customers, testimonials, benchmarks, or contact records for the fictional studio. The page labels its data as fictional and makes no further claim.
 
 ## Product Principles
 
-- Show real work before making claims.
-- Keep the shell static, local, and dependency-free.
-- Make the next action obvious: open a demo or contact the owner.
-- Design for the phone first without losing the desktop composition.
-- Govern motion instead of banning it: loops need a real pause control and must stop under reduced motion.
+- Copy the demo exactly, then translate the copy.
+- Keep the fictional disclosure where visitors can read it.
+- Preserve layout, motion, and interaction behavior instead of rebuilding them from a description.
+- Keep the demo archive unchanged and out of the main navigation.
+- Verify the shipped page in a real browser at phone widths and with reduced motion.
 
 ## Accessibility & Inclusion
 
-The page must meet WCAG AA contrast, keep all controls keyboard reachable with visible focus, retain a visually hidden `h1` for screen readers, and stop motion under `prefers-reduced-motion`.
+The document uses English, landmarks, a unique title, and labelled controls. Focus stays visible, dialogs close with Escape, and the mobile menu returns focus to its trigger. Text using `ink`, `ink-soft`, `muted`, `cyan`, `magenta`, `amber`, `green`, and `violet` meets WCAG AA on the shipped dark backgrounds. The `muted-2` technical labels measure between 3.20:1 and 3.70:1, below the 4.5:1 AA threshold for normal text. That shortfall stays because the stylesheet is a literal copy. Reduced motion disables the loops, cursor, and ghost layer while keeping content readable. Fictional contact details are disclosed and must not be treated as a real support channel.
