@@ -64,6 +64,7 @@ class ContentTest(unittest.TestCase):
         self.assertNotIn("TERSEDIA UNTUK PROJECT", HTML)
         self.assertNotIn("status-dot", HTML)
         self.assertNotIn("<b>online</b>", HTML)
+        self.assertNotIn("satu hari kerja", HTML)
 
 
 class CssContractTest(unittest.TestCase):
