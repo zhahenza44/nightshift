@@ -120,10 +120,17 @@ class CssContractTest(unittest.TestCase):
         self.assertIn("cursor: pointer", CSS)
         self.assertIn("min-height: 44px", CSS)
 
-    def test_no_endless_motion(self):
+    def test_motion_is_finite_and_capped(self):
         self.assertTrue(CSS)
-        self.assertNotIn("@keyframes", CSS)
-        self.assertNotIn("infinite", CSS)
+        self.assertNotIn('infinite', CSS)
+        self.assertLessEqual(CSS.count('@keyframes'), 2)
+        self.assertIn('@keyframes hero-in', CSS)
+        self.assertIn('animation: hero-in', CSS)
+
+    def test_motion_stops_under_reduced_motion(self):
+        block = CSS.split('@media (prefers-reduced-motion: reduce)')[1]
+        self.assertIn('animation: none', block)
+        self.assertIn('transform: none', block)
 
     def test_interactive_states_and_boundaries(self):
         self.assertTrue(CSS)

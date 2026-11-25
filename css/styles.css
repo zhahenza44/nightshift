@@ -232,6 +232,7 @@ button:focus-visible {
   border: 1px solid var(--line-strong);
   background: transparent;
   color: var(--cyan);
+  transition: transform 160ms ease, background 160ms ease, border-color 160ms ease;
 }
 
 .menu-toggle span {
@@ -243,6 +244,7 @@ button:focus-visible {
 }
 
 .menu-toggle:active {
+  transform: translateY(1px);
   background: var(--cyan-soft);
   border-color: var(--cyan);
 }
@@ -358,6 +360,27 @@ h2 {
   min-width: 0;
 }
 
+@keyframes hero-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero-copy > * {
+  animation: hero-in 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.hero-copy > *:nth-child(1) { animation-delay: 0ms; }
+.hero-copy > *:nth-child(2) { animation-delay: 80ms; }
+.hero-copy > *:nth-child(3) { animation-delay: 160ms; }
+.hero-copy > *:nth-child(4) { animation-delay: 240ms; }
+.hero-copy > *:nth-child(5) { animation-delay: 240ms; }
+
 .sr-only {
   position: absolute;
   width: 1px;
@@ -421,7 +444,7 @@ h2 {
 }
 
 .btn--primary:active {
-  transform: translateY(0);
+  transform: translateY(1px);
   background: #00b8cc;
   box-shadow: 0 0 0 1px var(--cyan);
 }
@@ -437,7 +460,7 @@ h2 {
 }
 
 .btn--ghost:active {
-  transform: translateY(0);
+  transform: translateY(1px);
   background: rgba(0, 229, 255, 0.18);
 }
 
@@ -607,7 +630,7 @@ h2 {
   font-size: 0.68rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  transition: color 160ms ease, border-color 160ms ease, background 160ms ease;
+  transition: color 160ms ease, border-color 160ms ease, background 160ms ease, transform 160ms ease;
 }
 
 .filter-bar button:hover {
@@ -622,6 +645,7 @@ h2 {
 }
 
 .filter-bar button:active {
+  transform: translateY(1px);
   border-color: var(--cyan);
   background: var(--cyan-soft);
   color: var(--cyan);
@@ -739,6 +763,11 @@ h2 {
   letter-spacing: 0.1em;
   text-decoration: none;
   text-transform: uppercase;
+  transition: transform 160ms ease;
+}
+
+.card-link:active {
+  transform: translateY(1px);
 }
 
 .contact {
@@ -776,7 +805,7 @@ h2 {
 }
 
 .contact-links a:active {
-  transform: translateY(0);
+  transform: translateY(1px);
   border-color: var(--cyan);
   background: var(--cyan-soft);
 }
@@ -892,5 +921,24 @@ h2 {
   *::after {
     animation: none !important;
     transition: none !important;
+  }
+
+  .hero-copy > *,
+  .btn,
+  .btn:hover,
+  .btn--primary:active,
+  .btn--ghost:active,
+  .menu-toggle,
+  .menu-toggle:active,
+  .filter-bar button,
+  .filter-bar button:active,
+  .project-card:hover,
+  .project-card:focus-within,
+  .card-link,
+  .card-link:active,
+  .contact-links a:hover,
+  .contact-links a:active {
+    animation: none !important;
+    transform: none !important;
   }
 }
