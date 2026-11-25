@@ -2,14 +2,15 @@
 """Rendered smoke check for the portfolio shell using Firefox WebDriver BiDi.
 
 No third-party package is needed. The script serves the repository over HTTP,
-opens a 390px iframe in headless Firefox, exercises the controls, and checks
-layout, focus, and reduced-motion behavior.
+opens 390px and 320px iframes in headless Firefox, exercises the controls, and
+checks layout, focus, motion, and reduced-motion behavior.
 """
 
 import base64
 import http.server
 import json
 import os
+import re
 import shutil
 import socket
 import struct
@@ -24,11 +25,12 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 HARNESS_PATH = "/__portfolio_browser_check__.html"
-HARNESS = """<!doctype html>
+NARROW_PATH = "/__portfolio_browser_check__320.html"
+HARNESS_TEMPLATE = """<!doctype html>
 <html lang="en">
 <head><meta charset="utf-8"><title>Portfolio browser check</title></head>
 <body>
-<iframe id="frame" src="/index.html" style="width:390px;height:844px;border:0"></iframe>
+<iframe id="frame" src="/index.html" style="width:{width}px;height:844px;border:0"></iframe>
 </body>
 </html>
 """
@@ -79,6 +81,23 @@ new Promise((resolve) => {
       check('hero copy visible after entrance', heroOpacity.every((value) => Number(value) === 1),
         heroOpacity.join(','));
 
+      const orb = doc.querySelector('.orb-rings');
+      const ticker = doc.querySelector('.ticker-track');
+      check('orb loop is running', win.getComputedStyle(orb).animationName === 'orb-spin',
+        win.getComputedStyle(orb).animationName);
+      check('ticker loop is running', win.getComputedStyle(ticker).animationName === 'ticker-scroll',
+        win.getComputedStyle(ticker).animationName);
+
+      const introRect = doc.querySelector('.hero-intro').getBoundingClientRect();
+      const actionsRect = doc.querySelector('.hero-actions').getBoundingClientRect();
+      const actionGap = Math.round(actionsRect.top - introRect.bottom);
+      check('Instagram action row sits close to intro', actionGap <= 16, 'gap=' + actionGap + 'px');
+
+      const primaryRect = doc.querySelector('.btn--primary').getBoundingClientRect();
+      const ghostRect = doc.querySelector('.btn--ghost').getBoundingClientRect();
+      check('Instagram button aligns with View projects', primaryRect.top === ghostRect.top,
+        'primary=' + Math.round(primaryRect.top) + ' ghost=' + Math.round(ghostRect.top));
+
       const cards = () => Array.from(doc.querySelectorAll('.project-card'))
         .filter((card) => !card.hidden).length;
       const pressed = (id) => doc.getElementById(id).getAttribute('aria-pressed');
@@ -111,6 +130,41 @@ new Promise((resolve) => {
       check('focus returns to toggle', doc.activeElement === toggle, doc.activeElement && doc.activeElement.id);
       check('menu label opens in English', toggle.getAttribute('aria-label') === 'Open menu',
         toggle.getAttribute('aria-label'));
+
+      const motionToggle = doc.getElementById('motion-toggle');
+      check('pause control starts English and unpaused',
+        motionToggle.getAttribute('aria-label') === 'Pause motion' &&
+        motionToggle.getAttribute('aria-pressed') === 'false',
+        motionToggle.getAttribute('aria-label') + ' pressed=' + motionToggle.getAttribute('aria-pressed'));
+      motionToggle.click();
+      check('pause control pauses both loops',
+        doc.documentElement.classList.contains('motion-paused') &&
+        motionToggle.getAttribute('aria-label') === 'Resume motion' &&
+        motionToggle.getAttribute('aria-pressed') === 'true' &&
+        win.getComputedStyle(orb).animationPlayState === 'paused' &&
+        win.getComputedStyle(ticker).animationPlayState === 'paused',
+        win.getComputedStyle(orb).animationPlayState + ' / ' + win.getComputedStyle(ticker).animationPlayState);
+      motionToggle.click();
+      check('pause control resumes both loops',
+        !doc.documentElement.classList.contains('motion-paused') &&
+        win.getComputedStyle(orb).animationPlayState === 'running' &&
+        win.getComputedStyle(ticker).animationPlayState === 'running',
+        win.getComputedStyle(orb).animationPlayState + ' / ' + win.getComputedStyle(ticker).animationPlayState);
+
+      const magnetic = doc.querySelector('.btn--primary');
+      const magneticRect = magnetic.getBoundingClientRect();
+      magnetic.dispatchEvent(new win.PointerEvent('pointermove', {
+        bubbles: true, pointerType: 'mouse',
+        clientX: magneticRect.right - 1, clientY: magneticRect.top + 1
+      }));
+      const magX = Math.abs(Number.parseFloat(magnetic.style.getPropertyValue('--mag-x')) || 0);
+      const magY = Math.abs(Number.parseFloat(magnetic.style.getPropertyValue('--mag-y')) || 0);
+      check('magnetic offset is capped at 2px', magX <= 2.01 && magY <= 2.01,
+        'x=' + magX.toFixed(2) + ' y=' + magY.toFixed(2));
+      magnetic.dispatchEvent(new win.PointerEvent('pointerleave', {bubbles: true}));
+      magnetic.focus();
+      const focusMagX = magnetic.style.getPropertyValue('--mag-x');
+      check('keyboard focus does not move button', focusMagX === '0px', focusMagX);
 
       const links = Array.from(doc.querySelectorAll('a'));
       let clicked = 0;
@@ -165,9 +219,46 @@ new Promise((resolve) => {
         linkStyle.outlineStyle !== 'none' && Number.parseFloat(linkStyle.outlineWidth) > 0,
         linkStyle.outlineStyle + ' ' + linkStyle.outlineWidth);
 
-      resolve(checks);
+      doc.getElementById('project-grid').scrollIntoView({block: 'center'});
+      setTimeout(() => {
+        const gridOpacity = Number(win.getComputedStyle(doc.getElementById('project-grid')).opacity);
+        check('project grid reveal completes', gridOpacity === 1, 'opacity=' + gridOpacity);
+
+        win.scrollTo({top: doc.documentElement.scrollHeight, behavior: 'instant'});
+        win.dispatchEvent(new win.Event('scroll'));
+        const progressWidth = Number.parseFloat(doc.getElementById('scroll-progress-bar').style.width);
+        check('scroll progress reaches bottom', progressWidth >= 99, 'width=' + progressWidth + '%');
+        resolve(checks);
+      }, 700);
     }, 1200);
   };
+  if (frame.contentDocument && frame.contentDocument.readyState === 'complete') {
+    run();
+  } else {
+    frame.addEventListener('load', run, {once: true});
+  }
+})
+"""
+
+NARROW_SCRIPT = r"""
+new Promise((resolve) => {
+  const frame = document.getElementById('frame');
+  const checks = [];
+  const check = (name, pass, detail) => checks.push({name, pass: Boolean(pass), detail});
+  const run = () => setTimeout(() => {
+    const win = frame.contentWindow;
+    const doc = win.document;
+    check('320px iframe viewport', win.innerWidth === 320, String(win.innerWidth));
+    check('320px has no horizontal overflow', doc.documentElement.scrollWidth <= 320,
+      'scrollWidth=' + doc.documentElement.scrollWidth);
+    for (const selector of ['.brand', '.motion-toggle', '#menu-toggle', '.btn--primary', '.btn--ghost']) {
+      const rect = doc.querySelector(selector).getBoundingClientRect();
+      check(selector + ' fits 320px',
+        rect.left >= -1 && rect.right <= 321 && rect.height >= 44,
+        Math.round(rect.left) + '..' + Math.round(rect.right) + ' h=' + Math.round(rect.height));
+    }
+    resolve(checks);
+  }, 1200);
   if (frame.contentDocument && frame.contentDocument.readyState === 'complete') {
     run();
   } else {
@@ -185,13 +276,20 @@ new Promise((resolve) => {
     setTimeout(() => {
       const win = frame.contentWindow;
       const doc = win.document;
-      const nodes = Array.from(doc.querySelectorAll('.hero-copy > *, .btn, .card-link, .project-card'));
+      const nodes = Array.from(doc.querySelectorAll(
+        '.hero-copy > *, .btn, .card-link, .project-card, .orb-rings, .ticker-track, .project-grid'
+      ));
       const names = Array.from(new Set(nodes.map((el) => win.getComputedStyle(el).animationName)));
       check('reduced motion disables animations', names.every((name) => name === 'none'), names.join(','));
       const opacity = Array.from(doc.querySelectorAll('.hero-copy > *'))
         .map((el) => win.getComputedStyle(el).opacity);
       check('reduced motion keeps copy visible', opacity.every((value) => Number(value) === 1),
         opacity.join(','));
+      check('reduced motion hides pause control',
+        win.getComputedStyle(doc.getElementById('motion-toggle')).display === 'none',
+        win.getComputedStyle(doc.getElementById('motion-toggle')).display);
+      const gridOpacity = Number(win.getComputedStyle(doc.getElementById('project-grid')).opacity);
+      check('reduced motion keeps project grid visible', gridOpacity === 1, 'opacity=' + gridOpacity);
       resolve(checks);
     }, 100);
   };
@@ -215,8 +313,10 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         super().__init__(*args, directory=str(ROOT), **kwargs)
 
     def do_GET(self):
-        if self.path.split("?", 1)[0] == HARNESS_PATH:
-            body = HARNESS.encode()
+        match = re.fullmatch(r"/__portfolio_browser_check__(\d*)\.html", self.path.split("?", 1)[0])
+        if match:
+            width = int(match.group(1) or 390)
+            body = HARNESS_TEMPLATE.format(width=width).encode()
             self.send_response(200)
             self.send_header("Content-Type", "text/html; charset=utf-8")
             self.send_header("Content-Length", str(len(body)))
@@ -389,12 +489,22 @@ def main():
     server_thread = __import__("threading").Thread(target=server.serve_forever, daemon=True)
     server_thread.start()
     url = f"http://127.0.0.1:{http_port}{HARNESS_PATH}"
+    narrow_url = f"http://127.0.0.1:{http_port}{NARROW_PATH}"
 
     failed = 0
     try:
         checks = []
-        for expression, reduced in ((NORMAL_SCRIPT, False), (REDUCED_SCRIPT, True)):
-            checks += run_check(firefox, url, expression, reduced)
+        for check_url, expression, reduced in (
+            (url, NORMAL_SCRIPT, False),
+            (narrow_url, NARROW_SCRIPT, False),
+            (url, REDUCED_SCRIPT, True),
+        ):
+            result = run_check(firefox, check_url, expression, reduced)
+            if not isinstance(result, list) or not result:
+                failed += 1
+                print(f"CHECK FAIL harness returned no checks :: {check_url}")
+                continue
+            checks += result
         for item in checks:
             status = "PASS" if item.get("pass") else "FAIL"
             if status == "FAIL":

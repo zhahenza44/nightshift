@@ -384,22 +384,22 @@ git commit -m "feat: wire cybertron interactions"
 - Consumes: the running page from Tasks 1 to 3.
 - Produces: rendered checks for loop state, pause state, action spacing, magnetic cap, progress width, reveal completion, and narrow-header fit.
 
-- [ ] **Step 1: Extend the harness to two widths**
+- [x] **Step 1: Extend the harness to two widths**
 
 Replace the fixed `HARNESS` string with a `HARNESS_TEMPLATE` that formats `{width}` into the iframe style. Keep `HARNESS_PATH = "/__portfolio_browser_check__.html"` and add `NARROW_PATH = "/__portfolio_browser_check__320.html"`.
 
 Update `Handler.do_GET` to match both paths:
 
 ```python
-match = re.fullmatch(r"/__portfolio_browser_check__(?:_(\d+))?\.html", self.path.split("?", 1)[0])
+match = re.fullmatch(r"/__portfolio_browser_check__(\d*)\.html", self.path.split("?", 1)[0])
 if match:
     width = int(match.group(1) or 390)
     body = HARNESS_TEMPLATE.format(width=width).encode()
 ```
 
-Import `re` at the top of the file.
+Import `re` at the top of the file. The digit group has no leading underscore because both harness paths use a double underscore before the width.
 
-- [ ] **Step 2: Add normal-motion checks to `NORMAL_SCRIPT`**
+- [x] **Step 2: Add normal-motion checks to `NORMAL_SCRIPT`**
 
 Add these checks after the existing hero visibility check:
 
@@ -455,6 +455,7 @@ const magX = Math.abs(Number.parseFloat(magnetic.style.getPropertyValue('--mag-x
 const magY = Math.abs(Number.parseFloat(magnetic.style.getPropertyValue('--mag-y')) || 0);
 check('magnetic offset is capped at 2px', magX <= 2.01 && magY <= 2.01,
   'x=' + magX.toFixed(2) + ' y=' + magY.toFixed(2));
+magnetic.dispatchEvent(new win.PointerEvent('pointerleave', {bubbles: true}));
 magnetic.focus();
 const focusMagX = magnetic.style.getPropertyValue('--mag-x');
 check('keyboard focus does not move button', focusMagX === '0px', focusMagX);
@@ -468,7 +469,7 @@ setTimeout(() => {
   const gridOpacity = Number(win.getComputedStyle(doc.getElementById('project-grid')).opacity);
   check('project grid reveal completes', gridOpacity === 1, 'opacity=' + gridOpacity);
 
-  win.scrollTo(0, doc.documentElement.scrollHeight);
+  win.scrollTo({top: doc.documentElement.scrollHeight, behavior: 'instant'});
   win.dispatchEvent(new win.Event('scroll'));
   const progressWidth = Number.parseFloat(doc.getElementById('scroll-progress-bar').style.width);
   check('scroll progress reaches bottom', progressWidth >= 99, 'width=' + progressWidth + '%');
@@ -478,7 +479,7 @@ setTimeout(() => {
 
 Move the existing final `resolve(checks)` into that timeout. Keep the outer 1200ms delay before the nested 700ms delay so the finite entrance has already ended.
 
-- [ ] **Step 3: Add `NARROW_SCRIPT` for 320px**
+- [x] **Step 3: Add `NARROW_SCRIPT` for 320px**
 
 Define `NARROW_SCRIPT` using the same BiDi expression shape as `REDUCED_SCRIPT`. It must check:
 
@@ -494,7 +495,7 @@ for (const selector of ['.brand', '.motion-toggle', '#menu-toggle', '.btn--prima
 }
 ```
 
-- [ ] **Step 4: Extend reduced-motion checks**
+- [x] **Step 4: Extend reduced-motion checks**
 
 In `REDUCED_SCRIPT`, change the node selector to include the new animated elements:
 
@@ -514,13 +515,13 @@ const gridOpacity = Number(win.getComputedStyle(doc.getElementById('project-grid
 check('reduced motion keeps project grid visible', gridOpacity === 1, 'opacity=' + gridOpacity);
 ```
 
-- [ ] **Step 5: Run the rendered check and fix any failure**
+- [x] **Step 5: Run the rendered check and fix any failure**
 
 Run: `python3 tests/browser_smoke.py`
 
 Expected: all checks PASS. The check count must be greater than the previous 27. Fix source or script assertions until there are zero failures. Do not weaken the pause, overflow, action spacing, magnetic cap, reveal, or reduced-motion checks.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add tests/browser_smoke.py
