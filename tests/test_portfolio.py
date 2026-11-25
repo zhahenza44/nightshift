@@ -18,10 +18,22 @@ JS = read("js/main.js")
 class ContentTest(unittest.TestCase):
     def test_identity_and_copy(self):
         self.assertIn("Alan Nawa", HTML)
-        self.assertIn("Halo, saya Alan Nawa, not-a-dev :)", HTML)
+        self.assertIn("Hi, I'm Alan Nawa, not-a-dev :)", HTML)
         self.assertIn("https://instagram.com/zhahenzar", HTML)
         self.assertIn("zhahenza666@proton.me", HTML)
         self.assertIn("https://github.com/zhahenza44", HTML)
+
+    def test_shell_copy_is_english(self):
+        self.assertIn('<html lang="en">', HTML)
+        self.assertIn('>Skip to content</a>', HTML)
+        self.assertIn('Hi, I\'m Alan Nawa, not-a-dev :)', HTML)
+        self.assertIn('>View projects<', HTML)
+        self.assertIn('>View demo<', HTML)
+        for phrase in ('Halo, saya', 'JASA', 'KONTAK', 'Yang sudah saya bangun',
+                       'Punya project', 'Lihat project', 'Lihat demo', '3 kanal',
+                       '>6 project<'):
+            with self.subTest(phrase=phrase):
+                self.assertNotIn(phrase, HTML)
 
     def test_six_project_cards(self):
         self.assertEqual(HTML.count('class="project-card'), 6)
@@ -61,8 +73,8 @@ class ContentTest(unittest.TestCase):
         self.assertIn(".sr-only", CSS)
 
     def test_footer_source_label(self):
-        self.assertIn("Lihat source", HTML)
-        self.assertNotIn("Lihat source &amp; demo", HTML)
+        self.assertIn("View source", HTML)
+        self.assertNotIn("View source &amp; demo", HTML)
 
     def test_forbidden_contact(self):
         self.assertTrue(HTML)
