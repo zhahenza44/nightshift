@@ -305,6 +305,20 @@ class DeliveryTest(unittest.TestCase):
         self.assertIn("demos/", readme)
         self.assertNotIn("Omegamoto", readme)
 
+    def test_product_records_liveness_dials_and_reasons(self):
+        product = read('PRODUCT.md')
+        for marker in ('ENERGY 3 / RHYTHM 2 / MOTION 3', 'orb', 'pause', 'ticker',
+                       'scroll progress', 'magnetic', 'reveal'):
+            with self.subTest(marker=marker):
+                self.assertIn(marker, product.lower() if marker.islower() else product)
+        self.assertNotIn('Use motion once, briefly, and never loop it', product)
+
+    def test_readme_describes_liveness(self):
+        readme = read('README.md')
+        for marker in ('orb', 'ticker', 'Pause motion', 'scroll progress', 'reduced motion'):
+            with self.subTest(marker=marker):
+                self.assertIn(marker, readme.lower() if marker.islower() else readme)
+
 
 if __name__ == "__main__":
     unittest.main()

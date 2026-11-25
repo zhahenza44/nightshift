@@ -354,6 +354,7 @@ class WebSocket:
         if b"101" not in header.split(b"\r\n")[0]:
             raise RuntimeError("WebSocket handshake failed")
         self.next_id = 1
+        self.events = []
 
     def _recv_exact(self, count):
         while len(self.pending) < count:
@@ -400,6 +401,8 @@ class WebSocket:
                 if response.get("type") != "success":
                     raise RuntimeError(f"{method} failed: {json.dumps(response)}")
                 return response.get("result", {})
+            if response.get("method"):
+                self.events.append(response)
 
     def close(self):
         self.sock.close()
@@ -460,13 +463,26 @@ def run_check(firefox, url, expression, reduced):
         client = WebSocket(f"ws://127.0.0.1:{bidi_port}/session", bidi_port)
         try:
             client.send("session.new", {"capabilities": {"alwaysMatch": {"browserName": "firefox"}}})
+            client.send("session.subscribe", {"events": ["log.entryAdded"]})
             tree = client.send("browsingContext.getTree", {})
             contexts = tree.get("contexts") or []
             if not contexts:
                 raise RuntimeError("no browsing context")
             context = contexts[0]["context"]
             client.send("browsingContext.navigate", {"context": context, "url": url, "wait": "complete"})
-            return evaluate(client, context, expression)
+            result = evaluate(client, context, expression)
+            errors = [
+                event for event in client.events
+                if event.get("method") == "log.entryAdded"
+                and event.get("params", {}).get("level") == "error"
+            ]
+            if isinstance(result, list):
+                result = result + [{
+                    "name": "no console errors",
+                    "pass": not errors,
+                    "detail": str(len(errors)) + " errors",
+                }]
+            return result
         finally:
             client.close()
     finally:

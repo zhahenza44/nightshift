@@ -37,11 +37,13 @@ The shell is a single static page that can be opened from disk or any static hos
 
 ## Brand Commitments
 
-Name: Alan Nawa. The owner pinned a cyberpunk x TRON direction inspired by the `NIGHT//SHIFT` demo: cyan primary, magenta technical accent, clipped corners, a thin horizon grid, and finite motion.
+Name: Alan Nawa. The owner pinned a cyberpunk x TRON direction inspired by the `NIGHT//SHIFT` demo: cyan primary, magenta technical accent, clipped corners, a thin horizon grid, and two governed loops.
 
-Design dials: ENERGY 2 / RHYTHM 2 / MOTION 2. The page is direct rather than shouting. It keeps a consistent CV rhythm with a distinct hero panel, paired services, card grid, and contact row. Motion is one 700ms entrance plus hover and press feedback, with no loop.
+Design dials: ENERGY 3 / RHYTHM 2 / MOTION 3. The page is direct rather than shouting. It keeps a consistent CV rhythm with a distinct hero panel, paired services, card grid, and contact row. Motion is one 700ms entrance, one orb spin, one service-label ticker, one project reveal, and pointer feedback. Both loops have a real pause control and stop completely under reduced motion.
 
 Visual reasons: cyan marks the single primary action and links. Magenta marks only indexes and technical labels. Gradients and the thin grid are the approved TRON identity, not decoration by default. System monospace gives the technical labels their voice without a network font. The two service cards share weight because they are two equal ways to help. The arrow on the footer source link is the only arrow; it marks an off-site GitHub destination. Near-black is the approved TRON base, not a deferred light theme.
+
+Motion reasons: the orb is the TRON identity motif because it turns the hero panel into a rotating ring of real facts. The ticker carries only real service labels, never a slogan. The pause control gives visitors a real stop for both loops. The scroll progress rule gives orientation on a long CV. Magnetic feedback answers the pointer within 2px and never triggers on focus. The single reveal directs attention to the real work once. The tighter action row closes the reported gap above the Instagram button.
 
 ## Evidence on Hand
 
@@ -53,7 +55,7 @@ Six demo folders under `demos/`, three live contact destinations, and the existi
 - Keep the shell static, local, and dependency-free.
 - Make the next action obvious: open a demo or contact the owner.
 - Design for the phone first without losing the desktop composition.
-- Use motion once, briefly, and never loop it.
+- Govern motion instead of banning it: loops need a real pause control and must stop under reduced motion.
 
 ## Accessibility & Inclusion
 

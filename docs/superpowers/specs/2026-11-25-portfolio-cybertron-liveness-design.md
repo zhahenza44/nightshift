@@ -1,6 +1,6 @@
 # Portfolio Cybertron Liveness Design
 
-**Status:** drafted for approval
+**Status:** approved
 **Supersedes:** the restrained motion section of `2026-11-25-portfolio-cybertron-design.md`
 **Owner request:** make the shell feel as alive as the NIGHT//SHIFT demo while keeping Alan Nawa's real CV.
 

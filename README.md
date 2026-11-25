@@ -1,6 +1,6 @@
 # Alan Nawa portfolio
 
-A static one-page CV for Alan Nawa: web development, landing pages, and AI workflow automation. The shell copy is in English. The visual system is cyberpunk x TRON: cyan actions, a magenta technical accent, clipped corners, a thin horizon grid, and one short entrance motion. The motion is finite and stops under `prefers-reduced-motion`. Six demos live in `demos/` and open directly from the project cards.
+A static one-page CV for Alan Nawa: web development, landing pages, and AI workflow automation. The shell copy is in English. The visual system is cyberpunk x TRON: cyan actions, a magenta technical accent, clipped corners, a thin horizon grid, a rotating text orb, and a real-label ticker. Two loops run unless reduced motion is enabled or the visitor presses the Pause motion button, which reports its state with `aria-pressed`. Six demos live in `demos/` and open directly from the project cards.
 
 ## Open the page
 
@@ -21,12 +21,12 @@ Then open `http://localhost:8080`.
 Portofolio/
 ├── index.html          # all page content
 ├── css/styles.css      # cyberpunk TRON theme, layout, responsive rules
-├── js/main.js          # project filter and mobile menu
+├── js/main.js          # filters, menu, motion pause, scroll progress, reveal
 ├── assets/favicon.svg
 ├── PRODUCT.md          # product truth and constraints
 ├── demos/              # six local demo pages, unchanged contents
 ├── tests/test_portfolio.py
-├── tests/browser_smoke.py # rendered Firefox check at 390px
+├── tests/browser_smoke.py # rendered Firefox checks at 390px and 320px
 ├── .githooks/pre-commit   # runs both checks before each commit
 ├── docs/superpowers/   # approved design and implementation plan
 └── README.md
@@ -61,15 +61,15 @@ cd /home/asnodt/Projects/Portofolio
 python3 -m unittest discover -s tests -v
 ```
 
-The tests read `index.html`, `css/styles.css`, and `js/main.js` as text. They check structure, contacts, the six demo files, English copy, the cyberpunk TRON tokens, finite motion, and responsive rules.
+The tests read `index.html`, `css/styles.css`, and `js/main.js` as text. They check structure, contacts, the six demo files, English copy, the cyberpunk TRON tokens, the governed motion budget, and responsive rules.
 
-For a rendered check at 390px, run the Firefox smoke script. It requires Firefox but no third-party package:
+For rendered checks at 390px and 320px, run the Firefox smoke script. It requires Firefox but no third-party package:
 
 ```bash
 python3 tests/browser_smoke.py
 ```
 
-It serves the page locally, clicks the filters and menu, checks focus outlines and overflow, and repeats with reduced motion enabled.
+It serves the page locally, clicks the filters, menu, and Pause motion button, checks the action gap, magnetic cap, scroll progress, project reveal, focus outlines, and overflow at both widths, then repeats with reduced motion enabled.
 
 Both checks run before each commit through `.githooks/pre-commit`. Enable the hook once after cloning:
 

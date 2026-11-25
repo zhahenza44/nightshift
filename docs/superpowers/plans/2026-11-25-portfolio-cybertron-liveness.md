@@ -540,7 +540,7 @@ git commit -m "test: verify rendered cybertron liveness"
 - Consumes: the shipped markup, CSS, and JS from Tasks 1 to 4.
 - Produces: documentation that matches the live page and a complete verification report.
 
-- [ ] **Step 1: Write failing documentation tests**
+- [x] **Step 1: Write failing documentation tests**
 
 Add to `DeliveryTest`:
 
@@ -560,13 +560,13 @@ def test_readme_describes_liveness(self):
             self.assertIn(marker, readme.lower() if marker.islower() else readme)
 ```
 
-- [ ] **Step 2: Run the tests and watch them fail**
+- [x] **Step 2: Run the tests and watch them fail**
 
 Run: `python3 -m unittest discover -s tests -v`
 
 Expected: FAIL on the two new documentation tests.
 
-- [ ] **Step 3: Update the documents**
+- [x] **Step 3: Update the documents**
 
 In `PRODUCT.md`:
 
