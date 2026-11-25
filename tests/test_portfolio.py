@@ -107,5 +107,17 @@ class InteractionTest(unittest.TestCase):
         self.assertNotIn("whatsapp", JS.lower())
 
 
+class DeliveryTest(unittest.TestCase):
+    def test_readme_has_no_forbidden_contacts(self):
+        readme = read("README.md")
+        self.assertTrue(readme, "README.md must exist")
+        for phrase in ("wa.me", "whatsapp", "projects.co.id"):
+            self.assertNotIn(phrase, readme.lower())
+        self.assertIn("index.html", readme)
+
+    def test_full_content(self):
+        self.assertEqual(HTML.count('class="project-card'), 7)
+
+
 if __name__ == "__main__":
     unittest.main()
