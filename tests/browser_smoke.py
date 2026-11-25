@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Rendered smoke check for the portfolio shell using Firefox WebDriver BiDi.
+"""Rendered smoke check for the NightShift landing page using Firefox WebDriver BiDi.
 
 No third-party package is needed. The script serves the repository over HTTP,
 opens 390px and 320px iframes in headless Firefox, exercises the controls, and
@@ -28,181 +28,207 @@ HARNESS_PATH = "/__portfolio_browser_check__.html"
 NARROW_PATH = "/__portfolio_browser_check__320.html"
 HARNESS_TEMPLATE = """<!doctype html>
 <html lang="en">
-<head><meta charset="utf-8"><title>Portfolio browser check</title></head>
+<head><meta charset="utf-8"><title>NightShift browser check</title></head>
 <body>
-<iframe id="frame" src="/index.html" style="width:{width}px;height:844px;border:0"></iframe>
+<iframe id="frame" src="/index.html?noboot" style="width:{width}px;height:844px;border:0"></iframe>
 </body>
 </html>
 """
 
-NORMAL_SCRIPT = r"""
+NORMAL_SCRIPT_A = r"""
 new Promise((resolve) => {
   const frame = document.getElementById('frame');
   const checks = [];
   const check = (name, pass, detail) => checks.push({name, pass: Boolean(pass), detail});
-  const run = () => {
-    const immediateWin = frame.contentWindow;
-    const immediateDoc = immediateWin.document;
-    const heroActions = immediateDoc.querySelector('.hero-actions');
-    immediateDoc.querySelector('.hero-actions .btn--primary').focus();
-    const immediateStyle = immediateWin.getComputedStyle(heroActions);
-    checks.push({
-      name: 'focused hero actions are visible immediately',
-      pass: Number(immediateStyle.opacity) === 1 && immediateStyle.animationName === 'none',
-      detail: 'opacity=' + immediateStyle.opacity + ' animation=' + immediateStyle.animationName
-    });
-    const firstHeroStyle = immediateWin.getComputedStyle(immediateDoc.querySelector('.hero-copy > *'));
-    checks.push({
-      name: 'hero entrance animation is applied',
-      pass: firstHeroStyle.animationName === 'hero-in' && firstHeroStyle.animationDuration === '0.7s',
-      detail: firstHeroStyle.animationName + ' ' + firstHeroStyle.animationDuration
-    });
-    setTimeout(() => {
+  const wait = (ms) => new Promise((done) => setTimeout(done, ms));
+  (async () => {
+    try {
+      if (!(frame.contentDocument && frame.contentDocument.readyState === 'complete')) {
+        await new Promise((done) => frame.addEventListener('load', done, {once: true}));
+      }
+      await wait(2400);
+
       const win = frame.contentWindow;
       const doc = win.document;
       const viewport = win.innerWidth;
-      const scrollWidth = doc.documentElement.scrollWidth;
       check('390px iframe viewport', viewport === 390, String(viewport));
-      check('no horizontal overflow', scrollWidth <= viewport, 'scrollWidth=' + scrollWidth);
+      check('no horizontal overflow', doc.documentElement.scrollWidth <= viewport,
+        'scrollWidth=' + doc.documentElement.scrollWidth);
 
-      const tickerRoot = doc.querySelector('.ticker');
+      const boot = doc.getElementById('boot');
+      check('boot overlay finished or removed', !boot || boot.classList.contains('is-done'),
+        boot ? boot.className : 'removed');
+      check('document marked ready', doc.documentElement.classList.contains('is-ready'),
+        doc.documentElement.className);
+
+      const heroLabel = doc.querySelector('.hero-title').getAttribute('aria-label');
+      check('hero copy is English', heroLabel === 'Webs that cannot be ignored.', heroLabel);
+      const heroWords = Array.from(doc.querySelectorAll('.hero-title .title-inner'))
+        .map((el) => el.textContent.trim()).join(' ');
+      check('hero headline words translated', heroWords === 'WEBS THAT CANNOT BE IGNORED.', heroWords);
+
+      const heroOpacity = ['.hero-copy', '.hero-stats', '.hero-foot']
+        .map((selector) => Number(win.getComputedStyle(doc.querySelector(selector)).opacity));
+      check('hero entrance copies visible', heroOpacity.every((value) => value === 1),
+        heroOpacity.join(','));
+      const titleOffsets = Array.from(doc.querySelectorAll('.title-inner')).map((el) => {
+        const matrix = new DOMMatrixReadOnly(win.getComputedStyle(el).transform);
+        return Math.round(matrix.m42);
+      });
+      check('hero title lines settle', titleOffsets.every((value) => Math.abs(value) < 1),
+        titleOffsets.join(','));
+
       const orbRoot = doc.querySelector('.hero-orb');
+      const scopedRoots = [
+        orbRoot,
+        doc.querySelector('.ticker'),
+        doc.querySelector('.hero'),
+        doc.querySelector('.footer-marquee'),
+      ];
       const inSubtree = (root, el) => Boolean(root) && el !== root && root.contains(el);
       const findEscapes = () => Array.from(doc.querySelectorAll('body *')).filter((el) => {
-        if (el.ownerSVGElement && inSubtree(orbRoot, el)) return false;
-        if (inSubtree(tickerRoot, el)) return false;
+        if (scopedRoots.some((root) => el === root || inSubtree(root, el))) return false;
         const rect = el.getBoundingClientRect();
         const style = win.getComputedStyle(el);
         return rect.width > 0 && style.position !== 'fixed' &&
           (rect.right > viewport + 1 || rect.left < -1);
       }).map((el) => el.tagName.toLowerCase() + '.' + el.className);
       const overflowing = findEscapes();
-      check('no element escapes viewport', overflowing.length === 0, overflowing.slice(0, 5).join(' | ') || 'none');
+      check('no element escapes viewport', overflowing.length === 0,
+        overflowing.slice(0, 5).join(' | ') || 'none');
 
-      const probeHost = doc.querySelector('.sr-only');
+      const probeHost = doc.createElement('div');
+      probeHost.style.cssText = 'position:relative;overflow:hidden;width:100px;height:10px;';
+      doc.body.appendChild(probeHost);
       const probe = doc.createElement('div');
       probe.className = 'overflow-probe';
-      probe.style.position = 'absolute';
-      probe.style.left = '-500px';
-      probe.style.width = '10px';
-      probe.style.height = '10px';
+      probe.style.cssText = 'position:absolute;left:-500px;width:10px;height:10px;';
       probeHost.appendChild(probe);
       const probeFound = findEscapes().some((item) => item.includes('overflow-probe'));
       check('overflow scan catches escaped content inside clipped container', probeFound,
         probeFound ? 'flagged' : 'missed');
-      probe.remove();
+      probeHost.remove();
 
-      const heroOpacity = Array.from(doc.querySelectorAll('.hero-copy > *'))
-        .map((el) => win.getComputedStyle(el).opacity);
-      check('hero copy visible after entrance', heroOpacity.every((value) => Number(value) === 1),
-        heroOpacity.join(','));
-
-      const orb = doc.querySelector('.orb-rings');
-      const ticker = doc.querySelector('.ticker-track');
-      check('orb loop is running', win.getComputedStyle(orb).animationName === 'orb-spin',
-        win.getComputedStyle(orb).animationName);
-      check('ticker loop is running', win.getComputedStyle(ticker).animationName === 'ticker-scroll',
-        win.getComputedStyle(ticker).animationName);
-
-      const introRect = doc.querySelector('.hero-intro').getBoundingClientRect();
-      const actionsRect = doc.querySelector('.hero-actions').getBoundingClientRect();
-      const actionGap = Math.round(actionsRect.top - introRect.bottom);
-      check('Instagram action row sits close to intro', actionGap <= 16, 'gap=' + actionGap + 'px');
-
-      const primaryRect = doc.querySelector('.btn--primary').getBoundingClientRect();
-      const ghostRect = doc.querySelector('.btn--ghost').getBoundingClientRect();
-      check('Instagram button aligns with View projects', primaryRect.top === ghostRect.top,
-        'primary=' + Math.round(primaryRect.top) + ' ghost=' + Math.round(ghostRect.top));
-
-      const cards = () => Array.from(doc.querySelectorAll('.project-card'))
-        .filter((card) => !card.hidden).length;
-      const pressed = (id) => doc.getElementById(id).getAttribute('aria-pressed');
-      check('all cards visible initially', cards() === 6, 'visible=' + cards());
-
-      doc.getElementById('filter-job1').click();
-      check('AI filter shows one card', cards() === 1, 'visible=' + cards());
-      check('AI filter pressed state', pressed('filter-job1') === 'true' && pressed('filter-all') === 'false',
-        'all=' + pressed('filter-all') + ' job1=' + pressed('filter-job1'));
-
-      doc.getElementById('filter-job2').click();
-      check('Web filter shows five cards', cards() === 5, 'visible=' + cards());
-
-      doc.getElementById('filter-all').click();
-      check('All filter restores six cards', cards() === 6, 'visible=' + cards());
+      const animationName = (selector) => win.getComputedStyle(doc.querySelector(selector)).animationName;
+      check('orb loop is running', animationName('.orb-copy') === 'orb-spin',
+        animationName('.orb-copy'));
+      check('ticker loop is running', animationName('.ticker-track') === 'ticker',
+        animationName('.ticker-track'));
+      check('footer marquee is running', animationName('.footer-marquee div') === 'footer-marquee',
+        animationName('.footer-marquee div'));
+      check('hero rings drift', animationName('.hero-rings') === 'rings-drift',
+        animationName('.hero-rings'));
 
       win.scrollTo({top: 200, behavior: 'instant'});
       win.dispatchEvent(new win.Event('scroll'));
-      const widthBeforeFilter = Number.parseFloat(doc.getElementById('scroll-progress-bar').style.width);
-      doc.getElementById('filter-job1').click();
-      const filteredMax = doc.documentElement.scrollHeight - win.innerHeight;
-      const expectedFiltered = filteredMax > 0
-        ? Math.min(100, Math.max(0, win.scrollY / filteredMax * 100))
-        : 0;
-      const widthAfterFilter = Number.parseFloat(doc.getElementById('scroll-progress-bar').style.width);
-      check('scroll progress follows filter height change',
-        Math.abs(widthAfterFilter - expectedFiltered) < 1,
-        'was=' + widthBeforeFilter.toFixed(2) + '% now=' + widthAfterFilter.toFixed(2) +
-        '% expected=' + expectedFiltered.toFixed(2) + '%');
-      doc.getElementById('filter-all').click();
+      await wait(80);
+      const progress = Number.parseFloat(doc.getElementById('scroll-progress').style.width);
+      check('scroll progress responds to scrolling', progress > 0 && progress < 100,
+        'width=' + progress + '%');
 
-      const toggle = doc.getElementById('menu-toggle');
+      doc.getElementById('process-list').scrollIntoView({block: 'center', behavior: 'instant'});
+      win.dispatchEvent(new win.Event('scroll'));
+      await wait(200);
+      const fill = Number.parseFloat(doc.getElementById('process-fill').style.height);
+      check('process fill advances', fill > 0, 'height=' + fill + '%');
+      const activeSteps = doc.querySelectorAll('.process-step.is-active').length;
+      check('process steps activate on scroll', activeSteps >= 1, 'active=' + activeSteps);
+
+      const menuButton = doc.getElementById('menu-btn');
       const menu = doc.getElementById('mobile-menu');
-      toggle.click();
-      check('menu opens', toggle.getAttribute('aria-expanded') === 'true' && !menu.hasAttribute('inert'),
-        'expanded=' + toggle.getAttribute('aria-expanded') + ' inert=' + menu.hasAttribute('inert'));
-      check('menu label closes in English', toggle.getAttribute('aria-label') === 'Close menu',
-        toggle.getAttribute('aria-label'));
+      menuButton.click();
+      check('menu opens',
+        menuButton.getAttribute('aria-expanded') === 'true' &&
+        menu.getAttribute('aria-hidden') === 'false' && !menu.inert,
+        'expanded=' + menuButton.getAttribute('aria-expanded') + ' hidden=' + menu.getAttribute('aria-hidden'));
+      check('menu label closes in English', menuButton.getAttribute('aria-label') === 'Close menu',
+        menuButton.getAttribute('aria-label'));
+      await wait(220);
       check('focus moves into menu', doc.activeElement === menu.querySelector('a'),
         doc.activeElement && doc.activeElement.textContent.trim());
-
       doc.dispatchEvent(new win.KeyboardEvent('keydown', {key: 'Escape', bubbles: true}));
-      check('Escape closes menu', toggle.getAttribute('aria-expanded') === 'false' && menu.hasAttribute('inert'),
-        'expanded=' + toggle.getAttribute('aria-expanded') + ' inert=' + menu.hasAttribute('inert'));
-      check('focus returns to toggle', doc.activeElement === toggle, doc.activeElement && doc.activeElement.id);
-      check('menu label opens in English', toggle.getAttribute('aria-label') === 'Open menu',
-        toggle.getAttribute('aria-label'));
+      check('Escape closes menu',
+        menuButton.getAttribute('aria-expanded') === 'false' &&
+        menu.getAttribute('aria-hidden') === 'true' && menu.inert,
+        'expanded=' + menuButton.getAttribute('aria-expanded') + ' hidden=' + menu.getAttribute('aria-hidden'));
+      check('focus returns to menu button', doc.activeElement === menuButton,
+        doc.activeElement && doc.activeElement.id);
+      check('menu label opens in English', menuButton.getAttribute('aria-label') === 'Open menu',
+        menuButton.getAttribute('aria-label'));
 
-      const motionToggle = doc.getElementById('motion-toggle');
-      const toggleText = () => motionToggle.querySelector('.motion-toggle-label').textContent.trim();
-      check('pause control starts English and unpaused',
-        motionToggle.getAttribute('aria-label') === 'Pause motion' &&
-        toggleText() === 'Pause motion' &&
-        motionToggle.getAttribute('aria-pressed') === 'false',
-        motionToggle.getAttribute('aria-label') + '/' + toggleText() + ' pressed=' + motionToggle.getAttribute('aria-pressed'));
-      motionToggle.click();
-      check('pause control keeps its name while pressed',
-        motionToggle.getAttribute('aria-label') === 'Pause motion' && toggleText() === 'Pause motion',
-        motionToggle.getAttribute('aria-label') + '/' + toggleText());
-      check('pause control pauses both loops',
-        doc.documentElement.classList.contains('motion-paused') &&
-        motionToggle.getAttribute('aria-pressed') === 'true' &&
-        win.getComputedStyle(orb).animationPlayState === 'paused' &&
-        win.getComputedStyle(ticker).animationPlayState === 'paused',
-        win.getComputedStyle(orb).animationPlayState + ' / ' + win.getComputedStyle(ticker).animationPlayState);
-      motionToggle.click();
-      check('pause control resumes both loops',
-        !doc.documentElement.classList.contains('motion-paused') &&
-        motionToggle.getAttribute('aria-pressed') === 'false' &&
-        toggleText() === 'Pause motion' &&
-        win.getComputedStyle(orb).animationPlayState === 'running' &&
-        win.getComputedStyle(ticker).animationPlayState === 'running',
-        win.getComputedStyle(orb).animationPlayState + ' / ' + win.getComputedStyle(ticker).animationPlayState);
+      const projectButton = doc.querySelector('[data-open-project="hypermart"]');
+      projectButton.scrollIntoView({block: 'center'});
+      projectButton.click();
+      const dialog = doc.getElementById('project-dialog');
+      check('case file dialog opens', dialog.open, String(dialog.open));
+      const dialogText = doc.getElementById('dialog-content').textContent;
+      check('dialog case copy is English',
+        dialogText.includes('CASE FILE 01 / E-COMMERCE') && dialogText.includes('Challenge') &&
+        dialogText.includes('Approach') && dialogText.includes('YEAR'),
+        dialogText.slice(0, 90).replace(/\s+/g, ' '));
+      check('dialog note discloses fictional case',
+        dialogText.includes('fictional case study for portfolio use'),
+        dialogText.includes('fictional case study for portfolio use') ? 'present' : 'missing');
+      resolve(checks);
+    } catch (error) {
+      resolve([{name: 'normal pass opens dialog', pass: false,
+        detail: String((error && error.stack) || error)}]);
+    }
+  })();
+})
+"""
 
-      const magnetic = doc.querySelector('.btn--primary');
+NORMAL_SCRIPT_B = r"""
+new Promise((resolve) => {
+  const checks = [];
+  const check = (name, pass, detail) => checks.push({name, pass: Boolean(pass), detail});
+  const wait = (ms) => new Promise((done) => setTimeout(done, ms));
+  (async () => {
+    try {
+      await wait(80);
+      const doc = document;
+      const win = window;
+      const viewport = win.innerWidth;
+      const dialog = doc.getElementById('project-dialog');
+      check('Escape closes case file dialog', !dialog.open, String(dialog.open));
+      check('focus returns to case file button',
+        doc.activeElement === doc.querySelector('[data-open-project="hypermart"]'),
+        (doc.activeElement && doc.activeElement.dataset.openProject) || '');
+
+      const copyButton = doc.getElementById('copy-email');
+      copyButton.scrollIntoView({block: 'center', behavior: 'instant'});
+      copyButton.click();
+      await wait(120);
+      const toast = doc.getElementById('toast');
+      check('copy email shows English toast',
+        toast.classList.contains('is-visible') &&
+        toast.textContent === 'EMAIL COPIED — hello@nightshift.studio',
+        toast.textContent);
+      check('copy label confirms in English',
+        copyButton.querySelector('span').textContent === 'Copied',
+        copyButton.querySelector('span').textContent);
+
+      const magnetic = doc.querySelector('.hero-actions .btn--primary');
+      magnetic.scrollIntoView({block: 'center', behavior: 'instant'});
       const magneticRect = magnetic.getBoundingClientRect();
-      magnetic.dispatchEvent(new win.PointerEvent('pointermove', {
-        bubbles: true, pointerType: 'mouse',
-        clientX: magneticRect.right - 1, clientY: magneticRect.top + 1
+      magnetic.dispatchEvent(new win.MouseEvent('mousemove', {
+        bubbles: true, clientX: magneticRect.right - 1, clientY: magneticRect.top + 1,
       }));
-      const magX = Math.abs(Number.parseFloat(magnetic.style.getPropertyValue('--mag-x')) || 0);
-      const magY = Math.abs(Number.parseFloat(magnetic.style.getPropertyValue('--mag-y')) || 0);
-      check('magnetic offset responds and stays capped at 2px',
-        magX >= 1.5 && magY >= 1.5 && magX <= 2.01 && magY <= 2.01,
-        'x=' + magX.toFixed(2) + ' y=' + magY.toFixed(2));
-      magnetic.dispatchEvent(new win.PointerEvent('pointerleave', {bubbles: true}));
-      magnetic.focus();
-      const focusMagX = magnetic.style.getPropertyValue('--mag-x');
-      check('keyboard focus does not move button', focusMagX === '0px', focusMagX);
+      const magneticTransform = magnetic.style.transform;
+      const magneticCoordinates = magneticTransform.slice(
+        magneticTransform.indexOf('(') + 1,
+        magneticTransform.lastIndexOf(')'),
+      );
+      const magneticValues = (magneticCoordinates.match(/-?\d+(?:\.\d+)?/g) || []).map(Number);
+      check('magnetic button responds to mouse movement',
+        magneticValues.length >= 2 && (Math.abs(magneticValues[0]) > 0 || Math.abs(magneticValues[1]) > 0),
+        magneticTransform || 'none');
+      check('magnetic offset stays capped',
+        Math.abs(magneticValues[0]) <= 9.01 && Math.abs(magneticValues[1]) <= 7.01,
+        magneticTransform || 'none');
+      magnetic.dispatchEvent(new win.MouseEvent('mouseleave', {bubbles: true}));
+      check('magnetic button resets', magnetic.style.transform === 'translate3d(0px, 0px, 0px)',
+        magnetic.style.transform);
 
       const links = Array.from(doc.querySelectorAll('a'));
       let clicked = 0;
@@ -215,29 +241,24 @@ new Promise((resolve) => {
         'clicked=' + clicked + '/' + links.length);
       const hrefs = links.map((link) => link.getAttribute('href'));
       const required = [
-        '#main', '#top', '#project-grid', '#contact',
-        'https://instagram.com/zhahenzar',
-        'https://github.com/zhahenza44',
-        'mailto:zhahenza666@proton.me',
+        '#main', '#top', '#studio', '#work', '#services', '#process', '#contact',
+        'mailto:hello@nightshift.studio', 'https://wa.me/6281234567890',
         'https://github.com/zhahenza44/otomasi-web',
-        'demos/ai-lead-capture/dashboard/index.html',
-        'demos/servis-ac/index.html',
-        'demos/ruang-rapi/index.html',
-        'demos/kedai-kopi/index.html',
-        'demos/rental-mobil/index.html',
-        'demos/nightshift/index.html'
       ];
       const missing = required.filter((href) => !hrefs.includes(href));
-      check('all required link destinations present', missing.length === 0,
-        missing.join(',') || 'all present');
+      check('required hrefs present', missing.length === 0, missing.join(',') || 'all present');
+      check('no local demo links on landing page',
+        !hrefs.some((href) => href && href.includes('demos/')),
+        hrefs.filter((href) => href && href.includes('demos/')).join(',') || 'none');
 
-      [
-        ['filter-all', 'All filter'],
-        ['menu-toggle', 'Menu toggle'],
-        ['filter-job1', 'AI filter'],
-      ].forEach(([id, label]) => {
-        const el = doc.getElementById(id);
-        el.scrollIntoView({block: 'center'});
+      for (const [selector, label] of [
+        ['#menu-btn', 'menu button'],
+        ['.hero-actions .btn--primary', 'primary action'],
+        ['[data-open-project="hypermart"]', 'case file button'],
+        ['#copy-email', 'copy email button'],
+      ]) {
+        const el = doc.querySelector(selector);
+        el.scrollIntoView({block: 'center', behavior: 'instant'});
         el.focus();
         const style = win.getComputedStyle(el);
         check(label + ' has visible focus outline',
@@ -245,36 +266,25 @@ new Promise((resolve) => {
           style.outlineStyle + ' ' + style.outlineWidth);
         const rect = el.getBoundingClientRect();
         check(label + ' focus target inside viewport',
-          rect.left >= -1 && rect.right <= viewport + 1 && rect.top >= -1 && rect.bottom <= win.innerHeight + 1,
-          'top=' + Math.round(rect.top) + ' bottom=' + Math.round(rect.bottom));
-      });
+          rect.left >= -1 && rect.right <= viewport + 1,
+          Math.round(rect.left) + '..' + Math.round(rect.right));
+      }
 
-      const cardLink = doc.querySelector('.card-link');
-      cardLink.scrollIntoView({block: 'center'});
-      cardLink.focus();
-      const linkStyle = win.getComputedStyle(cardLink);
-      check('card link has visible focus outline',
-        linkStyle.outlineStyle !== 'none' && Number.parseFloat(linkStyle.outlineWidth) > 0,
-        linkStyle.outlineStyle + ' ' + linkStyle.outlineWidth);
+      win.scrollTo({top: doc.documentElement.scrollHeight, behavior: 'instant'});
+      win.dispatchEvent(new win.Event('scroll'));
+      await wait(120);
+      const bottomProgress = Number.parseFloat(doc.getElementById('scroll-progress').style.width);
+      check('footer progress reaches bottom', bottomProgress >= 99, 'width=' + bottomProgress + '%');
+      check('footer disclosure is English',
+        doc.querySelector('.site-footer').textContent.includes('DEMO CONCEPT / FICTIONAL STUDIO'),
+        doc.querySelector('.site-footer').textContent.replace(/\s+/g, ' ').trim().slice(0, 80));
 
-      doc.getElementById('project-grid').scrollIntoView({block: 'center'});
-      setTimeout(() => {
-        const gridOpacity = Number(win.getComputedStyle(doc.getElementById('project-grid')).opacity);
-        check('project grid reveal completes', gridOpacity === 1, 'opacity=' + gridOpacity);
-
-        win.scrollTo({top: doc.documentElement.scrollHeight, behavior: 'instant'});
-        win.dispatchEvent(new win.Event('scroll'));
-        const progressWidth = Number.parseFloat(doc.getElementById('scroll-progress-bar').style.width);
-        check('scroll progress reaches bottom', progressWidth >= 99, 'width=' + progressWidth + '%');
-        resolve(checks);
-      }, 700);
-    }, 1200);
-  };
-  if (frame.contentDocument && frame.contentDocument.readyState === 'complete') {
-    run();
-  } else {
-    frame.addEventListener('load', run, {once: true});
-  }
+      resolve(checks);
+    } catch (error) {
+      resolve([{name: 'normal pass continues after Escape', pass: false,
+        detail: String((error && error.stack) || error)}]);
+    }
+  })();
 })
 """
 
@@ -283,25 +293,34 @@ new Promise((resolve) => {
   const frame = document.getElementById('frame');
   const checks = [];
   const check = (name, pass, detail) => checks.push({name, pass: Boolean(pass), detail});
-  const run = () => setTimeout(() => {
-    const win = frame.contentWindow;
-    const doc = win.document;
-    check('320px iframe viewport', win.innerWidth === 320, String(win.innerWidth));
-    check('320px has no horizontal overflow', doc.documentElement.scrollWidth <= 320,
-      'scrollWidth=' + doc.documentElement.scrollWidth);
-    for (const selector of ['.brand', '.motion-toggle', '#menu-toggle', '.btn--primary', '.btn--ghost']) {
-      const rect = doc.querySelector(selector).getBoundingClientRect();
-      check(selector + ' fits 320px',
-        rect.left >= -1 && rect.right <= 321 && rect.height >= 44,
-        Math.round(rect.left) + '..' + Math.round(rect.right) + ' h=' + Math.round(rect.height));
+  const wait = (ms) => new Promise((done) => setTimeout(done, ms));
+  (async () => {
+    try {
+      if (!(frame.contentDocument && frame.contentDocument.readyState === 'complete')) {
+        await new Promise((done) => frame.addEventListener('load', done, {once: true}));
+      }
+      await wait(2400);
+      const win = frame.contentWindow;
+      const doc = win.document;
+      check('320px iframe viewport', win.innerWidth === 320, String(win.innerWidth));
+      check('320px has no horizontal overflow', doc.documentElement.scrollWidth <= 320,
+        'scrollWidth=' + doc.documentElement.scrollWidth);
+      for (const selector of [
+        '.brand', '#menu-btn', '.hero-actions .btn--primary', '.hero-actions .btn--ghost',
+        '#copy-email', '.contact-actions .btn--primary',
+      ]) {
+        const el = doc.querySelector(selector);
+        const rect = el.getBoundingClientRect();
+        check(selector + ' fits 320px and meets 24px tap target',
+          rect.left >= -1 && rect.right <= 321 && rect.width >= 24 && rect.height >= 24,
+          Math.round(rect.left) + '..' + Math.round(rect.right) + ' h=' + Math.round(rect.height));
+      }
+      resolve(checks);
+    } catch (error) {
+      resolve([{name: 'narrow pass runs', pass: false,
+        detail: String((error && error.stack) || error)}]);
     }
-    resolve(checks);
-  }, 1200);
-  if (frame.contentDocument && frame.contentDocument.readyState === 'complete') {
-    run();
-  } else {
-    frame.addEventListener('load', run, {once: true});
-  }
+  })();
 })
 """
 
@@ -310,32 +329,57 @@ new Promise((resolve) => {
   const frame = document.getElementById('frame');
   const checks = [];
   const check = (name, pass, detail) => checks.push({name, pass: Boolean(pass), detail});
-  const run = () => {
-    setTimeout(() => {
+  const wait = (ms) => new Promise((done) => setTimeout(done, ms));
+  (async () => {
+    try {
+      if (!(frame.contentDocument && frame.contentDocument.readyState === 'complete')) {
+        await new Promise((done) => frame.addEventListener('load', done, {once: true}));
+      }
+      await wait(600);
       const win = frame.contentWindow;
       const doc = win.document;
-      const nodes = Array.from(doc.querySelectorAll(
-        '.hero-copy > *, .btn, .card-link, .project-card, .orb-rings, .ticker-track, .project-grid'
-      ));
-      const names = Array.from(new Set(nodes.map((el) => win.getComputedStyle(el).animationName)));
-      check('reduced motion disables animations', names.every((name) => name === 'none'), names.join(','));
-      const opacity = Array.from(doc.querySelectorAll('.hero-copy > *'))
-        .map((el) => win.getComputedStyle(el).opacity);
-      check('reduced motion keeps copy visible', opacity.every((value) => Number(value) === 1),
-        opacity.join(','));
-      check('reduced motion hides pause control',
-        win.getComputedStyle(doc.getElementById('motion-toggle')).display === 'none',
-        win.getComputedStyle(doc.getElementById('motion-toggle')).display);
-      const gridOpacity = Number(win.getComputedStyle(doc.getElementById('project-grid')).opacity);
-      check('reduced motion keeps project grid visible', gridOpacity === 1, 'opacity=' + gridOpacity);
+      check('old pause control is absent', !doc.getElementById('motion-toggle'),
+        doc.getElementById('motion-toggle') ? 'present' : 'absent');
+      check('reduced motion hides custom cursor',
+        win.getComputedStyle(doc.getElementById('cursor')).display === 'none',
+        win.getComputedStyle(doc.getElementById('cursor')).display);
+      check('reduced motion hides ghost layer',
+        win.getComputedStyle(doc.getElementById('ghost-layer')).display === 'none',
+        win.getComputedStyle(doc.getElementById('ghost-layer')).display);
+
+      const loopSelectors = [
+        '.ticker-track', '.footer-marquee div', '.hero-rings', '.orb-copy', '.orb-line--dash',
+      ];
+      const loopNames = loopSelectors.map((selector) => [
+        selector, win.getComputedStyle(doc.querySelector(selector)).animationName,
+      ]);
+      check('reduced motion disables looping animations',
+        loopNames.every((item) => item[1] === 'none'),
+        loopNames.map((item) => item[0] + '=' + item[1]).join(','));
+      const longAnimations = Array.from(doc.querySelectorAll('body *')).filter((el) => {
+        const style = win.getComputedStyle(el);
+        return style.animationName !== 'none' && Number.parseFloat(style.animationDuration) > 0.001;
+      });
+      check('reduced motion collapses remaining animations', longAnimations.length === 0,
+        longAnimations.slice(0, 5).map((el) => el.className || el.tagName).join(',') || 'none');
+
+      const hidden = [
+        '.title-inner', '.hero-copy', '.hero-stats', '.hero-foot', '.reveal',
+        '.manifesto-copy .word', '.t-line',
+      ].filter((selector) => {
+        const el = doc.querySelector(selector);
+        return el && Number(win.getComputedStyle(el).opacity) < 1;
+      });
+      check('reduced motion keeps content visible', hidden.length === 0, hidden.join(',') || 'none');
+      const boot = doc.getElementById('boot');
+      check('boot skipped under reduced motion', !boot || boot.classList.contains('is-done'),
+        boot ? boot.className : 'removed');
       resolve(checks);
-    }, 100);
-  };
-  if (frame.contentDocument && frame.contentDocument.readyState === 'complete') {
-    run();
-  } else {
-    frame.addEventListener('load', run, {once: true});
-  }
+    } catch (error) {
+      resolve([{name: 'reduced motion pass runs', pass: false,
+        detail: String((error && error.stack) || error)}]);
+    }
+  })();
 })
 """
 
@@ -468,6 +512,20 @@ def evaluate(client, context, expression):
     return unwrap(result.get("result", {}))
 
 
+def page_context(client, marker):
+    tree = client.send("browsingContext.getTree", {"children": True})
+
+    def walk(contexts):
+        for context in contexts:
+            yield context
+            yield from walk(context.get("children") or [])
+
+    for context in walk(tree.get("contexts") or []):
+        if marker in (context.get("url") or ""):
+            return context["context"]
+    raise RuntimeError(f"no browsing context for {marker}")
+
+
 def wait_for_bidi(port):
     url = f"http://127.0.0.1:{port}/session"
     deadline = time.monotonic() + 30
@@ -483,8 +541,8 @@ def wait_for_bidi(port):
     return False
 
 
-def run_check(firefox, url, expression, reduced):
-    """Run one expression in a fresh Firefox profile and return its checks."""
+def run_check(firefox, url, expression, reduced, followup=None):
+    """Run one or two expressions in a fresh Firefox profile and return checks."""
     profile = tempfile.mkdtemp(prefix="portfolio-firefox-")
     if reduced:
         (Path(profile) / "prefs.js").write_text(
@@ -509,6 +567,24 @@ def run_check(firefox, url, expression, reduced):
             context = contexts[0]["context"]
             client.send("browsingContext.navigate", {"context": context, "url": url, "wait": "complete"})
             result = evaluate(client, context, expression)
+            if followup is not None:
+                target = page_context(client, "index.html")
+                client.send("input.performActions", {
+                    "context": target,
+                    "actions": [{
+                        "type": "key",
+                        "id": "native-escape",
+                        "actions": [
+                            {"type": "keyDown", "value": "\ue00c"},
+                            {"type": "keyUp", "value": "\ue00c"},
+                        ],
+                    }],
+                })
+                second = evaluate(client, target, followup)
+                if isinstance(result, list) and isinstance(second, list):
+                    result = result + second
+                elif not isinstance(result, list):
+                    result = second
             errors = [
                 event for event in client.events
                 if event.get("method") == "log.entryAdded"
@@ -548,12 +624,12 @@ def main():
     failed = 0
     try:
         checks = []
-        for check_url, expression, reduced in (
-            (url, NORMAL_SCRIPT, False),
-            (narrow_url, NARROW_SCRIPT, False),
-            (url, REDUCED_SCRIPT, True),
+        for check_url, expression, reduced, followup in (
+            (url, NORMAL_SCRIPT_A, False, NORMAL_SCRIPT_B),
+            (narrow_url, NARROW_SCRIPT, False, None),
+            (url, REDUCED_SCRIPT, True, None),
         ):
-            result = run_check(firefox, check_url, expression, reduced)
+            result = run_check(firefox, check_url, expression, reduced, followup)
             if not isinstance(result, list) or not result:
                 failed += 1
                 print(f"CHECK FAIL harness returned no checks :: {check_url}")
