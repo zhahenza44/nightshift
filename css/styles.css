@@ -2399,7 +2399,7 @@ html.has-cursor .cursor {
   bottom: -1px;
   width: 1px;
   height: 2px;
-  background: inherit;
+  background: var(--magenta);
   box-shadow: inherit;
 }
 
