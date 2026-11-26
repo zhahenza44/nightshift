@@ -52,6 +52,7 @@ The page is one static document that can be opened from disk or any static host.
 - Allow additive CSS for the CV section that uses the demo tokens.
 - Leave every file inside `demos/` unchanged.
 - Keep the demo stylesheet's low-contrast `muted-2` technical labels. The contrast shortfall is an accepted consequence of the literal-copy decision.
+- Publish the static page on GitHub Pages from `zhahenza44/nightshift`. Use `nightshift.is-not-a.dev` as the custom domain and point its DNS CNAME record to `zhahenza44.github.io`.
 
 ## Capabilities and Constraints
 

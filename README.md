@@ -22,11 +22,16 @@ python3 -m http.server 8080
 
 Then open `http://localhost:8080`.
 
+## Live deployment
+
+The site is published from `master` at `https://github.com/zhahenza44/nightshift` with GitHub Pages. The repository root includes a `CNAME` file for `nightshift.is-not-a.dev`. The Open Domains request asks for a CNAME record pointing to `zhahenza44.github.io`. It is pending review, so use the GitHub Pages URL until the custom domain activates.
+
 ## What is in the root
 
 ```text
 Portofolio/
 ├── index.html            # NightShift markup plus the real CV section, lang="en"
+├── CNAME                 # GitHub Pages custom domain
 ├── css/styles.css        # NightShift visual system plus additive CV rules
 ├── js/main.js            # NightShift behavior, English visitor strings
 ├── assets/favicon.svg    # NightShift favicon
@@ -63,7 +68,7 @@ cd /home/asnodt/Projects/Portofolio
 python3 -m unittest discover -s tests -v
 ```
 
-They read `index.html`, `css/styles.css`, `js/main.js`, and the favicon. They pin the English NightShift copy, the footer and dialog disclosure, the CV content and links, the merged section order and nav labels, the Surabaya location, the hero stats and year, the `GITHUB` label, the removed contact note, the contact panel spacing at 390px and 1366px, and the preserved effects.
+They read `index.html`, `css/styles.css`, `js/main.js`, and the favicon. They pin the English NightShift copy, the footer and dialog disclosure, the CV content and links, the merged section order and nav labels, the Surabaya location, the hero stats and year, the `GITHUB` label, the removed contact note, the contact panel spacing at 390px and 1366px, the pinned GitHub Pages domain, and the preserved effects.
 
 Run the rendered checks with Firefox installed:
 
