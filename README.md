@@ -2,10 +2,10 @@
 
 The main portfolio page keeps the `NIGHT//SHIFT` identity and adds Alan Nawa's real CV after the manifesto. Work and Services share one section, and the studio location reads Surabaya, ID. The page has two clearly separated parts:
 
-- The NightShift showcase: fictional case studies, metrics, status, email address, phone number, boot sequence, ghost cursor, scanline, ticker, magnetic buttons, scroll reveals, process fill, project dialogs, copy-email toast, clock, and mobile menu. The contact section discloses that this part is fictional.
+- The NightShift showcase: fictional case studies, metrics, status, email address, phone number, boot sequence, ghost cursor, scanline, ticker, magnetic buttons, scroll reveals, process fill, project dialogs, copy-email toast, clock, and mobile menu. The footer and case-file dialogs label this part as fictional.
 - The CV section: Alan Nawa, Web & AI Automation, two services, six demo links, and three real contact channels. A note in the section says it is the owner's real CV and that the case studies below it are fictional.
 
-The hero shows `Projects 1` and `Response <24h`; the Experience stat is gone. The GitHub link in the contact section reads `GITHUB` and still points to `https://github.com/zhahenza44/otomasi-web`.
+The hero tag reads `EST. 2026`. The hero shows `Projects 1` and `Response <24h`; the Experience stat is gone. The GitHub link in the contact section reads `GITHUB` and still points to `https://github.com/zhahenza44/otomasi-web`. The contact section no longer carries the note about fictional names, metrics, email, and phone number; the footer and case-file dialogs do that labeling. The CV section has no vertical section padding.
 
 All visitor copy is English. Type comes from Google Fonts, with local fallbacks when the network is unavailable.
 
@@ -63,7 +63,7 @@ cd /home/asnodt/Projects/Portofolio
 python3 -m unittest discover -s tests -v
 ```
 
-They read `index.html`, `css/styles.css`, `js/main.js`, and the favicon. They pin the English NightShift copy, the fictional disclosure, the CV content and links, the merged section order and nav labels, the Surabaya location, the hero stats, the `GITHUB` label, and the preserved effects.
+They read `index.html`, `css/styles.css`, `js/main.js`, and the favicon. They pin the English NightShift copy, the footer and dialog disclosure, the CV content and links, the merged section order and nav labels, the Surabaya location, the hero stats and year, the `GITHUB` label, the removed contact note, and the preserved effects.
 
 Run the rendered checks with Firefox installed:
 

@@ -30,7 +30,7 @@ The page is one static document that can be opened from disk or any static host.
 
 - Use the NightShift demo literally, not the previous Alan Nawa CV shell as the page design.
 - Translate every visitor-facing string into English and set `lang="en"`.
-- Keep the fictional studio, case studies, metrics, status, email address, and phone number. Disclose them in the contact section.
+- Keep the fictional studio, case studies, metrics, status, email address, and phone number. Label them in the footer and case-file dialogs.
 - Keep the Google Fonts requests.
 - Keep the boot sequence, ghost cursor, ticker, magnetic buttons, and other demo motion with no pause control.
 - Keep the brand as NIGHT//SHIFT and the hero copy unchanged.
@@ -39,6 +39,9 @@ The page is one static document that can be opened from disk or any static host.
 - Set the hero stat to `Projects 1`, remove Experience, and keep `Response <24h` with its terminal line and contact copy.
 - Label the GitHub contact link `GITHUB` and keep its href at `https://github.com/zhahenza44/otomasi-web`.
 - Ignore only blocked Google Fonts downloads in the rendered console check. Every other console error still fails the run.
+- Remove the contact-section note naming fictional names, metrics, email, and phone number.
+- Set the hero tag to `EST. 2026`.
+- Remove the vertical section padding on `#cv.section` so the CV block does not create a wide empty band at 1366px.
 - Add Alan Nawa's CV after the manifesto, using the data in the old shell at `bbebb12:index.html`.
 - Allow additive CSS for the CV section that uses the demo tokens.
 - Leave every file inside `demos/` unchanged.
@@ -46,10 +49,10 @@ The page is one static document that can be opened from disk or any static host.
 
 ## Capabilities and Constraints
 
-- Root `index.html`, `js/main.js`, and the favicon come from `demos/nightshift/`. Their differences are translated visitor strings, the document language, and the CV section.
-- `css/styles.css` keeps every demo selector and keyframe, then appends a CV block and a `services-block` spacing rule before the reduced-motion rules.
+- Root `index.html`, `js/main.js`, and the favicon come from `demos/nightshift/`. Their differences are translated visitor strings, the document language, the CV section, the merged Work & Services section, the Surabaya location, the hero stats and year, the removed contact note, and the `GITHUB` label.
+- `css/styles.css` keeps every demo selector and keyframe, then appends a CV block, a `#cv.section` padding reset, and a `services-block` spacing rule before the reduced-motion rules.
 - All visitor copy is English. Brand tokens such as `NIGHT//SHIFT`, `N//S`, technical labels, and code-like strings stay as designed.
-- Fictional data stays visible and is labeled as fictional. The CV section has its own note naming the real data.
+- Fictional data stays visible. The footer and case-file dialogs label the showcase as fictional, and the CV section has its own note naming the real data.
 - The CV lists two services, six demo links, and three real contact channels.
 - The `demos/` folder is intact and linked from the CV section only.
 - Motion loops run without a pause control. Reduced-motion users get static content, a hidden cursor and ghost layer, and a skipped boot overlay.
@@ -67,14 +70,14 @@ Motion reasons: the boot sequence frames the page as a NightShift system, the gh
 
 ## Evidence on Hand
 
-NightShift source: `demos/nightshift/`. There are no real customers, testimonials, benchmarks, or contact records for the fictional studio. The page labels its data as fictional and makes no further claim.
+NightShift source: `demos/nightshift/`. There are no real customers, testimonials, benchmarks, or contact records for the fictional studio. The footer and case-file dialogs label the showcase as fictional and make no further claim.
 
 CV source: `bbebb12:index.html`. It supplies the owner's name, role, bio, two service descriptions, six demo paths, and three contact channels. No new claim was added to the CV section.
 
 ## Product Principles
 
 - Copy the demo exactly, then translate the copy.
-- Keep the fictional disclosure where visitors can read it.
+- Keep the fictional disclosure in the footer and case-file dialogs.
 - Put real CV data in its own section with a note that separates it from the fictional showcase.
 - Preserve layout, motion, and interaction behavior instead of rebuilding them from a description.
 - Keep the demo archive unchanged and link it only from the CV list.
@@ -82,4 +85,4 @@ CV source: `bbebb12:index.html`. It supplies the owner's name, role, bio, two se
 
 ## Accessibility & Inclusion
 
-The document uses English, landmarks, a unique title, and labelled controls. Focus stays visible, dialogs close with Escape, and the mobile menu returns focus to its trigger. Text using `ink`, `ink-soft`, `muted`, `cyan`, `magenta`, `amber`, `green`, and `violet` meets WCAG AA on the shipped dark backgrounds. The `muted-2` technical labels measure between 3.20:1 and 3.70:1, below the 4.5:1 AA threshold for normal text. That shortfall stays because the stylesheet is a literal copy. Reduced motion disables the loops, cursor, and ghost layer while keeping content readable. Fictional contact details are disclosed and must not be treated as a real support channel. The three CV contact links are the real channels.
+The document uses English, landmarks, a unique title, and labelled controls. Focus stays visible, dialogs close with Escape, and the mobile menu returns focus to its trigger. Text using `ink`, `ink-soft`, `muted`, `cyan`, `magenta`, `amber`, `green`, and `violet` meets WCAG AA on the shipped dark backgrounds. The `muted-2` technical labels measure between 3.20:1 and 3.70:1, below the 4.5:1 AA threshold for normal text. That shortfall stays because the stylesheet is a literal copy. Reduced motion disables the loops, cursor, and ghost layer while keeping content readable. The fictional studio is labeled as fictional, and its contact details must not be treated as a real support channel. The three CV contact links are the real channels.
