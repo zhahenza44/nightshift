@@ -602,6 +602,10 @@ new Promise((resolve) => {
       const list = doc.getElementById('process-list');
       const fill = doc.getElementById('process-fill');
       const panel = doc.querySelector('.contact-panel');
+      win.scrollTo({top: 0, behavior: 'instant'});
+      win.dispatchEvent(new win.Event('scroll'));
+      await wait(80);
+      const initialComplete = fill.classList.contains('is-complete');
       fill.style.transition = 'none';
       const scrollTarget = list.getBoundingClientRect().bottom + win.scrollY -
         win.innerHeight * 0.58 + 2;
@@ -623,7 +627,11 @@ new Promise((resolve) => {
       const connectorBottom = fillRect.bottom - afterBottom;
       const fillStyle = win.getComputedStyle(fill);
 
+      check(label + 'process connector class absent before rail completes', !initialComplete,
+        'class=' + fill.className);
       check(label + 'process fill reaches full progress', progress > 99.9, 'height=' + fill.style.height);
+      check(label + 'process connector waits for rail completion',
+        fill.classList.contains('is-complete') && exists, 'class=' + fill.className);
       check(label + 'process connector exists', exists, 'content=' + after.content);
       check(label + 'process connector spans seam', exists && afterHeight === 2 && afterBottom === -1,
         'height=' + afterHeight + ' bottom=' + afterBottom);
