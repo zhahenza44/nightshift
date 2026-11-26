@@ -41,7 +41,7 @@ class ContentTest(unittest.TestCase):
             'id="cursor-ring"', 'class="cursor-label"', 'class="fx-noise"',
             'class="fx-scan"', 'id="scroll-progress"', 'id="site-header"',
             'id="mobile-menu"', 'class="hero" id="top"', 'class="ticker"',
-            'id="studio"', 'id="cv"', 'id="work"', 'id="services"', 'id="process"',
+            'id="studio"', 'id="cv"', 'id="work"', 'id="process"',
             'id="contact"', 'class="site-footer"', 'id="project-dialog"', 'id="toast"',
         ):
             with self.subTest(marker=marker):
@@ -53,17 +53,20 @@ class ContentTest(unittest.TestCase):
             'aria-label="NIGHT SHIFT, back to top"',
             'aria-label="Main navigation"',
             'aria-label="Mobile navigation"',
-            '<a href="#cv"><span>02</span>CV</a>',
-            '<a href="#work"><span>03</span>Work</a>',
-            '<a href="#services"><span>04</span>Services</a>',
-            '<a href="#process"><span>05</span>Process</a>',
-            '<a href="#contact"><span>06</span>Contact</a>',
             ">OPEN FOR Q1 2027</span>",
             "<span>Start a project</span>",
             'aria-label="Open menu"',
         ):
             with self.subTest(marker=marker):
                 self.assertIn(marker, HTML)
+        for marker in (
+            '<a href="#cv"><span>02</span>CV</a>',
+            '<a href="#work"><span>03</span>Work &amp; Services</a>',
+            '<a href="#process"><span>04</span>Process</a>',
+            '<a href="#contact"><span>05</span>Contact</a>',
+        ):
+            with self.subTest(nav=marker):
+                self.assertEqual(HTML.count(marker), 2)
 
     def test_hero_copy_is_english(self):
         for marker in (
@@ -77,7 +80,6 @@ class ContentTest(unittest.TestCase):
             "<span>Start a project</span>",
             "<span>View work</span>",
             "<dt>Projects</dt>",
-            "<dt>Experience</dt>",
             "<dt>Response</dt>",
             "<span>h</span>",
             ">SCROLL TO EXPLORE</span>",
@@ -98,7 +100,7 @@ class ContentTest(unittest.TestCase):
     def test_sections_and_disclosure_are_english(self):
         for marker in (
             ">MANIFESTO</span>",
-            ">SELECTED WORK</span>",
+            ">WORK &amp; SERVICES</span>",
             ">CAPABILITIES</span>",
             ">PROCESS</span>",
             ">CONTACT</span>",
@@ -139,22 +141,67 @@ class ContentTest(unittest.TestCase):
 
     def test_section_numbering_and_nav(self):
         for marker in (
-            '<a href="#cv"><span>02</span>CV</a>',
-            '<a href="#work"><span>03</span>Work</a>',
-            '<a href="#services"><span>04</span>Services</a>',
-            '<a href="#process"><span>05</span>Process</a>',
-            '<a href="#contact"><span>06</span>Contact</a>',
             '<span class="section-index">02</span>',
             '>MANIFESTO</span>',
         ):
             with self.subTest(marker=marker):
                 self.assertIn(marker, HTML)
+        for marker in (
+            '<a href="#cv"><span>02</span>CV</a>',
+            '<a href="#work"><span>03</span>Work &amp; Services</a>',
+            '<a href="#process"><span>04</span>Process</a>',
+            '<a href="#contact"><span>05</span>Contact</a>',
+        ):
+            with self.subTest(nav=marker):
+                self.assertEqual(HTML.count(marker), 2)
+        for phrase in ('href="#services"', 'id="services"'):
+            with self.subTest(absent=phrase):
+                self.assertNotIn(phrase, HTML)
         studio = HTML.find('id="studio"')
         cv = HTML.find('id="cv"')
         work = HTML.find('id="work"')
         self.assertGreater(cv, -1)
         self.assertLess(studio, cv)
         self.assertLess(cv, work)
+
+    def test_merged_work_and_services_contract(self):
+        for marker in (
+            '>WORK &amp; SERVICES</span>',
+            '<span class="section-index">03</span>',
+        ):
+            with self.subTest(marker=marker):
+                self.assertIn(marker, HTML)
+        order = ('studio', 'cv', 'work', 'process', 'contact')
+        positions = [HTML.find('id="' + section + '"') for section in order]
+        self.assertTrue(all(position > -1 for position in positions), str(positions))
+        self.assertEqual(positions, sorted(positions))
+
+    def test_surabaya_and_github_label(self):
+        for marker in (
+            'DIGITAL STUDIO<br>SURABAYA, ID',
+            '<span>SURABAYA, ID</span>',
+            '<dd>Surabaya, ID</dd>',
+            '<span class="t-key">location</span>: surabaya, id',
+            '<div class="terminal-foot"><span>SURABAYA, ID</span>',
+            '<span class="mono">SURABAYA, ID</span>',
+            'href="https://github.com/zhahenza44/otomasi-web" target="_blank" rel="noopener">GITHUB <span>↗</span></a>',
+        ):
+            with self.subTest(marker=marker):
+                self.assertIn(marker, HTML)
+        for phrase in ('JKT', 'Jakarta', 'jakarta', 'SOURCE <span>↗</span>'):
+            with self.subTest(absent=phrase):
+                self.assertNotIn(phrase, HTML)
+
+    def test_hero_stats_contract(self):
+        for marker in (
+            '<div><dt>Projects</dt><dd><span class="count" data-count="1">1</span></dd></div>',
+            '<div><dt>Response</dt><dd>&lt;24<span>h</span></dd></div>',
+        ):
+            with self.subTest(marker=marker):
+                self.assertIn(marker, HTML)
+        for phrase in ('<dt>Experience</dt>', 'data-count="40"', 'data-count="6"'):
+            with self.subTest(absent=phrase):
+                self.assertNotIn(phrase, HTML)
 
     def test_cv_identity_and_services(self):
         for marker in (
@@ -337,6 +384,16 @@ class DeliveryTest(unittest.TestCase):
         for path in ("README.md", "PRODUCT.md"):
             with self.subTest(path=path):
                 self.assertTrue(read(path), path + " must exist")
+
+    def test_browser_smoke_ignores_only_font_download_errors(self):
+        smoke = read("tests/browser_smoke.py")
+        for marker in (
+            "downloadable font: download failed",
+            "fonts.gstatic.com",
+            'event.get("params", {}).get("level") == "error"',
+        ):
+            with self.subTest(marker=marker):
+                self.assertIn(marker, smoke)
 
     def test_nightshift_plan_exists(self):
         self.assertIn("NightShift becomes the main landing page",

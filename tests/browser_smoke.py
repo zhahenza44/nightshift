@@ -252,6 +252,34 @@ new Promise((resolve) => {
       check('cv section follows manifesto',
         Boolean(cvSection) && sectionIds.indexOf('studio') < sectionIds.indexOf('cv') &&
           sectionIds.indexOf('cv') < sectionIds.indexOf('work'), sectionIds.join(','));
+      check('section ids are merged',
+        sectionIds.join(',') === 'top,studio,cv,work,process,contact', sectionIds.join(','));
+      const workSection = doc.querySelector('section#work');
+      check('combined work section keeps both content blocks',
+        Boolean(workSection) && workSection.querySelectorAll('.project-card').length === 3 &&
+          workSection.querySelectorAll('.service-card').length === 4,
+        'projects=' + (workSection ? workSection.querySelectorAll('.project-card').length : 'missing') +
+          ' services=' + (workSection ? workSection.querySelectorAll('.service-card').length : 'missing'));
+      check('services nav anchor is gone', doc.querySelectorAll('a[href="#services"]').length === 0,
+        'anchors=' + doc.querySelectorAll('a[href="#services"]').length);
+      const githubLink = doc.querySelector('a[href="https://github.com/zhahenza44/otomasi-web"]');
+      const contactLinks = doc.querySelector('.contact-links');
+      check('github label replaced source',
+        Boolean(githubLink) && githubLink.textContent.trim().startsWith('GITHUB') &&
+          Boolean(contactLinks) && !contactLinks.textContent.includes('SOURCE'),
+        githubLink ? githubLink.textContent.trim() : 'missing link');
+      const bodyText = doc.body.textContent;
+      check('location is Surabaya',
+        bodyText.includes('Surabaya, ID') && bodyText.includes('surabaya, id') &&
+          !bodyText.includes('Jakarta') && !bodyText.includes('JKT'),
+        'Surabaya=' + bodyText.includes('Surabaya, ID') + ' lower=' + bodyText.includes('surabaya, id'));
+      const statLabels = Array.from(doc.querySelectorAll('.hero-stats dt'))
+        .map((el) => el.textContent.trim());
+      const statValues = Array.from(doc.querySelectorAll('.hero-stats dd'))
+        .map((el) => el.textContent.trim());
+      check('hero stats match owner update',
+        statLabels.join(',') === 'Projects,Response' && statValues.join(',') === '1,<24h',
+        statLabels.join(',') + ' :: ' + statValues.join(','));
       const cvText = cvSection ? cvSection.textContent.replace(/\s+/g, ' ').trim() : '';
       check('cv identity is visible',
         cvText.includes('Alan Nawa') && cvText.includes('Web & AI Automation'),
@@ -281,7 +309,7 @@ new Promise((resolve) => {
         }).length + '/6');
 
       const required = [
-        '#main', '#top', '#studio', '#cv', '#work', '#services', '#process', '#contact',
+        '#main', '#top', '#studio', '#cv', '#work', '#process', '#contact',
         'mailto:hello@nightshift.studio', 'https://wa.me/6281234567890',
         'https://github.com/zhahenza44/otomasi-web',
         'demos/ai-lead-capture/dashboard/index.html', 'demos/servis-ac/index.html',
@@ -361,6 +389,11 @@ new Promise((resolve) => {
       check('320px iframe viewport', win.innerWidth === 320, String(win.innerWidth));
       check('320px has no horizontal overflow', doc.documentElement.scrollWidth <= 320,
         'scrollWidth=' + doc.documentElement.scrollWidth);
+      const servicesBlock = doc.querySelector('.services-block');
+      const blockRect = servicesBlock ? servicesBlock.getBoundingClientRect() : null;
+      check('combined section fits 320px',
+        Boolean(blockRect) && blockRect.left >= -1 && blockRect.right <= 321,
+        blockRect ? Math.round(blockRect.left) + '..' + Math.round(blockRect.right) : 'missing');
       const cvBlocks = [doc.querySelector('.cv-grid'), doc.querySelector('.cv-demo-list')];
       check('cv section fits 320px', cvBlocks.every(Boolean) && cvBlocks.every((el) => {
         const rect = el.getBoundingClientRect();
@@ -653,6 +686,11 @@ def run_check(firefox, url, expression, reduced, followup=None):
                 event for event in client.events
                 if event.get("method") == "log.entryAdded"
                 and event.get("params", {}).get("level") == "error"
+                and not (
+                    "downloadable font: download failed" in str(
+                        event.get("params", {}).get("text", ""))
+                    and "fonts.gstatic.com" in str(event.get("params", {}).get("text", ""))
+                )
             ]
             if isinstance(result, list):
                 result = result + [{
