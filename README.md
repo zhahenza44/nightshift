@@ -24,7 +24,7 @@ Then open `http://localhost:8080`.
 
 ## Live deployment
 
-The site is published from `master` at `https://github.com/zhahenza44/nightshift` with GitHub Pages. The repository root includes a `CNAME` file for `nightshift.is-not-a.dev`. The Open Domains request asks for a CNAME record pointing to `zhahenza44.github.io`. It is pending review, so use the GitHub Pages URL until the custom domain activates.
+The site is published from `master` at `https://github.com/zhahenza44/nightshift` with GitHub Pages. The repository root includes a `CNAME` file for `nightshift.is-not-a.dev`. The Open Domains request was approved. The `nightshift.is-not-a.dev` CNAME resolves to `zhahenza44.github.io`, and the HTTP site serves this page. GitHub is still issuing the HTTPS certificate for the custom domain.
 
 ## What is in the root
 
