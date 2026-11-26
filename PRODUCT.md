@@ -42,7 +42,7 @@ The page is one static document that can be opened from disk or any static host.
 - Remove the contact-section note naming fictional names, metrics, email, and phone number.
 - Set the hero tag to `EST. 2026`.
 - Remove the vertical section padding on `#cv.section` so the CV block does not create a wide empty band at 1366px.
-- Reduce the bottom padding on `#work.section` to `clamp(32px, 4vw, 48px)` so CAPABILITIES does not leave a wide empty band before the CV section.
+- Reduce the bottom padding on `#work.section` to `clamp(32px, 4vw, 48px)` so CAPABILITIES does not leave a wide empty band before the Process section.
 - Remove the bottom padding on `#process.section` so the last process step meets the contact panel without an empty band.
 - Remove the vertical padding on `#contact.section` and the top margin on `.site-footer` so the contact panel meets the footer without an empty band.
 - Add Alan Nawa's CV after the manifesto, using the data in the old shell at `bbebb12:index.html`.
@@ -53,7 +53,7 @@ The page is one static document that can be opened from disk or any static host.
 ## Capabilities and Constraints
 
 - Root `index.html`, `js/main.js`, and the favicon come from `demos/nightshift/`. Their differences are translated visitor strings, the document language, the CV section, the merged Work & Services section, the Surabaya location, the hero stats and year, the removed contact note, and the `GITHUB` label.
-- `css/styles.css` keeps every demo selector and keyframe, then appends a CV block, padding resets for `#cv.section`, `#process.section`, and `#contact.section`, a compact bottom padding on `#work.section`, a zero footer top margin, and a `services-block` spacing rule before the reduced-motion rules.
+- `css/styles.css` keeps every demo selector and keyframe, overrides the demo `.work` padding with a compact `#work.section` rule in the Work block, then appends a CV block, padding resets for `#cv.section`, `#process.section`, and `#contact.section`, a zero footer top margin, and a `services-block` spacing rule before the reduced-motion rules.
 - All visitor copy is English. Brand tokens such as `NIGHT//SHIFT`, `N//S`, technical labels, and code-like strings stay as designed.
 - Fictional data stays visible. The footer and case-file dialogs label the showcase as fictional, and the CV section has its own note naming the real data.
 - The CV lists two services, six demo links, and three real contact channels.
