@@ -393,6 +393,9 @@ class DeliveryTest(unittest.TestCase):
             with self.subTest(path=path):
                 self.assertTrue(read(path), path + " must exist")
 
+    def test_github_pages_cname_is_pinned(self):
+        self.assertEqual(read("CNAME"), "nightshift.is-not-a.dev\n")
+
     def test_browser_smoke_ignores_only_font_download_errors(self):
         smoke = read("tests/browser_smoke.py")
         for marker in (
