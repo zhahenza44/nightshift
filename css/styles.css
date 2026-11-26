@@ -3457,6 +3457,10 @@ html.has-cursor .cursor {
    Real CV section
    -------------------------------------------------------------------------- */
 
+#cv.section {
+  padding-block: 0;
+}
+
 .cv-grid {
   display: grid;
   grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
