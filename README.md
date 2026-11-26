@@ -39,7 +39,7 @@ Portofolio/
 └── README.md
 ```
 
-`index.html`, `js/main.js`, and the favicon come from `demos/nightshift/`. Their differences are translated visitor strings, the document language, the CV section, the combined Work & Services section, the hero year, and the trimmed contact copy. The stylesheet keeps every demo rule and adds a CV block, padding resets for `#cv.section`, `#process.section`, and `#contact.section`, a zero top margin for the footer, and a small `services-block` spacing rule, all using the same tokens. No file inside `demos/` was changed.
+`index.html`, `js/main.js`, and the favicon come from `demos/nightshift/`. Their differences are translated visitor strings, the document language, the CV section, the combined Work & Services section, the hero year, and the trimmed contact copy. The stylesheet keeps every demo rule and adds a CV block, padding resets for `#cv.section`, `#process.section`, and `#contact.section`, a compact bottom padding on `#work.section`, a zero top margin for the footer, and a small `services-block` spacing rule, all using the same tokens. No file inside `demos/` was changed.
 
 ## The CV section
 
