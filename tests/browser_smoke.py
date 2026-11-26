@@ -634,9 +634,11 @@ new Promise((resolve) => {
         fillRect.left > panelRect.left && fillRect.left < panelRect.right,
         'x=' + Math.round(fillRect.left) + ' panel=' + Math.round(panelRect.left) + '..' + Math.round(panelRect.right));
       check(label + 'process fill paints above contact panel', fillStyle.zIndex === '1', fillStyle.zIndex);
-      check(label + 'process connector keeps neon gradient',
-        exists && after.backgroundImage === fillStyle.backgroundImage && after.boxShadow === fillStyle.boxShadow,
-        after.backgroundImage + ' :: ' + after.boxShadow);
+      const gradientColors = fillStyle.backgroundImage.match(/rgba?\([^)]+\)/g) || [];
+      const endColor = gradientColors[gradientColors.length - 1] || '';
+      check(label + 'process connector keeps terminal color',
+        exists && after.backgroundImage === 'none' && after.backgroundColor === endColor,
+        'seam=' + after.backgroundColor + ' gradientEnd=' + endColor + ' image=' + after.backgroundImage);
 
       resolve(checks);
     } catch (error) {
