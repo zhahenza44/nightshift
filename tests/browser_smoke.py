@@ -261,6 +261,13 @@ new Promise((resolve) => {
           workSection.querySelectorAll('.service-card').length === 4,
         'projects=' + (workSection ? workSection.querySelectorAll('.project-card').length : 'missing') +
           ' services=' + (workSection ? workSection.querySelectorAll('.service-card').length : 'missing'));
+      const servicesBlock390 = doc.querySelector('.services-block');
+      const workStyle390 = win.getComputedStyle(workSection);
+      const afterCapabilities390 = servicesBlock390
+        ? Math.round(workSection.getBoundingClientRect().bottom - servicesBlock390.getBoundingClientRect().bottom) : -1;
+      check('work bottom padding stays compact at 390px',
+        workStyle390.paddingBottom === '32px' && afterCapabilities390 >= 31 && afterCapabilities390 <= 33,
+        'padding=' + workStyle390.paddingBottom + ' gap=' + afterCapabilities390);
       check('services nav anchor is gone', doc.querySelectorAll('a[href="#services"]').length === 0,
         'anchors=' + doc.querySelectorAll('a[href="#services"]').length);
       const githubLink = doc.querySelector('a[href="https://github.com/zhahenza44/otomasi-web"]');
@@ -529,6 +536,16 @@ new Promise((resolve) => {
         const rect = el.getBoundingClientRect();
         return rect.width > 0 && rect.height > 0;
       }), content.join(','));
+      const wideWork = doc.querySelector('section#work.section.work');
+      const wideServices = doc.querySelector('.services-block');
+      const wideWorkStyle = wideWork ? win.getComputedStyle(wideWork) : null;
+      const afterCapabilities1366 = wideWork && wideServices
+        ? Math.round(wideWork.getBoundingClientRect().bottom - wideServices.getBoundingClientRect().bottom) : -1;
+      check('1366px work bottom padding stays compact',
+        Boolean(wideWorkStyle) && wideWorkStyle.paddingBottom === '48px' &&
+          afterCapabilities1366 >= 47 && afterCapabilities1366 <= 49,
+        'padding=' + (wideWorkStyle ? wideWorkStyle.paddingBottom : 'missing') +
+          ' gap=' + afterCapabilities1366);
       const contact = doc.querySelector('section#contact.section.contact');
       const panel = doc.querySelector('.contact-panel');
       const footer = doc.querySelector('.site-footer');
