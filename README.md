@@ -5,7 +5,7 @@ The main portfolio page keeps the `NIGHT//SHIFT` identity and adds Alan Nawa's r
 - The NightShift showcase: fictional case studies, metrics, status, email address, phone number, boot sequence, ghost cursor, scanline, ticker, magnetic buttons, scroll reveals, process fill, project dialogs, copy-email toast, clock, and mobile menu. The footer and case-file dialogs label this part as fictional.
 - The CV section: Alan Nawa, Web & AI Automation, two services, six demo links, and three real contact channels. A note in the section says it is the owner's real CV and that the case studies below it are fictional.
 
-The hero tag reads `EST. 2026`. The hero shows `Projects 1` and `Response <24h`; the Experience stat is gone. The GitHub link in the contact section reads `GITHUB` and still points to `https://github.com/zhahenza44/otomasi-web`. The contact section no longer carries the note about fictional names, metrics, email, and phone number; the footer and case-file dialogs do that labeling. The CV section has no vertical section padding.
+The hero tag reads `EST. 2026`. The hero shows `Projects 1` and `Response <24h`; the Experience stat is gone. The GitHub link in the contact section reads `GITHUB` and still points to `https://github.com/zhahenza44/otomasi-web`. The contact section no longer carries the note about fictional names, metrics, email, and phone number; the footer and case-file dialogs do that labeling. The CV section has no vertical section padding. The contact panel also has no vertical section padding and meets the footer directly.
 
 All visitor copy is English. Type comes from Google Fonts, with local fallbacks when the network is unavailable.
 
@@ -39,7 +39,7 @@ Portofolio/
 └── README.md
 ```
 
-`index.html`, `js/main.js`, and the favicon come from `demos/nightshift/`. Their differences are translated visitor strings, the document language, the CV section, and the combined Work & Services section. The stylesheet keeps every demo rule and adds a CV block plus a small `services-block` spacing rule that use the same tokens. No file inside `demos/` was changed.
+`index.html`, `js/main.js`, and the favicon come from `demos/nightshift/`. Their differences are translated visitor strings, the document language, the CV section, the combined Work & Services section, the hero year, and the trimmed contact copy. The stylesheet keeps every demo rule and adds a CV block, padding resets for `#cv.section` and `#contact.section`, a zero top margin for the footer, and a small `services-block` spacing rule, all using the same tokens. No file inside `demos/` was changed.
 
 ## The CV section
 
@@ -63,7 +63,7 @@ cd /home/asnodt/Projects/Portofolio
 python3 -m unittest discover -s tests -v
 ```
 
-They read `index.html`, `css/styles.css`, `js/main.js`, and the favicon. They pin the English NightShift copy, the footer and dialog disclosure, the CV content and links, the merged section order and nav labels, the Surabaya location, the hero stats and year, the `GITHUB` label, the removed contact note, and the preserved effects.
+They read `index.html`, `css/styles.css`, `js/main.js`, and the favicon. They pin the English NightShift copy, the footer and dialog disclosure, the CV content and links, the merged section order and nav labels, the Surabaya location, the hero stats and year, the `GITHUB` label, the removed contact note, the contact panel spacing at 390px and 1366px, and the preserved effects.
 
 Run the rendered checks with Firefox installed:
 
