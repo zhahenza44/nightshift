@@ -209,7 +209,7 @@ new Promise((resolve) => {
       const toast = doc.getElementById('toast');
       check('copy email shows English toast',
         toast.classList.contains('is-visible') &&
-        toast.textContent === 'EMAIL COPIED — hello@nightshift.studio',
+        toast.textContent === 'EMAIL COPIED — zhahenza666@proton.me',
         toast.textContent);
       check('copy label confirms in English',
         copyButton.querySelector('span').textContent === 'Copied',
@@ -338,7 +338,6 @@ new Promise((resolve) => {
 
       const required = [
         '#main', '#top', '#studio', '#cv', '#work', '#process', '#contact',
-        'mailto:hello@nightshift.studio', 'https://wa.me/6281234567890',
         'https://github.com/zhahenza44/otomasi-web',
         'demos/ai-lead-capture/dashboard/index.html', 'demos/servis-ac/index.html',
         'demos/ruang-rapi/index.html', 'demos/kedai-kopi/index.html',
@@ -348,6 +347,12 @@ new Promise((resolve) => {
       ];
       const missing = required.filter((href) => !hrefs.includes(href));
       check('required hrefs present', missing.length === 0, missing.join(',') || 'all present');
+      const staleHrefs = hrefs.filter((href) => href && (href.includes('nightshift.studio') || href.includes('wa.me')));
+      check('no fictional email or WhatsApp link remains', staleHrefs.length === 0,
+        staleHrefs.join(',') || 'none');
+      const copyEmailData = doc.getElementById('copy-email').dataset.email;
+      check('copy email uses the real address', copyEmailData === 'zhahenza666@proton.me',
+        copyEmailData || 'missing');
       const demoHrefs = required.filter((href) => href && href.startsWith('demos/'));
       const demoLinks = Array.from(doc.querySelectorAll('a[href^="demos/"]'));
       const badDemoLinks = demoLinks.filter((link) => link.getAttribute('target') !== '_blank' ||
@@ -387,9 +392,12 @@ new Promise((resolve) => {
         await wait(20);
       }
       check('footer progress reaches bottom', bottomProgress >= 99, 'width=' + bottomProgress + '%');
-      check('footer disclosure is English',
-        doc.querySelector('.site-footer').textContent.includes('DEMO CONCEPT / FICTIONAL STUDIO'),
-        doc.querySelector('.site-footer').textContent.replace(/\s+/g, ' ').trim().slice(0, 80));
+      const footerText = doc.querySelector('.site-footer').textContent.replace(/\s+/g, ' ').trim();
+      check('fictional studio footer label removed', !footerText.includes('DEMO CONCEPT / FICTIONAL STUDIO'),
+        footerText.slice(0, 80));
+      check('footer keeps English copy and back to top',
+        footerText.includes('NIGHT//SHIFT') && footerText.includes('BACK TO TOP'),
+        footerText.slice(0, 80));
 
       resolve(checks);
     } catch (error) {

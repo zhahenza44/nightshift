@@ -266,6 +266,13 @@ class ContentTest(unittest.TestCase):
         self.assertNotIn("names, metrics, email, and phone number are fictional", HTML)
         self.assertNotIn('class="demo-note"', HTML)
 
+    def test_fictional_contact_and_footer_label_are_gone(self):
+        self.assertNotIn("hello@nightshift.studio", HTML)
+        self.assertNotIn("HELLO@NIGHTSHIFT.STUDIO", HTML)
+        self.assertNotIn("https://wa.me/6281234567890", HTML)
+        self.assertNotIn(">WHATSAPP <", HTML)
+        self.assertNotIn("DEMO CONCEPT / FICTIONAL STUDIO", HTML)
+
     def test_no_indonesian_visitor_copy_in_html(self):
         words = (
             "yang", "dan", "untuk", "dengan", "tidak", "bukan", "kami", "kamu",
