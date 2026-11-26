@@ -2476,6 +2476,10 @@ html.has-cursor .cursor {
   padding-top: clamp(80px, 10vw, 130px);
 }
 
+#contact.section {
+  padding-block: 0;
+}
+
 .contact-panel {
   position: relative;
   padding: clamp(26px, 4.5vw, 64px);
@@ -2740,7 +2744,7 @@ html.has-cursor .cursor {
 
 .site-footer {
   position: relative;
-  margin-top: clamp(80px, 10vw, 130px);
+  margin-top: 0;
   border-top: 1px solid var(--line);
   overflow: hidden;
 }
