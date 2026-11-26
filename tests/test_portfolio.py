@@ -75,7 +75,7 @@ class ContentTest(unittest.TestCase):
             ">CANNOT BE</span>",
             'id="hero-scramble">IGNORED.</span>',
             ">DIGITAL STUDIO</span>",
-            ">EST. 2020</span>",
+            ">EST. 2026</span>",
             "landing pages, company profiles, and AI automation systems",
             "<span>Start a project</span>",
             "<span>View work</span>",
@@ -86,6 +86,7 @@ class ContentTest(unittest.TestCase):
         ):
             with self.subTest(marker=marker):
                 self.assertIn(marker, HTML)
+        self.assertNotIn("EST. 2020", HTML)
 
     def test_three_case_files_and_fictional_metrics(self):
         for title in ("HYPERMART", "AEGIS", "VOID HOTEL"):
@@ -117,7 +118,6 @@ class ContentTest(unittest.TestCase):
             "Tell us about the project.",
             "<span>Send brief</span>",
             "<span>Copy email</span>",
-            "names, metrics, email, and phone number are fictional",
             'aria-label="Case file details"',
             'aria-label="Close case file"',
             ">CLOSE ×</button>",
@@ -263,7 +263,8 @@ class ContentTest(unittest.TestCase):
 
     def test_cv_note_and_fictional_disclosure(self):
         self.assertIn("This section is my real CV", HTML)
-        self.assertIn("names, metrics, email, and phone number are fictional", HTML)
+        self.assertNotIn("names, metrics, email, and phone number are fictional", HTML)
+        self.assertNotIn('class="demo-note"', HTML)
 
     def test_no_indonesian_visitor_copy_in_html(self):
         words = (

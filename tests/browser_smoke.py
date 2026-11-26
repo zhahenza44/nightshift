@@ -2,8 +2,8 @@
 """Rendered smoke check for the NightShift landing page using Firefox WebDriver BiDi.
 
 No third-party package is needed. The script serves the repository over HTTP,
-opens 390px and 320px iframes in headless Firefox, exercises the controls, and
-checks layout, focus, motion, and reduced-motion behavior.
+opens 390px, 320px, and 1366px iframes in headless Firefox, exercises the
+controls, and checks layout, focus, motion, and reduced-motion behavior.
 """
 
 import base64
@@ -26,6 +26,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 HARNESS_PATH = "/__portfolio_browser_check__.html"
 NARROW_PATH = "/__portfolio_browser_check__320.html"
+WIDE_PATH = "/__portfolio_browser_check__1366.html"
 HARNESS_TEMPLATE = """<!doctype html>
 <html lang="en">
 <head><meta charset="utf-8"><title>NightShift browser check</title></head>
@@ -285,10 +286,12 @@ new Promise((resolve) => {
         cvText.includes('Alan Nawa') && cvText.includes('Web & AI Automation'),
         cvText.slice(0, 120) || 'missing');
       const footerNote = doc.querySelector('.demo-note');
+      check('contact demo note removed',
+        !footerNote && !bodyText.includes('names, metrics, email, and phone number are fictional'),
+        footerNote ? footerNote.textContent.trim() : 'removed');
       check('cv note separates real CV from fictional case files',
-        cvText.includes('This section is my real CV') &&
-          Boolean(footerNote && footerNote.textContent.includes('fictional')),
-        cvText.includes('This section is my real CV') ? 'both notes present' : 'cv note missing');
+        cvText.includes('This section is my real CV') && cvText.includes('fictional'),
+        cvText.includes('This section is my real CV') ? 'cv note present' : 'cv note missing');
       const cvNav = doc.querySelectorAll('a[href="#cv"]');
       check('CV nav anchor reaches the CV section', cvNav.length === 2, 'anchors=' + cvNav.length);
       const cvContactParts = [
@@ -474,6 +477,43 @@ new Promise((resolve) => {
       resolve(checks);
     } catch (error) {
       resolve([{name: 'reduced motion pass runs', pass: false,
+        detail: String((error && error.stack) || error)}]);
+    }
+  })();
+})
+"""
+
+WIDE_SCRIPT = r"""
+new Promise((resolve) => {
+  const frame = document.getElementById('frame');
+  (async () => {
+    try {
+      if (!(frame.contentDocument && frame.contentDocument.readyState === 'complete')) {
+        await new Promise((done) => frame.addEventListener('load', done, {once: true}));
+      }
+      await new Promise((done) => setTimeout(done, 240));
+      const win = frame.contentWindow;
+      const doc = win.document;
+      const checks = [];
+      const check = (name, pass, detail) => checks.push({name, pass: Boolean(pass), detail: String(detail)});
+      check('1366px iframe viewport', win.innerWidth === 1366, String(win.innerWidth));
+      const cv = doc.querySelector('section#cv.section.cv');
+      const style = cv ? win.getComputedStyle(cv) : null;
+      check('CV section has no vertical padding',
+        Boolean(style) && style.paddingTop === '0px' && style.paddingBottom === '0px',
+        style ? 'top=' + style.paddingTop + ' bottom=' + style.paddingBottom : 'missing section');
+      check('1366px no horizontal overflow', doc.documentElement.scrollWidth <= win.innerWidth,
+        'scrollWidth=' + doc.documentElement.scrollWidth);
+      const content = ['#cv .section-head', '#cv .cv-grid', '#cv .cv-demo-list'];
+      check('CV content stays visible', content.every((selector) => {
+        const el = doc.querySelector(selector);
+        if (!el) return false;
+        const rect = el.getBoundingClientRect();
+        return rect.width > 0 && rect.height > 0;
+      }), content.join(','));
+      resolve(checks);
+    } catch (error) {
+      resolve([{name: '1366px pass runs', pass: false,
         detail: String((error && error.stack) || error)}]);
     }
   })();
@@ -722,6 +762,7 @@ def main():
     server_thread.start()
     url = f"http://127.0.0.1:{http_port}{HARNESS_PATH}"
     narrow_url = f"http://127.0.0.1:{http_port}{NARROW_PATH}"
+    wide_url = f"http://127.0.0.1:{http_port}{WIDE_PATH}"
 
     failed = 0
     try:
@@ -730,6 +771,7 @@ def main():
             (url, NORMAL_SCRIPT_A, False, NORMAL_SCRIPT_B),
             (narrow_url, NARROW_SCRIPT, False, None),
             (url, REDUCED_SCRIPT, True, None),
+            (wide_url, WIDE_SCRIPT, False, None),
         ):
             result = run_check(firefox, check_url, expression, reduced, followup)
             if not isinstance(result, list) or not result:
