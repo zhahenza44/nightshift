@@ -2386,9 +2386,21 @@ html.has-cursor .cursor {
   left: 3px;
   width: 1px;
   height: 0;
+  z-index: 1;
   background: linear-gradient(180deg, var(--cyan), var(--magenta));
   box-shadow: 0 0 10px rgba(99, 245, 255, 0.5);
   transition: height 0.15s linear;
+}
+
+.process-fill::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  width: 1px;
+  height: 2px;
+  background: inherit;
+  box-shadow: inherit;
 }
 
 .process-step {
