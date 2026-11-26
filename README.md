@@ -2,10 +2,10 @@
 
 The main portfolio page keeps the `NIGHT//SHIFT` identity and adds Alan Nawa's real CV after the manifesto. Work and Services share one section, and the studio location reads Surabaya, ID. The page has two clearly separated parts:
 
-- The NightShift showcase: fictional case studies, metrics, status, email address, phone number, boot sequence, ghost cursor, scanline, ticker, magnetic buttons, scroll reveals, process fill, project dialogs, copy-email toast, clock, and mobile menu. The footer and case-file dialogs label this part as fictional.
+- The NightShift showcase: fictional case studies, metrics, status, boot sequence, ghost cursor, scanline, ticker, magnetic buttons, scroll reveals, process fill, project dialogs, copy-email toast, clock, and mobile menu. The case-file dialog labels the showcase as fictional; every contact point uses the owner's real email.
 - The CV section: Alan Nawa, Web & AI Automation, two services, six demo links, and three real contact channels. A note in the section says it is the owner's real CV and that the case studies below it are fictional.
 
-The hero tag reads `EST. 2026`. The hero shows `Projects 1` and `Response <24h`; the Experience stat is gone. The GitHub link in the contact section reads `GITHUB` and still points to `https://github.com/zhahenza44/otomasi-web`. The contact section no longer carries the note about fictional names, metrics, email, and phone number; the footer and case-file dialogs do that labeling. The CV section has no vertical section padding. The contact panel also has no vertical section padding: it follows the last Process step directly and meets the footer directly.
+The hero tag reads `EST. 2026`. The hero shows `Projects 1` and `Response <24h`; the Experience stat is gone. The GitHub link in the contact section reads `GITHUB` and still points to `https://github.com/zhahenza44/otomasi-web`. The contact section no longer carries the note about fictional names, metrics, email, and phone number; the case-file dialog and CV note do that labeling. The fictional email and WhatsApp link are gone: the mobile menu, Send brief, Copy email, and EMAIL link all use `zhahenza666@proton.me`, and the footer no longer shows `DEMO CONCEPT / FICTIONAL STUDIO`. The CV section has no vertical section padding. The contact panel also has no vertical section padding: it follows the last Process step directly and meets the footer directly.
 
 All visitor copy is English. Type comes from Google Fonts, with local fallbacks when the network is unavailable.
 
@@ -39,7 +39,7 @@ Portofolio/
 └── README.md
 ```
 
-`index.html`, `js/main.js`, and the favicon come from `demos/nightshift/`. Their differences are translated visitor strings, the document language, the CV section, the combined Work & Services section, the hero year, and the trimmed contact copy. The stylesheet keeps every demo rule and adds a CV block, padding resets for `#cv.section`, `#process.section`, and `#contact.section`, a compact bottom padding on `#work.section`, a zero top margin for the footer, and a small `services-block` spacing rule, all using the same tokens. No file inside `demos/` was changed.
+`index.html`, `js/main.js`, and the favicon come from `demos/nightshift/`. Their differences are translated visitor strings, the document language, the CV section, the combined Work & Services section, the hero year, the trimmed contact copy, the real contact address, and the removed WhatsApp link and footer label. The stylesheet keeps every demo rule and adds a CV block, padding resets for `#cv.section`, `#process.section`, and `#contact.section`, a compact bottom padding on `#work.section`, a zero top margin for the footer, and a small `services-block` spacing rule, all using the same tokens. No file inside `demos/` was changed.
 
 ## The CV section
 
