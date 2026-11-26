@@ -33,7 +33,7 @@ The page is one static document that can be opened from disk or any static host.
 - Keep the fictional studio, case studies, metrics, status, email address, and phone number. Label them in the footer and case-file dialogs.
 - Keep the Google Fonts requests.
 - Keep the boot sequence, ghost cursor, ticker, magnetic buttons, and other demo motion with no pause control.
-- Keep the brand as NIGHT//SHIFT and the hero copy unchanged.
+- Keep the brand as NIGHT//SHIFT and the hero headline copy unchanged.
 - Merge Work and Services into one `03 WORK & SERVICES` section with a CAPABILITIES sub-block. Remove the separate `#services` anchor and renumber Process and Contact.
 - Set every visitor-facing location to Surabaya, ID, including the hero foot and the terminal line.
 - Set the hero stat to `Projects 1`, remove Experience, and keep `Response <24h` with its terminal line and contact copy.
