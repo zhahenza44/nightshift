@@ -2394,6 +2394,7 @@ html.has-cursor .cursor {
 
 .process-fill::after {
   content: "";
+  display: none;
   position: absolute;
   left: 0;
   bottom: -1px;
@@ -2401,6 +2402,10 @@ html.has-cursor .cursor {
   height: 2px;
   background: var(--magenta);
   box-shadow: inherit;
+}
+
+.process-fill.is-complete::after {
+  display: block;
 }
 
 .process-step {

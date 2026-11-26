@@ -606,6 +606,7 @@ new Promise((resolve) => {
       win.dispatchEvent(new win.Event('scroll'));
       await wait(80);
       const initialComplete = fill.classList.contains('is-complete');
+      const initialClass = fill.className;
       fill.style.transition = 'none';
       const scrollTarget = list.getBoundingClientRect().bottom + win.scrollY -
         win.innerHeight * 0.58 + 2;
@@ -628,7 +629,7 @@ new Promise((resolve) => {
       const fillStyle = win.getComputedStyle(fill);
 
       check(label + 'process connector class absent before rail completes', !initialComplete,
-        'class=' + fill.className);
+        'class=' + initialClass);
       check(label + 'process fill reaches full progress', progress > 99.9, 'height=' + fill.style.height);
       check(label + 'process connector waits for rail completion',
         fill.classList.contains('is-complete') && exists, 'class=' + fill.className);

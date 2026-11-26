@@ -185,6 +185,7 @@
     const lineStart = window.innerHeight * 0.58;
     const progress = clamp((lineStart - rect.top) / Math.max(rect.height, 1), 0, 1);
     processFill.style.height = `${progress * 100}%`;
+    processFill.classList.toggle("is-complete", progress >= 0.999);
 
     processSteps.forEach((step) => {
       const stepRect = step.getBoundingClientRect();

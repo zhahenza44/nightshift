@@ -140,6 +140,11 @@ new Promise((resolve) => {
       const list = doc.getElementById('process-list');
       const fill = doc.getElementById('process-fill');
       const panel = doc.querySelector('.contact-panel');
+      win.scrollTo({top: 0, behavior: 'instant'});
+      win.dispatchEvent(new win.Event('scroll'));
+      await wait(80);
+      const initialComplete = fill.classList.contains('is-complete');
+      const initialClass = fill.className;
       fill.style.transition = 'none';
       const scrollTarget = list.getBoundingClientRect().bottom + win.scrollY -
         win.innerHeight * 0.58 + 2;
@@ -161,7 +166,11 @@ new Promise((resolve) => {
       const connectorBottom = fillRect.bottom - afterBottom;
       const fillStyle = win.getComputedStyle(fill);
 
+      check(label + 'process connector class absent before rail completes', !initialComplete,
+        'class=' + initialClass);
       check(label + 'process fill reaches full progress', progress > 99.9, 'height=' + fill.style.height);
+      check(label + 'process connector waits for rail completion',
+        fill.classList.contains('is-complete') && exists, 'class=' + fill.className);
       check(label + 'process connector exists', exists, 'content=' + after.content);
       check(label + 'process connector spans seam', exists && afterHeight === 2 && afterBottom === -1,
         'height=' + afterHeight + ' bottom=' + afterBottom);
@@ -188,7 +197,7 @@ new Promise((resolve) => {
 """
 ```
 
-Execution ruling: a fixed 250ms wait sampled the 0.15s height transition and an exact 1px float compare flaked at 1366px. The test disables the transition inside the iframe, polls the inline height, and allows 1.01px for floating-point rounding.
+Execution ruling: a fixed 250ms wait sampled the 0.15s height transition and an exact 1px float compare flaked at 1366px. The test disables the transition inside the iframe, polls the inline height, and allows 1.01px for floating-point rounding. A later review added the completion gate: the test scrolls back to the top before sampling, and checks the `is-complete` class because Firefox reports `content: none` and `display: none` unreliably on a non-generated pseudo-element.
 
 Add the script to `main()` with these three exact tuple entries:
 
@@ -214,10 +223,11 @@ git commit --no-verify -m "test: pin process rail seam connection"
 
 **Files:**
 - Modify: `css/styles.css:2383-2392`
+- Modify: `js/main.js:187` (final review fix)
 
 **Interfaces:**
 - Consumes: the failing checks from Task 3 and the unchanged inline height output.
-- Produces: `.process-fill::after`, a 2px tall continuation whose bottom edge is 1px below the fill, plus `z-index: 1` on the fill. No JavaScript change.
+- Produces: `.process-fill::after`, a 2px tall continuation whose bottom edge is 1px below the fill, plus `z-index: 1` on the fill. The final review fix toggles `is-complete` from `updateProcess()` so the 2px extension appears only when the rail reaches the contact panel.
 
 - [x] **Step 1: Extend the rail in CSS**
 
@@ -226,17 +236,24 @@ In `css/styles.css`, add `z-index: 1;` to `.process-fill` immediately after `hei
 ```css
 .process-fill::after {
   content: "";
+  display: none;
   position: absolute;
   left: 0;
   bottom: -1px;
   width: 1px;
   height: 2px;
-  background: inherit;
+  background: var(--magenta);
   box-shadow: inherit;
+}
+
+.process-fill.is-complete::after {
+  display: block;
 }
 ```
 
-Keep the existing `top`, `left`, `width`, gradient, glow, and `transition` declarations unchanged.
+Keep the existing `top`, `left`, `width`, gradient, glow, and `transition` declarations unchanged. In `js/main.js`, add `processFill.classList.toggle("is-complete", progress >= 0.999);` immediately after the existing height assignment; the inline `progress * 100` output stays unchanged.
+
+Execution ruling: a final review caught two side effects. `background: inherit` restarted the cyan-to-magenta gradient inside the 2px seam and flashed cyan at the magenta end, so the connector uses the gradient's terminal color via `var(--magenta)` and the test checks the rendered terminal color instead of identical declarations. The always-on pseudo also placed a 2px neon cap at the top of the empty rail, so the connector is gated by the completion class. Cost if wrong is a visible ornament and a broken seam; both are pinned by RED checks.
 
 - [x] **Step 2: Run the tests and verify they pass**
 
