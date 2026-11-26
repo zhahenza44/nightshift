@@ -584,6 +584,69 @@ new Promise((resolve) => {
 })
 """
 
+CONNECTOR_SCRIPT = r"""
+new Promise((resolve) => {
+  const frame = document.getElementById('frame');
+  const checks = [];
+  const check = (name, pass, detail) => checks.push({name, pass: Boolean(pass), detail});
+  const wait = (ms) => new Promise((done) => setTimeout(done, ms));
+  let label = '';
+  (async () => {
+    try {
+      if (!(frame.contentDocument && frame.contentDocument.readyState === 'complete')) {
+        await new Promise((done) => frame.addEventListener('load', done, {once: true}));
+      }
+      await wait(2400);
+      const win = frame.contentWindow;
+      const doc = win.document;
+      const list = doc.getElementById('process-list');
+      const fill = doc.getElementById('process-fill');
+      const panel = doc.querySelector('.contact-panel');
+      fill.style.transition = 'none';
+      const scrollTarget = list.getBoundingClientRect().bottom + win.scrollY -
+        win.innerHeight * 0.58 + 2;
+      win.scrollTo({top: scrollTarget, behavior: 'instant'});
+      win.dispatchEvent(new win.Event('scroll'));
+      for (let i = 0; i < 50; i += 1) {
+        if (Number.parseFloat(fill.style.height) > 99.9) break;
+        await wait(20);
+      }
+
+      label = win.innerWidth + 'px ';
+      const progress = Number.parseFloat(fill.style.height);
+      const fillRect = fill.getBoundingClientRect();
+      const panelRect = panel.getBoundingClientRect();
+      const after = win.getComputedStyle(fill, '::after');
+      const afterHeight = Number.parseFloat(after.height);
+      const afterBottom = Number.parseFloat(after.bottom);
+      const exists = after.content !== 'none' && Number.isFinite(afterHeight) && Number.isFinite(afterBottom);
+      const connectorBottom = fillRect.bottom - afterBottom;
+      const fillStyle = win.getComputedStyle(fill);
+
+      check(label + 'process fill reaches full progress', progress > 99.9, 'height=' + fill.style.height);
+      check(label + 'process connector exists', exists, 'content=' + after.content);
+      check(label + 'process connector spans seam', exists && afterHeight === 2 && afterBottom === -1,
+        'height=' + afterHeight + ' bottom=' + afterBottom);
+      check(label + 'process connector lands on panel top',
+        exists && Math.abs(connectorBottom - panelRect.top) <= 1.01,
+        'connector=' + connectorBottom.toFixed(3) + ' panel=' + panelRect.top.toFixed(3));
+      check(label + 'process connector stays inside panel width',
+        fillRect.left > panelRect.left && fillRect.left < panelRect.right,
+        'x=' + Math.round(fillRect.left) + ' panel=' + Math.round(panelRect.left) + '..' + Math.round(panelRect.right));
+      check(label + 'process fill paints above contact panel', fillStyle.zIndex === '1', fillStyle.zIndex);
+      check(label + 'process connector keeps neon gradient',
+        exists && after.backgroundImage === fillStyle.backgroundImage && after.boxShadow === fillStyle.boxShadow,
+        after.backgroundImage + ' :: ' + after.boxShadow);
+
+      resolve(checks);
+    } catch (error) {
+      resolve([{name: label + 'connector pass runs', pass: false,
+        detail: String((error && error.stack) || error)}]);
+    }
+  })();
+})
+"""
+
 
 def free_port():
     with socket.socket() as sock:
@@ -836,6 +899,9 @@ def main():
             (narrow_url, NARROW_SCRIPT, False, None),
             (url, REDUCED_SCRIPT, True, None),
             (wide_url, WIDE_SCRIPT, False, None),
+            (url, CONNECTOR_SCRIPT, False, None),
+            (narrow_url, CONNECTOR_SCRIPT, False, None),
+            (wide_url, CONNECTOR_SCRIPT, False, None),
         ):
             result = run_check(firefox, check_url, expression, reduced, followup)
             if not isinstance(result, list) or not result:
