@@ -292,15 +292,15 @@ new Promise((resolve) => {
       const contactSection = doc.querySelector('section#contact.section.contact');
       const contactPanel = doc.querySelector('.contact-panel');
       const siteFooter = doc.querySelector('.site-footer');
-      const contactProcess = doc.querySelector('section#process');
+      const lastProcessStep = doc.querySelector('#process .process-step:last-of-type');
       const contactStyle = contactSection ? win.getComputedStyle(contactSection) : null;
       const footerStyle = siteFooter ? win.getComputedStyle(siteFooter) : null;
       check('contact section drops vertical padding',
         Boolean(contactStyle) && contactStyle.paddingTop === '0px' && contactStyle.paddingBottom === '0px',
         contactStyle ? 'top=' + contactStyle.paddingTop + ' bottom=' + contactStyle.paddingBottom : 'missing section');
-      const abovePanel = contactPanel && contactProcess
-        ? Math.round(contactPanel.getBoundingClientRect().top - contactProcess.getBoundingClientRect().bottom) : -1;
-      check('contact panel follows process without extra gap', abovePanel >= 0 && abovePanel <= 1,
+      const abovePanel = contactPanel && lastProcessStep
+        ? Math.round(contactPanel.getBoundingClientRect().top - lastProcessStep.getBoundingClientRect().bottom) : -1;
+      check('contact panel follows last process step without extra gap', abovePanel >= 0 && abovePanel <= 1,
         'above=' + abovePanel);
       const belowPanel = contactPanel && siteFooter
         ? Math.round(siteFooter.getBoundingClientRect().top - contactPanel.getBoundingClientRect().bottom) : -1;
@@ -532,15 +532,15 @@ new Promise((resolve) => {
       const contact = doc.querySelector('section#contact.section.contact');
       const panel = doc.querySelector('.contact-panel');
       const footer = doc.querySelector('.site-footer');
-      const process = doc.querySelector('section#process');
+      const lastStep = doc.querySelector('#process .process-step:last-of-type');
       const contactStyle = contact ? win.getComputedStyle(contact) : null;
       const footerStyle = footer ? win.getComputedStyle(footer) : null;
       check('1366px contact section drops vertical padding',
         Boolean(contactStyle) && contactStyle.paddingTop === '0px' && contactStyle.paddingBottom === '0px',
         contactStyle ? 'top=' + contactStyle.paddingTop + ' bottom=' + contactStyle.paddingBottom : 'missing section');
-      const above = panel && process
-        ? Math.round(panel.getBoundingClientRect().top - process.getBoundingClientRect().bottom) : -1;
-      check('1366px contact panel follows process without extra gap', above >= 0 && above <= 1,
+      const above = panel && lastStep
+        ? Math.round(panel.getBoundingClientRect().top - lastStep.getBoundingClientRect().bottom) : -1;
+      check('1366px contact panel follows last process step without extra gap', above >= 0 && above <= 1,
         'above=' + above);
       const below = panel && footer
         ? Math.round(footer.getBoundingClientRect().top - panel.getBoundingClientRect().bottom) : -1;
