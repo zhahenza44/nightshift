@@ -1757,6 +1757,10 @@ html.has-cursor .cursor {
   padding-bottom: clamp(100px, 13vw, 180px);
 }
 
+#work.section {
+  padding-bottom: clamp(32px, 4vw, 48px);
+}
+
 .work-intro {
   display: grid;
   grid-template-columns: minmax(0, 1.4fr) minmax(260px, 0.6fr);
