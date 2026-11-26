@@ -34,6 +34,11 @@ The page is one static document that can be opened from disk or any static host.
 - Keep the Google Fonts requests.
 - Keep the boot sequence, ghost cursor, ticker, magnetic buttons, and other demo motion with no pause control.
 - Keep the brand as NIGHT//SHIFT and the hero copy unchanged.
+- Merge Work and Services into one `03 WORK & SERVICES` section with a CAPABILITIES sub-block. Remove the separate `#services` anchor and renumber Process and Contact.
+- Set every visitor-facing location to Surabaya, ID, including the hero foot and the terminal line.
+- Set the hero stat to `Projects 1`, remove Experience, and keep `Response <24h` with its terminal line and contact copy.
+- Label the GitHub contact link `GITHUB` and keep its href at `https://github.com/zhahenza44/otomasi-web`.
+- Ignore only blocked Google Fonts downloads in the rendered console check. Every other console error still fails the run.
 - Add Alan Nawa's CV after the manifesto, using the data in the old shell at `bbebb12:index.html`.
 - Allow additive CSS for the CV section that uses the demo tokens.
 - Leave every file inside `demos/` unchanged.
@@ -42,7 +47,7 @@ The page is one static document that can be opened from disk or any static host.
 ## Capabilities and Constraints
 
 - Root `index.html`, `js/main.js`, and the favicon come from `demos/nightshift/`. Their differences are translated visitor strings, the document language, and the CV section.
-- `css/styles.css` keeps every demo selector and keyframe, then appends a CV block before the reduced-motion rules.
+- `css/styles.css` keeps every demo selector and keyframe, then appends a CV block and a `services-block` spacing rule before the reduced-motion rules.
 - All visitor copy is English. Brand tokens such as `NIGHT//SHIFT`, `N//S`, technical labels, and code-like strings stay as designed.
 - Fictional data stays visible and is labeled as fictional. The CV section has its own note naming the real data.
 - The CV lists two services, six demo links, and three real contact channels.
@@ -54,7 +59,7 @@ The page is one static document that can be opened from disk or any static host.
 
 Name: NIGHT//SHIFT. The demo supplies the visual direction. Dark near-black is the base, cyan marks the primary actions and links, magenta marks technical accents, and the grid, horizon line, orb, and ticker are the studio's identity motifs. The CV block reuses these tokens instead of introducing a second visual system.
 
-Design dials: ENERGY 3 / RHYTHM 3 / MOTION 3. That describes the shipped demo, not a new proposal. The page leads with a full-height hero, shifts between manifesto, CV, work, services, process, and contact compositions, and uses motion to guide attention through each section.
+Design dials: ENERGY 3 / RHYTHM 3 / MOTION 3. That describes the shipped demo, not a new proposal. The page leads with a full-height hero, shifts between manifesto, CV, a combined work and services composition, process, and contact, and uses motion to guide attention through each section.
 
 Visual reasons: cyan carries the main action because it is the highest-contrast accent on the dark base. Magenta stays on technical labels so it never competes with the primary action. The grid and horizon belong to the NightShift identity copied from the demo. The orb repeats studio facts as the hero motif. The ticker repeats service labels. The CV section uses the same section head and panel patterns so it reads as part of the page, and its note sits next to the real contact details.
 
