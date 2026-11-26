@@ -140,6 +140,9 @@ new Promise((resolve) => {
       check('process fill advances', fill > 0, 'height=' + fill + '%');
       const activeSteps = doc.querySelectorAll('.process-step.is-active').length;
       check('process steps activate on scroll', activeSteps >= 1, 'active=' + activeSteps);
+      const stepNumbers = Array.from(doc.querySelectorAll('.step-no'))
+        .map((el) => el.textContent.trim()).join(',');
+      check('process step numbers are roman', stepNumbers === 'I,II,III,IV,V', stepNumbers);
 
       const menuButton = doc.getElementById('menu-btn');
       const menu = doc.getElementById('mobile-menu');

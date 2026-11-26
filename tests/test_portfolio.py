@@ -290,6 +290,16 @@ class ContentTest(unittest.TestCase):
         self.assertEqual(read("assets/favicon.svg"), read("demos/nightshift/assets/favicon.svg"))
 
 
+class ProcessContactTest(unittest.TestCase):
+    def test_process_step_numbers_are_roman(self):
+        block = re.search(r'<ol class="process-list" id="process-list">.*?</ol>', HTML, re.S)
+        self.assertIsNotNone(block)
+        numbers = re.findall(r'<span class="step-no">([^<]+)</span>', block.group(0))
+        self.assertEqual(numbers, ["I", "II", "III", "IV", "V"])
+        nav_numbers = re.findall(r'<a href="#(?:process|contact)"><span>(\d+)</span>', HTML)
+        self.assertEqual(nav_numbers, ["04", "04", "05", "05"])
+
+
 class CssContractTest(unittest.TestCase):
     def test_stylesheet_is_copied_from_demo(self):
         demo_css = read("demos/nightshift/css/styles.css")
