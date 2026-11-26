@@ -3571,6 +3571,16 @@ html.has-cursor .cursor {
   }
 }
 
+.services-block {
+  margin-top: clamp(90px, 12vw, 160px);
+  padding-top: clamp(44px, 6vw, 76px);
+  border-top: 1px solid var(--line);
+}
+
+.services-block .section-head {
+  margin-bottom: clamp(32px, 5vw, 56px);
+}
+
 /* --------------------------------------------------------------------------
    Motion / no-JS preferences
    -------------------------------------------------------------------------- */
