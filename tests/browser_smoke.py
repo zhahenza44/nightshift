@@ -289,6 +289,24 @@ new Promise((resolve) => {
       check('contact demo note removed',
         !footerNote && !bodyText.includes('names, metrics, email, and phone number are fictional'),
         footerNote ? footerNote.textContent.trim() : 'removed');
+      const contactSection = doc.querySelector('section#contact.section.contact');
+      const contactPanel = doc.querySelector('.contact-panel');
+      const siteFooter = doc.querySelector('.site-footer');
+      const contactProcess = doc.querySelector('section#process');
+      const contactStyle = contactSection ? win.getComputedStyle(contactSection) : null;
+      const footerStyle = siteFooter ? win.getComputedStyle(siteFooter) : null;
+      check('contact section drops vertical padding',
+        Boolean(contactStyle) && contactStyle.paddingTop === '0px' && contactStyle.paddingBottom === '0px',
+        contactStyle ? 'top=' + contactStyle.paddingTop + ' bottom=' + contactStyle.paddingBottom : 'missing section');
+      const abovePanel = contactPanel && contactProcess
+        ? Math.round(contactPanel.getBoundingClientRect().top - contactProcess.getBoundingClientRect().bottom) : -1;
+      check('contact panel follows process without extra gap', abovePanel >= 0 && abovePanel <= 1,
+        'above=' + abovePanel);
+      const belowPanel = contactPanel && siteFooter
+        ? Math.round(siteFooter.getBoundingClientRect().top - contactPanel.getBoundingClientRect().bottom) : -1;
+      check('contact panel sits flush with footer',
+        Boolean(footerStyle) && footerStyle.marginTop === '0px' && belowPanel >= 0 && belowPanel <= 1,
+        'marginTop=' + (footerStyle ? footerStyle.marginTop : 'missing') + ' below=' + belowPanel);
       check('cv note separates real CV from fictional case files',
         cvText.includes('This section is my real CV') && cvText.includes('fictional'),
         cvText.includes('This section is my real CV') ? 'cv note present' : 'cv note missing');
@@ -511,6 +529,24 @@ new Promise((resolve) => {
         const rect = el.getBoundingClientRect();
         return rect.width > 0 && rect.height > 0;
       }), content.join(','));
+      const contact = doc.querySelector('section#contact.section.contact');
+      const panel = doc.querySelector('.contact-panel');
+      const footer = doc.querySelector('.site-footer');
+      const process = doc.querySelector('section#process');
+      const contactStyle = contact ? win.getComputedStyle(contact) : null;
+      const footerStyle = footer ? win.getComputedStyle(footer) : null;
+      check('1366px contact section drops vertical padding',
+        Boolean(contactStyle) && contactStyle.paddingTop === '0px' && contactStyle.paddingBottom === '0px',
+        contactStyle ? 'top=' + contactStyle.paddingTop + ' bottom=' + contactStyle.paddingBottom : 'missing section');
+      const above = panel && process
+        ? Math.round(panel.getBoundingClientRect().top - process.getBoundingClientRect().bottom) : -1;
+      check('1366px contact panel follows process without extra gap', above >= 0 && above <= 1,
+        'above=' + above);
+      const below = panel && footer
+        ? Math.round(footer.getBoundingClientRect().top - panel.getBoundingClientRect().bottom) : -1;
+      check('1366px contact panel sits flush with footer',
+        Boolean(footerStyle) && footerStyle.marginTop === '0px' && below >= 0 && below <= 1,
+        'marginTop=' + (footerStyle ? footerStyle.marginTop : 'missing') + ' below=' + below);
       resolve(checks);
     } catch (error) {
       resolve([{name: '1366px pass runs', pass: false,
