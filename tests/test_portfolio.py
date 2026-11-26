@@ -297,7 +297,7 @@ class ProcessContactTest(unittest.TestCase):
         numbers = re.findall(r'<span class="step-no">([^<]+)</span>', block.group(0))
         self.assertEqual(numbers, ["I", "II", "III", "IV", "V"])
         nav_numbers = re.findall(r'<a href="#(?:process|contact)"><span>(\d+)</span>', HTML)
-        self.assertEqual(nav_numbers, ["04", "04", "05", "05"])
+        self.assertEqual(nav_numbers, ["04", "05", "04", "05"])
 
 
 class CssContractTest(unittest.TestCase):
