@@ -230,6 +230,28 @@ new Promise((resolve) => {
           githubAction.querySelector('span').textContent === 'GITHUB' &&
           (sendMessage.compareDocumentPosition(githubAction) & win.Node.DOCUMENT_POSITION_FOLLOWING) > 0,
         githubAction ? githubAction.outerHTML : 'missing link');
+      const emailAction = doc.querySelector('.contact-actions .btn--primary');
+      const emailRect = emailAction ? emailAction.getBoundingClientRect() : null;
+      const sendRect = sendMessage ? sendMessage.getBoundingClientRect() : null;
+      const githubRect = githubAction ? githubAction.getBoundingClientRect() : null;
+      check('390px email spans the action row',
+        Boolean(emailRect) && Boolean(sendRect) &&
+          emailRect.width >= 280 && emailRect.bottom <= sendRect.top + 1,
+        emailRect && sendRect
+          ? 'w=' + Math.round(emailRect.width) + ' bottom=' + Math.round(emailRect.bottom) +
+            ' dmTop=' + Math.round(sendRect.top)
+          : 'missing');
+      check('390px send message and github sit side by side',
+        Boolean(sendRect) && Boolean(githubRect) &&
+          Math.abs(sendRect.top - githubRect.top) <= 1 &&
+          sendRect.right <= githubRect.left + 1 &&
+          sendRect.height >= 44 && githubRect.height >= 44 &&
+          sendRect.left >= -1 && githubRect.right <= viewport + 1,
+        sendRect && githubRect
+          ? 'dm=' + Math.round(sendRect.left) + '..' + Math.round(sendRect.right) +
+            ' github=' + Math.round(githubRect.left) + '..' + Math.round(githubRect.right) +
+            ' h=' + Math.round(sendRect.height) + '/' + Math.round(githubRect.height)
+          : 'missing');
 
       const magnetic = doc.querySelector('.hero-actions .btn--primary');
       magnetic.scrollIntoView({block: 'center', behavior: 'instant'});
@@ -469,6 +491,30 @@ new Promise((resolve) => {
           rect.left >= -1 && rect.right <= 321 && rect.width >= 24 && rect.height >= 24,
           Math.round(rect.left) + '..' + Math.round(rect.right) + ' h=' + Math.round(rect.height));
       }
+      const emailAction = doc.querySelector('.contact-actions .btn--primary');
+      const sendAction = doc.getElementById('send-message');
+      const githubAction = doc.querySelector('.contact-actions a[href="https://github.com/zhahenza44/otomasi-web"]');
+      const emailRect = emailAction ? emailAction.getBoundingClientRect() : null;
+      const sendRect = sendAction ? sendAction.getBoundingClientRect() : null;
+      const githubRect = githubAction ? githubAction.getBoundingClientRect() : null;
+      check('320px email spans the action row',
+        Boolean(emailRect) && Boolean(sendRect) &&
+          emailRect.width >= 200 && emailRect.bottom <= sendRect.top + 1,
+        emailRect && sendRect
+          ? 'w=' + Math.round(emailRect.width) + ' bottom=' + Math.round(emailRect.bottom) +
+            ' dmTop=' + Math.round(sendRect.top)
+          : 'missing');
+      check('320px send message and github sit side by side',
+        Boolean(sendRect) && Boolean(githubRect) &&
+          Math.abs(sendRect.top - githubRect.top) <= 1 &&
+          sendRect.right <= githubRect.left + 1 &&
+          sendRect.height >= 44 && githubRect.height >= 44 &&
+          sendRect.left >= -1 && githubRect.right <= 321,
+        sendRect && githubRect
+          ? 'dm=' + Math.round(sendRect.left) + '..' + Math.round(sendRect.right) +
+            ' github=' + Math.round(githubRect.left) + '..' + Math.round(githubRect.right) +
+            ' h=' + Math.round(sendRect.height) + '/' + Math.round(githubRect.height)
+          : 'missing');
       resolve(checks);
     } catch (error) {
       resolve([{name: 'narrow pass runs', pass: false,
