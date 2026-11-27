@@ -1,6 +1,6 @@
 # NIGHT//SHIFT landing page
 
-The main portfolio page keeps the `NIGHT//SHIFT` identity and adds Alan Nawa's real CV after the manifesto. Work and Services share one section, and the studio location reads Surabaya, ID. The page has two clearly separated parts:
+The main portfolio page keeps the `NIGHT//SHIFT` identity and adds Alan Nawa's real CV after the manifesto. Work and Services share one section, and the studio location reads Surabaya, ID in the menu, CV, and terminal, but not in the header or hero foot. The page has two clearly separated parts:
 
 - The NightShift showcase: fictional case studies, metrics, status, boot sequence, ghost cursor, scanline, ticker, magnetic buttons, scroll reveals, process fill, project dialogs, clock, and mobile menu. The case-file dialog labels the showcase as fictional; contact actions use the owner's real channels.
 - The CV section: Alan Nawa, Web & AI Automation, two services, six demo links, and three real contact channels. A note in the section says it is the owner's real CV and that the case studies below it are fictional.
