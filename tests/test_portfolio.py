@@ -127,8 +127,8 @@ class ContentTest(unittest.TestCase):
     def test_contact_actions_use_instagram_dm_and_boxed_github(self):
         for marker in (
             '<a class="btn btn--primary magnetic" href="mailto:zhahenza666@proton.me"><span>Email</span><i>↗</i></a>',
-            '<a class="btn btn--ghost" id="send-message" href="https://ig.me/m/zhahenzar" target="_blank" rel="noopener"><span>Send message</span><i>↗</i></a>',
-            '<a class="btn btn--ghost" href="https://github.com/zhahenza44/otomasi-web" target="_blank" rel="noopener"><span>GITHUB</span><i>↗</i></a>',
+            '<a class="btn btn--ghost magnetic" id="send-message" href="https://ig.me/m/zhahenzar" target="_blank" rel="noopener"><span>Send message</span><i>↗</i></a>',
+            '<a class="btn btn--ghost magnetic" href="https://github.com/zhahenza44/otomasi-web" target="_blank" rel="noopener"><span>GITHUB</span><i>↗</i></a>',
         ):
             with self.subTest(marker=marker):
                 self.assertIn(marker, HTML)
@@ -200,7 +200,7 @@ class ContentTest(unittest.TestCase):
             '<dd>Surabaya, ID</dd>',
             '<span class="t-key">location</span>: surabaya, id',
             '<div class="terminal-foot"><span>SURABAYA, ID</span>',
-            '<a class="btn btn--ghost" href="https://github.com/zhahenza44/otomasi-web" target="_blank" rel="noopener"><span>GITHUB</span><i>↗</i></a>',
+            '<a class="btn btn--ghost magnetic" href="https://github.com/zhahenza44/otomasi-web" target="_blank" rel="noopener"><span>GITHUB</span><i>↗</i></a>',
         ):
             with self.subTest(marker=marker):
                 self.assertIn(marker, HTML)

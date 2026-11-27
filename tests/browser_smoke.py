@@ -360,8 +360,13 @@ new Promise((resolve) => {
       check('contact section drops vertical padding',
         Boolean(contactStyle) && contactStyle.paddingTop === '0px' && contactStyle.paddingBottom === '0px',
         contactStyle ? 'top=' + contactStyle.paddingTop + ' bottom=' + contactStyle.paddingBottom : 'missing section');
+      const layoutTop = (el) => {
+        let top = 0;
+        for (let node = el; node; node = node.offsetParent) top += node.offsetTop;
+        return top;
+      };
       const abovePanel = contactPanel && lastProcessStep
-        ? Math.round(contactPanel.getBoundingClientRect().top - lastProcessStep.getBoundingClientRect().bottom) : -1;
+        ? Math.round(layoutTop(contactPanel) - layoutTop(lastProcessStep) - lastProcessStep.offsetHeight) : -1;
       check('contact panel follows last process step without extra gap', abovePanel >= 0 && abovePanel <= 1,
         'above=' + abovePanel);
       const belowPanel = contactPanel && siteFooter
@@ -718,8 +723,13 @@ new Promise((resolve) => {
       check('1366px contact section drops vertical padding',
         Boolean(contactStyle) && contactStyle.paddingTop === '0px' && contactStyle.paddingBottom === '0px',
         contactStyle ? 'top=' + contactStyle.paddingTop + ' bottom=' + contactStyle.paddingBottom : 'missing section');
+      const layoutTop1366 = (el) => {
+        let top = 0;
+        for (let node = el; node; node = node.offsetParent) top += node.offsetTop;
+        return top;
+      };
       const above = panel && lastStep
-        ? Math.round(panel.getBoundingClientRect().top - lastStep.getBoundingClientRect().bottom) : -1;
+        ? Math.round(layoutTop1366(panel) - layoutTop1366(lastStep) - lastStep.offsetHeight) : -1;
       check('1366px contact panel follows last process step without extra gap', above >= 0 && above <= 1,
         'above=' + above);
       const below = panel && footer
