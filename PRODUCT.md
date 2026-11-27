@@ -12,19 +12,19 @@ Static HTML, CSS, and vanilla JavaScript. No build step. The page loads Google F
 
 ## Users
 
-Someone opening the owner's link, usually on a phone, who wants a visual statement and a way to reach Alan Nawa. The visitor can also open six working demos from the CV section.
+Someone opening the owner's link, usually on a phone, who wants a visual statement and a way to reach Alan Nawa. The visitor can also open six working demos from the Work & Services section.
 
 ## Product Purpose
 
-The `NIGHT//SHIFT` demo as the main landing page, with Alan Nawa's real CV inserted after the manifesto. The NightShift part is a design showcase with disclosed fictional data. The CV part carries the owner's real identity, services, demo links, and contact channels.
+The `NIGHT//SHIFT` demo as the main landing page, with Alan Nawa's real CV inserted after the manifesto. The NightShift part is a design showcase with disclosed fictional data. The CV part carries the owner's real identity, services, and contact channels. Work & Services carries the six real demos first, then the disclosed fictional case studies, then the CAPABILITIES modules.
 
 ## Positioning
 
-One page, two clearly labeled truths. The fictional studio stays intact as a design demo. The real CV stays in its own section with a note that separates it from the case studies below.
+One page, two clearly labeled truths. The fictional studio stays intact as a design demo. The real CV stays in its own section with a note that separates it from the case studies below. Work & Services labels the six real demos and the three fictional case studies separately, with the real demos first.
 
 ## Operating Context
 
-The page is one static document that can be opened from disk or any static host. `demos/` remains on disk with all six demos unchanged, and the CV section links to them. External fonts are part of the copied design.
+The page is one static document that can be opened from disk or any static host. `demos/` remains on disk with all six demos unchanged, and the Work & Services section links to them. External fonts are part of the copied design.
 
 ## Owner-directed decisions
 
@@ -37,6 +37,7 @@ The page is one static document that can be opened from disk or any static host.
 - Keep the boot sequence, ghost cursor, ticker, magnetic buttons, and other demo motion with no pause control.
 - Keep the brand as NIGHT//SHIFT and the hero headline copy unchanged.
 - Merge Work and Services into one `03 WORK & SERVICES` section with a CAPABILITIES sub-block. Remove the separate `#services` anchor and renumber Process and Contact.
+- Treat the demos from AI Lead Capture through NIGHT//SHIFT as real work. Move them out of the CV and into Work & Services ahead of the fictional case studies.
 - Set visitor-facing location labels to Surabaya, ID in the mobile menu, CV base, and terminal; do not show a location label in the header or hero foot.
 - Remove the `SURABAYA, ID` label from the header brand block and the hero foot row, keeping `DIGITAL STUDIO`, `SIGNAL 98.2%`, and `SCROLL TO EXPLORE` in place.
 - Set the hero stat to `Projects 1`, remove Experience, and keep `Response <24h` with its terminal line and contact copy.
@@ -67,11 +68,11 @@ The page is one static document that can be opened from disk or any static host.
 ## Capabilities and Constraints
 
 - Root `index.html`, `js/main.js`, and the favicon come from `demos/nightshift/`. Their differences are translated visitor strings, the document language, the CV section, the merged Work & Services section, the Surabaya location, the hero stats and year, the removed contact note, the real contact address, the removed WhatsApp link and footer label, and the `GITHUB` label.
-- `css/styles.css` keeps the demo selectors and keyframes except for the narrow-width `.hero-foot .mono` rule, which replaces the demo's `.hero-foot .mono:nth-child(2)` selector after the hero-foot location label was removed, and a `margin-left: auto` rule that keeps the scroll cue right aligned on phone widths. It overrides the demo `.work` padding with a compact `#work.section` rule in the Work block, then appends a CV block, padding resets for `#cv.section`, `#process.section`, and `#contact.section`, a zero footer top margin, and a `services-block` spacing rule before the reduced-motion rules.
+- `css/styles.css` keeps the demo selectors and keyframes except for the narrow-width `.hero-foot .mono` rule, which replaces the demo's `.hero-foot .mono:nth-child(2)` selector after the hero-foot location label was removed, and a `margin-left: auto` rule that keeps the scroll cue right aligned on phone widths. It renames the CV demo-list rules to `.real-case-list` and adds a `.case-group-head` spacing rule. It overrides the demo `.work` padding with a compact `#work.section` rule in the Work block, then appends a CV block, padding resets for `#cv.section`, `#process.section`, and `#contact.section`, a zero footer top margin, and a `services-block` spacing rule before the reduced-motion rules.
 - All visitor copy is English. Brand tokens such as `NIGHT//SHIFT`, `N//S`, technical labels, and code-like strings stay as designed.
 - Fictional case studies and metrics stay visible. The case-file dialog and CV note label the showcase as fictional, and the contact actions use the owner's real channels.
-- The CV lists two services, six demo links, and three real contact channels.
-- The `demos/` folder is intact and linked from the CV section only.
+- The CV lists two services and three real contact channels. Work & Services lists six real demo links and three fictional case studies.
+- The `demos/` folder is intact and linked from the Work & Services section only.
 - Motion loops run without a pause control. Reduced-motion users get static content, a hidden cursor and ghost layer, and a skipped boot overlay.
 - Keyboard controls keep visible focus. Header controls use the demo's 38px and 40px sizes, above the WCAG 2.2 AA 24px minimum; that is an accepted override of the 44px preference.
 
@@ -96,8 +97,9 @@ CV source: `bbebb12:index.html`. It supplies the owner's name, role, bio, two se
 - Copy the demo exactly, then translate the copy.
 - Keep the fictional disclosure in the case-file dialog and CV note.
 - Put real CV data in its own section with a note that separates it from the fictional showcase.
+- Put the six real demo links in Work & Services and label them separately from the fictional case studies, with the real cases first.
 - Preserve layout, motion, and interaction behavior instead of rebuilding them from a description.
-- Keep the demo archive unchanged and link it only from the CV list.
+- Keep the demo archive unchanged and link it only from the real case list in Work & Services.
 - Verify the shipped page in a real browser at phone widths and with reduced motion.
 
 ## Accessibility & Inclusion
