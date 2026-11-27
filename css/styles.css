@@ -3255,7 +3255,7 @@ html.has-cursor .cursor {
     font-size: 1.45rem;
   }
 
-  .hero-foot .mono:nth-child(2) {
+  .hero-foot .mono {
     display: none;
   }
 
