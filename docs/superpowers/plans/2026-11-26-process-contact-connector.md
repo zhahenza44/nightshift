@@ -289,7 +289,7 @@ Add `.superpowers/` to `.gitignore` on a new line. Keep the existing two lines u
 
 - [x] **Step 2: Update the README**
 
-Add one sentence to the opening description: "Process steps use Roman numerals I through V, and the neon process rail continues into the top border of the contact panel." Leave the deployment, demo, and CV paragraphs unchanged.
+Add one sentence to the opening description: "Process steps use Roman numerals I through V, and the neon process rail continues into the contact panel; when the rail finishes, all four sides of the contact frame turn magenta." Leave the deployment, demo, and CV paragraphs unchanged.
 
 - [x] **Step 3: Update the product decisions**
 
@@ -298,6 +298,7 @@ Add two bullets under `## Owner-directed decisions`, next to the existing proces
 ```markdown
 - Keep the process rail straight and extend it into the contact panel top border without a bend or marker.
 - Show the five process step numbers as Roman numerals I through V and leave section indices 04 and 05 unchanged.
+- Turn all four sides of the contact frame magenta once the process rail completes, so the rail reads as one connected gesture instead of stopping at a grey border. Keep the corner brackets magenta with it.
 ```
 
 - [x] **Step 4: Verify the final state**
@@ -319,3 +320,11 @@ git commit -m "docs: record process rail and roman step decisions"
 ```
 
 Confirm the pre-commit hook exits 0 and `git status --short --branch` shows no uncommitted changes.
+
+### Post-review owner decision: magenta contact frame
+
+The owner asked for the 05 CONTACT frame to carry the rail's magenta on all four sides when the page scrolls down. Reason: the 1px connector landed on a grey border and still read as a break.
+
+RED test: `contact frame unlit before rail completes`, `contact frame turns magenta with rail`, and `contact frame corners turn magenta with rail` at 390px, 320px, and 1366px. Result: `checks=135 failed=6`.
+
+GREEN implementation in `js/main.js` caches `.contact-panel`, sets `railComplete = progress >= 0.999`, toggles `is-complete` on the fill and `is-lit` on the panel. In `css/styles.css`, `.contact-panel.is-lit` sets `border-color: var(--magenta)` on the panel and both corner pseudo-elements. The inline `progress * 100` height output is unchanged.

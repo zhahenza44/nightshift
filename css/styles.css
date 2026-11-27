@@ -2516,6 +2516,15 @@ html.has-cursor .cursor {
   overflow: hidden;
 }
 
+.contact-panel.is-lit {
+  border-color: var(--magenta);
+}
+
+.contact-panel.is-lit::before,
+.contact-panel.is-lit::after {
+  border-color: var(--magenta);
+}
+
 .contact-panel::before,
 .contact-panel::after {
   content: "";

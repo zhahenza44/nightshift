@@ -127,6 +127,7 @@
   const heroGrid = $(".hero-grid");
   const processList = $("#process-list");
   const processFill = $("#process-fill");
+  const contactPanel = $(".contact-panel");
   const processSteps = $$(".process-step");
 
   let lastScrollY = window.scrollY;
@@ -185,7 +186,11 @@
     const lineStart = window.innerHeight * 0.58;
     const progress = clamp((lineStart - rect.top) / Math.max(rect.height, 1), 0, 1);
     processFill.style.height = `${progress * 100}%`;
-    processFill.classList.toggle("is-complete", progress >= 0.999);
+    const railComplete = progress >= 0.999;
+    processFill.classList.toggle("is-complete", railComplete);
+    if (contactPanel) {
+      contactPanel.classList.toggle("is-lit", railComplete);
+    }
 
     processSteps.forEach((step) => {
       const stepRect = step.getBoundingClientRect();

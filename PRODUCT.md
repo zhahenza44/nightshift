@@ -49,6 +49,7 @@ The page is one static document that can be opened from disk or any static host.
 - Remove the bottom padding on `#process.section` so the last process step meets the contact panel without an empty band.
 - Remove the vertical padding on `#contact.section` and the top margin on `.site-footer` so the contact panel meets the footer without an empty band.
 - Keep the process rail straight and extend it into the contact panel top border without a bend or marker.
+- Turn all four sides of the contact frame magenta once the process rail completes, so the rail reads as one connected gesture instead of stopping at a grey border. Keep the corner brackets magenta with it.
 - Show the five process step numbers as Roman numerals I through V and leave section indices 04 and 05 unchanged.
 - Add Alan Nawa's CV after the manifesto, using the data in the old shell at `bbebb12:index.html`.
 - Allow additive CSS for the CV section that uses the demo tokens.
