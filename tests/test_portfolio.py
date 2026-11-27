@@ -42,7 +42,7 @@ class ContentTest(unittest.TestCase):
             'class="fx-scan"', 'id="scroll-progress"', 'id="site-header"',
             'id="mobile-menu"', 'class="hero" id="top"', 'class="ticker"',
             'id="studio"', 'id="cv"', 'id="work"', 'id="process"',
-            'id="contact"', 'class="site-footer"', 'id="project-dialog"', 'id="toast"',
+            'id="contact"', 'class="site-footer"', 'id="project-dialog"',
         ):
             with self.subTest(marker=marker):
                 self.assertIn(marker, HTML)
@@ -116,14 +116,31 @@ class ContentTest(unittest.TestCase):
             "HAVE AN IDEA?",
             "SEND A SIGNAL.",
             "Tell us about the project.",
-            "<span>Send brief</span>",
-            "<span>Copy email</span>",
+            "<span>Email</span>",
             'aria-label="Case file details"',
             'aria-label="Close case file"',
             ">CLOSE ×</button>",
         ):
             with self.subTest(marker=marker):
                 self.assertIn(marker, HTML)
+
+    def test_contact_actions_use_instagram_dm_and_boxed_github(self):
+        for marker in (
+            '<a class="btn btn--primary magnetic" href="mailto:zhahenza666@proton.me"><span>Email</span><i>↗</i></a>',
+            '<a class="btn btn--ghost" id="send-message" href="https://ig.me/m/zhahenzar" target="_blank" rel="noopener"><span>Send message</span><i>↗</i></a>',
+            '<a class="btn btn--ghost" href="https://github.com/zhahenza44/otomasi-web" target="_blank" rel="noopener"><span>GITHUB</span><i>↗</i></a>',
+        ):
+            with self.subTest(marker=marker):
+                self.assertIn(marker, HTML)
+        for phrase in (
+            'id="copy-email"', 'Copy email', 'Send brief', 'EMAIL <span>↗</span>',
+            'class="contact-links', 'id="toast"',
+        ):
+            with self.subTest(absent=phrase):
+                self.assertNotIn(phrase, HTML)
+        for phrase in ('navigator.clipboard.writeText', 'showToast', 'copy-email', 'EMAIL COPIED'):
+            with self.subTest(absent_js=phrase):
+                self.assertNotIn(phrase, JS)
 
     def test_old_shell_contract_is_absent(self):
         for phrase in (
@@ -184,7 +201,7 @@ class ContentTest(unittest.TestCase):
             '<span class="t-key">location</span>: surabaya, id',
             '<div class="terminal-foot"><span>SURABAYA, ID</span>',
             '<span class="mono">SURABAYA, ID</span>',
-            'href="https://github.com/zhahenza44/otomasi-web" target="_blank" rel="noopener">GITHUB <span>↗</span></a>',
+            '<a class="btn btn--ghost" href="https://github.com/zhahenza44/otomasi-web" target="_blank" rel="noopener"><span>GITHUB</span><i>↗</i></a>',
         ):
             with self.subTest(marker=marker):
                 self.assertIn(marker, HTML)
@@ -305,7 +322,8 @@ class CssContractTest(unittest.TestCase):
         demo_css = read("demos/nightshift/css/styles.css")
         self.assertTrue(CSS)
         self.assertTrue(demo_css)
-        markers = sorted(set(re.findall(r"@keyframes\s+[\w-]+|[.#][A-Za-z][\w-]*", demo_css)))
+        removed_from_demo = {".contact-links", ".is-visible", ".toast"}
+        markers = sorted(set(re.findall(r"@keyframes\s+[\w-]+|[.#][A-Za-z][\w-]*", demo_css)) - removed_from_demo)
         for marker in markers:
             with self.subTest(marker=marker):
                 self.assertIn(marker, CSS)
@@ -356,8 +374,7 @@ class InteractionTest(unittest.TestCase):
     def test_menu_dialog_copy_clock_and_nav_markers(self):
         for marker in (
             'open ? "Close menu" : "Open menu"', 'event.key === "Escape"',
-            "dialog.showModal()", "dialog.close()", "navigator.clipboard.writeText",
-            'showToast(`EMAIL COPIED — ${email}`)', '"Copied"',
+            "dialog.showModal()", "dialog.close()",
             'new Intl.DateTimeFormat("en-GB"', "IntersectionObserver",
         ):
             with self.subTest(marker=marker):

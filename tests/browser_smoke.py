@@ -205,18 +205,31 @@ new Promise((resolve) => {
         doc.activeElement === doc.querySelector('[data-open-project="hypermart"]'),
         (doc.activeElement && doc.activeElement.dataset.openProject) || '');
 
-      const copyButton = doc.getElementById('copy-email');
-      copyButton.scrollIntoView({block: 'center', behavior: 'instant'});
-      copyButton.click();
-      await wait(120);
-      const toast = doc.getElementById('toast');
-      check('copy email shows English toast',
-        toast.classList.contains('is-visible') &&
-        toast.textContent === 'EMAIL COPIED — zhahenza666@proton.me',
-        toast.textContent);
-      check('copy label confirms in English',
-        copyButton.querySelector('span').textContent === 'Copied',
-        copyButton.querySelector('span').textContent);
+      const contactMain = doc.querySelector('.contact-main');
+      const mailActions = contactMain ? Array.from(contactMain.querySelectorAll('a[href^="mailto:"]')) : [];
+      const sendMessage = doc.getElementById('send-message');
+      const githubAction = doc.querySelector('.contact-actions a[href="https://github.com/zhahenza44/otomasi-web"]');
+      check('send message opens Instagram DM in a new tab',
+        Boolean(sendMessage) &&
+          sendMessage.getAttribute('href') === 'https://ig.me/m/zhahenzar' &&
+          sendMessage.getAttribute('target') === '_blank' &&
+          (sendMessage.getAttribute('rel') || '').includes('noopener') &&
+          sendMessage.querySelector('span').textContent === 'Send message',
+        sendMessage ? sendMessage.outerHTML : 'missing link');
+      check('email link row is gone',
+        Boolean(contactMain) && !doc.querySelector('.contact-links') &&
+          mailActions.length === 1 &&
+          mailActions[0].querySelector('span').textContent === 'Email',
+        'mailto=' + mailActions.length + ' textLinks=' + doc.querySelectorAll('.contact-links').length);
+      check('github is a box beside send message',
+        Boolean(githubAction) && Boolean(sendMessage) &&
+          githubAction.closest('.contact-actions') === sendMessage.closest('.contact-actions') &&
+          githubAction.classList.contains('btn') &&
+          githubAction.getAttribute('target') === '_blank' &&
+          (githubAction.getAttribute('rel') || '').includes('noopener') &&
+          githubAction.querySelector('span').textContent === 'GITHUB' &&
+          (sendMessage.compareDocumentPosition(githubAction) & win.Node.DOCUMENT_POSITION_FOLLOWING) > 0,
+        githubAction ? githubAction.outerHTML : 'missing link');
 
       const magnetic = doc.querySelector('.hero-actions .btn--primary');
       magnetic.scrollIntoView({block: 'center', behavior: 'instant'});
@@ -273,11 +286,10 @@ new Promise((resolve) => {
         'padding=' + workStyle390.paddingBottom + ' gap=' + afterCapabilities390);
       check('services nav anchor is gone', doc.querySelectorAll('a[href="#services"]').length === 0,
         'anchors=' + doc.querySelectorAll('a[href="#services"]').length);
-      const githubLink = doc.querySelector('a[href="https://github.com/zhahenza44/otomasi-web"]');
-      const contactLinks = doc.querySelector('.contact-links');
-      check('github label replaced source',
+      const githubLink = doc.querySelector('.contact-actions a[href="https://github.com/zhahenza44/otomasi-web"]');
+      check('github label stays GITHUB in the action row',
         Boolean(githubLink) && githubLink.textContent.trim().startsWith('GITHUB') &&
-          Boolean(contactLinks) && !contactLinks.textContent.includes('SOURCE'),
+          !doc.querySelector('.contact-links'),
         githubLink ? githubLink.textContent.trim() : 'missing link');
       const bodyText = doc.body.textContent;
       check('location is Surabaya',
@@ -342,6 +354,7 @@ new Promise((resolve) => {
       const required = [
         '#main', '#top', '#studio', '#cv', '#work', '#process', '#contact',
         'https://github.com/zhahenza44/otomasi-web',
+        'https://ig.me/m/zhahenzar',
         'demos/ai-lead-capture/dashboard/index.html', 'demos/servis-ac/index.html',
         'demos/ruang-rapi/index.html', 'demos/kedai-kopi/index.html',
         'demos/rental-mobil/index.html', 'demos/nightshift/index.html',
@@ -353,9 +366,6 @@ new Promise((resolve) => {
       const staleHrefs = hrefs.filter((href) => href && (href.includes('nightshift.studio') || href.includes('wa.me')));
       check('no fictional email or WhatsApp link remains', staleHrefs.length === 0,
         staleHrefs.join(',') || 'none');
-      const copyEmailData = doc.getElementById('copy-email').dataset.email;
-      check('copy email uses the real address', copyEmailData === 'zhahenza666@proton.me',
-        copyEmailData || 'missing');
       const demoHrefs = required.filter((href) => href && href.startsWith('demos/'));
       const demoLinks = Array.from(doc.querySelectorAll('a[href^="demos/"]'));
       const badDemoLinks = demoLinks.filter((link) => link.getAttribute('target') !== '_blank' ||
@@ -369,9 +379,13 @@ new Promise((resolve) => {
         ['#menu-btn', 'menu button'],
         ['.hero-actions .btn--primary', 'primary action'],
         ['[data-open-project="hypermart"]', 'case file button'],
-        ['#copy-email', 'copy email button'],
+        ['#send-message', 'send message button'],
       ]) {
         const el = doc.querySelector(selector);
+        if (!el) {
+          check(label + ' exists', false, 'missing ' + selector);
+          continue;
+        }
         el.scrollIntoView({block: 'center', behavior: 'instant'});
         el.focus();
         const style = win.getComputedStyle(el);
@@ -443,9 +457,13 @@ new Promise((resolve) => {
       }).join(' | ') || 'missing');
       for (const selector of [
         '.brand', '#menu-btn', '.hero-actions .btn--primary', '.hero-actions .btn--ghost',
-        '#copy-email', '.contact-actions .btn--primary',
+        '#send-message', '.contact-actions .btn--primary',
       ]) {
         const el = doc.querySelector(selector);
+        if (!el) {
+          check(selector + ' exists at 320px', false, 'missing ' + selector);
+          continue;
+        }
         const rect = el.getBoundingClientRect();
         check(selector + ' fits 320px and meets 24px tap target',
           rect.left >= -1 && rect.right <= 321 && rect.width >= 24 && rect.height >= 24,
@@ -575,6 +593,12 @@ new Promise((resolve) => {
       check('1366px contact panel sits flush with footer',
         Boolean(footerStyle) && footerStyle.marginTop === '0px' && below >= 0 && below <= 1,
         'marginTop=' + (footerStyle ? footerStyle.marginTop : 'missing') + ' below=' + below);
+      const actionButtons = Array.from(doc.querySelectorAll('.contact-actions .btn'));
+      const actionTops = actionButtons.map((el) => el.getBoundingClientRect().top);
+      check('1366px contact actions share one row',
+        actionButtons.length === 3 &&
+          Math.max(...actionTops) - Math.min(...actionTops) <= 1,
+        'count=' + actionButtons.length + ' tops=' + actionTops.map((top) => Math.round(top)).join(','));
       resolve(checks);
     } catch (error) {
       resolve([{name: '1366px pass runs', pass: false,
