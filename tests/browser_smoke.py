@@ -360,13 +360,16 @@ new Promise((resolve) => {
       check('contact section drops vertical padding',
         Boolean(contactStyle) && contactStyle.paddingTop === '0px' && contactStyle.paddingBottom === '0px',
         contactStyle ? 'top=' + contactStyle.paddingTop + ' bottom=' + contactStyle.paddingBottom : 'missing section');
-      const layoutTop = (el) => {
-        let top = 0;
-        for (let node = el; node; node = node.offsetParent) top += node.offsetTop;
-        return top;
+      const settleReveal = async (el) => {
+        el.scrollIntoView({block: 'center', behavior: 'instant'});
+        const deadline = Date.now() + 3000;
+        while (Date.now() < deadline && win.getComputedStyle(el).transform !== 'none') {
+          await new Promise((done) => setTimeout(done, 50));
+        }
       };
+      if (lastProcessStep) await settleReveal(lastProcessStep);
       const abovePanel = contactPanel && lastProcessStep
-        ? Math.round(layoutTop(contactPanel) - layoutTop(lastProcessStep) - lastProcessStep.offsetHeight) : -1;
+        ? Math.round(contactPanel.getBoundingClientRect().top - lastProcessStep.getBoundingClientRect().bottom) : -1;
       check('contact panel follows last process step without extra gap', abovePanel >= 0 && abovePanel <= 1,
         'above=' + abovePanel);
       const belowPanel = contactPanel && siteFooter
@@ -414,6 +417,14 @@ new Promise((resolve) => {
         Array.from(doc.querySelectorAll('.project-card.reveal')).length === 3 &&
           Array.from(doc.querySelectorAll('.project-card.reveal')).every((el) =>
             win.getComputedStyle(el).transitionProperty.includes('opacity')),
+        Array.from(doc.querySelectorAll('.project-card.reveal')).map((el) =>
+          win.getComputedStyle(el).transitionProperty).join(' | '));
+      check('fictional case cards keep hover easing',
+        Array.from(doc.querySelectorAll('.project-card.reveal')).length === 3 &&
+          Array.from(doc.querySelectorAll('.project-card.reveal')).every((el) => {
+            const props = win.getComputedStyle(el).transitionProperty;
+            return props.includes('border-color') && props.includes('box-shadow');
+          }),
         Array.from(doc.querySelectorAll('.project-card.reveal')).map((el) =>
           win.getComputedStyle(el).transitionProperty).join(' | '));
       check('process steps carry reveal class',
@@ -723,13 +734,16 @@ new Promise((resolve) => {
       check('1366px contact section drops vertical padding',
         Boolean(contactStyle) && contactStyle.paddingTop === '0px' && contactStyle.paddingBottom === '0px',
         contactStyle ? 'top=' + contactStyle.paddingTop + ' bottom=' + contactStyle.paddingBottom : 'missing section');
-      const layoutTop1366 = (el) => {
-        let top = 0;
-        for (let node = el; node; node = node.offsetParent) top += node.offsetTop;
-        return top;
+      const settleReveal1366 = async (el) => {
+        el.scrollIntoView({block: 'center', behavior: 'instant'});
+        const deadline = Date.now() + 3000;
+        while (Date.now() < deadline && win.getComputedStyle(el).transform !== 'none') {
+          await new Promise((done) => setTimeout(done, 50));
+        }
       };
+      if (lastStep) await settleReveal1366(lastStep);
       const above = panel && lastStep
-        ? Math.round(layoutTop1366(panel) - layoutTop1366(lastStep) - lastStep.offsetHeight) : -1;
+        ? Math.round(panel.getBoundingClientRect().top - lastStep.getBoundingClientRect().bottom) : -1;
       check('1366px contact panel follows last process step without extra gap', above >= 0 && above <= 1,
         'above=' + above);
       const below = panel && footer

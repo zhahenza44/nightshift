@@ -1577,6 +1577,14 @@ html.has-cursor .cursor {
   transform: none;
 }
 
+.js .project-card.reveal {
+  transition:
+    opacity 0.9s ease var(--delay, 0s),
+    transform 0.9s var(--ease-out) var(--delay, 0s),
+    border-color 0.4s ease,
+    box-shadow 0.5s ease;
+}
+
 /* --------------------------------------------------------------------------
    Manifesto
    -------------------------------------------------------------------------- */
