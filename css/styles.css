@@ -3320,8 +3320,15 @@ html.has-cursor .cursor {
     font-size: clamp(2.5rem, 11.2vw, 4rem);
   }
 
-  .contact-actions .btn {
+  .contact-actions .btn--primary {
     width: 100%;
+  }
+
+  .contact-actions .btn--ghost {
+    flex: 1 1 0;
+    min-width: 0;
+    gap: 8px;
+    padding-inline: 10px;
   }
 
   .terminal-body {
