@@ -4,19 +4,20 @@ Date: 2026-11-27
 
 ## Intent
 
-In `05 CONTACT`, replace the `Copy email` box with a `Send message` box that opens the owner's Instagram direct message. Remove the `EMAIL` text link below the buttons and turn the `GITHUB` text link into a box beside `Send message`. The visitor should have one clear path to a conversation and a visible code link without a dangling text row.
+In `05 CONTACT`, replace the `Copy email` box with a `Send message` box that opens the owner's Instagram direct message. Rename the existing `Send brief` box to `Email` without changing its address. Remove the `EMAIL` text link below the buttons and turn the `GITHUB` text link into a box beside `Send message`. The visitor should have one clear path to a conversation, one named email action, and a visible code link without a dangling text row.
 
 ## Goals
 
 - `Copy email` becomes an anchor labeled `Send message` with `href="https://ig.me/m/zhahenzar"`, opening in a new tab with `rel="noopener"`.
+- The primary `mailto:` button label changes from `Send brief` to `Email`. Its href, class, and behavior stay the same.
 - The `EMAIL ↗` link inside `.contact-links` is removed.
 - `GITHUB ↗` moves from `.contact-links` into `.contact-actions` as a boxed anchor using the existing ghost button style.
-- Desktop shows `Send brief`, `Send message`, and `GITHUB` in one row.
-- At 320px and 390px, `Send brief` spans the row and `Send message` with `GITHUB` sit side by side below it, each at least 44px tall and inside the viewport.
+- Desktop shows `Email`, `Send message`, and `GITHUB` in one row.
+- At 320px and 390px, `Email` spans the row and `Send message` with `GITHUB` sit side by side below it, each at least 44px tall and inside the viewport.
 
 ## Non-goals
 
-- Do not change `Send brief`, `mailto:zhahenza666@proton.me`, or the Instagram profile link elsewhere on the page.
+- Do not change the primary action's `mailto:zhahenza666@proton.me` href, class, or behavior, or the Instagram profile link elsewhere on the page. Only its visible label changes to `Email`.
 - Do not remove the email in the CV section or the footer.
 - Do not change `Response <24h`, the terminal line, or the contact copy.
 - Do not touch `demos/`.
@@ -37,4 +38,4 @@ In `05 CONTACT`, replace the `Copy email` box with a `Send message` box that ope
 
 ## Builder direction
 
-Remove the copy-email JavaScript and toast path only if no other caller uses it. Update the unit and rendered tests that currently assert `Copy email`, the copied-email toast, and the plain `GITHUB` link. Add rendered checks for the DM href, the boxed GitHub link, the missing `EMAIL` link, and the 320px side-by-side layout. Keep the rest of the page untouched.
+Remove the copy-email JavaScript and toast path only if no other caller uses it. Update the unit and rendered tests that currently assert `Send brief`, `Copy email`, the copied-email toast, and the plain `GITHUB` link. Pin the `Email` label on the unchanged `mailto:` anchor. Add rendered checks for the DM href, the boxed GitHub link, the missing `EMAIL` link, and the 320px side-by-side layout. Keep the rest of the page untouched.

@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Replace the contact `Copy email` box with `Send message` opening the owner's Instagram DM, move `GITHUB` into the action row as a box, and remove the `EMAIL` text link and unused copy path.
+**Goal:** Replace the contact `Copy email` box with `Send message` opening the owner's Instagram DM, rename `Send brief` to `Email` without changing its address, move `GITHUB` into the action row as a box, and remove the `EMAIL` text link and unused copy path.
 
 **Architecture:** The existing `.btn` system already supplies the box, hover states, focus states, and 50px tap target. Add two external anchors to `.contact-actions`, delete the empty `.contact-links` row and the unused clipboard/toast path, then give the narrow breakpoint its own two-column arrangement for the compact actions. The rest of the page stays untouched.
 
@@ -17,7 +17,7 @@
 - All visitor-facing copy stays English.
 - Keep the NIGHT//SHIFT brand, real CV section, fictional showcase disclosures, and every file in `demos/` unchanged.
 - Keep `Response <24h`, the terminal line, and the `contact-copy` paragraph exactly as they are.
-- Keep `Send brief` at `mailto:zhahenza666@proton.me`.
+- Keep the primary action at `mailto:zhahenza666@proton.me` and change only its visible label from `Send brief` to `Email`. Its class and behavior stay the same.
 - Use `https://ig.me/m/zhahenzar` exactly for `Send message`, with `target="_blank"` and `rel="noopener"`.
 - Keep `GITHUB` at `https://github.com/zhahenza44/otomasi-web`, with `target="_blank"` and `rel="noopener"`.
 - Work inline on `master`. Create no branch, merge, or pull request.
@@ -31,7 +31,7 @@
 - Removing `EMAIL` must not leave a bordered empty row: NORMAL_SCRIPT pins `.contact-links` absent and exactly one `mailto:` anchor left in `.contact-main`.
 - `GITHUB` must read as part of one action row on desktop: WIDE_SCRIPT pins all three `.contact-actions .btn` elements on the same top edge at 1366px.
 - A narrow phone must not squeeze the compact boxes into overflow or tiny targets: NORMAL_SCRIPT and NARROW_SCRIPT pin the two ghost buttons side by side, above 44px tall, and inside the viewport at 390px and 320px.
-- Removing the copy path must not leave stale code or runtime errors: the unit test pins no `navigator.clipboard.writeText`, `showToast`, or `copy-email` strings, and the rendered smoke console gate must stay clean.
+- Renaming the primary label and removing the copy path must not leave stale copy, stale code, or runtime errors: the unit test pins `<span>Email</span>`, rejects `Send brief`, rejects `navigator.clipboard.writeText`, `showToast`, and `copy-email`, and the rendered smoke console gate must stay clean.
 
 ---
 
@@ -51,18 +51,19 @@
 
 - [ ] **Step 1: Write the failing unit tests**
 
-In `tests/test_portfolio.py`, remove `'id="toast"'` from `test_nightshift_sections_exist`, remove `"<span>Copy email</span>"` from the homepage copy markers. In `test_menu_dialog_copy_clock_and_nav_markers`, remove the three markers that assert clipboard, toast, and `Copied` behavior. Add:
+In `tests/test_portfolio.py`, remove `'id="toast"'` from `test_nightshift_sections_exist`. In the homepage copy markers, change `"<span>Send brief</span>"` to `"<span>Email</span>"` and remove `"<span>Copy email</span>"`. In `test_menu_dialog_copy_clock_and_nav_markers`, remove the three markers that assert clipboard, toast, and `Copied` behavior. Add:
 
 ```python
     def test_contact_actions_use_instagram_dm_and_boxed_github(self):
         for marker in (
             '<a class="btn btn--ghost" id="send-message" href="https://ig.me/m/zhahenzar" target="_blank" rel="noopener"><span>Send message</span><i>↗</i></a>',
             '<a class="btn btn--ghost" href="https://github.com/zhahenza44/otomasi-web" target="_blank" rel="noopener"><span>GITHUB</span><i>↗</i></a>',
+            '<a class="btn btn--primary magnetic" href="mailto:zhahenza666@proton.me"><span>Email</span><i>↗</i></a>',
         ):
             with self.subTest(marker=marker):
                 self.assertIn(marker, HTML)
         for phrase in (
-            'id="copy-email"', 'Copy email', 'EMAIL <span>↗</span>',
+            'id="copy-email"', 'Copy email', 'Send brief', 'EMAIL <span>↗</span>',
             'class="contact-links', 'id="toast"',
         ):
             with self.subTest(absent=phrase):
@@ -107,7 +108,13 @@ Move the GitHub anchor into `.contact-actions` after the DM anchor:
 <a class="btn btn--ghost" href="https://github.com/zhahenza44/otomasi-web" target="_blank" rel="noopener"><span>GITHUB</span><i>↗</i></a>
 ```
 
-Delete the whole `.contact-links` div and the `#toast` div. Leave `Send brief` and the terminal untouched. The `↗` glyph keeps the existing button language and marks an external destination.
+Change the primary anchor's label to `Email` and leave everything else about it intact:
+
+```html
+<a class="btn btn--primary magnetic" href="mailto:zhahenza666@proton.me"><span>Email</span><i>↗</i></a>
+```
+
+Delete the whole `.contact-links` div and the `#toast` div. Leave the terminal untouched. The `↗` glyph keeps the existing button language and marks an external destination.
 
 - [ ] **Step 6: Remove the unused copy path**
 
@@ -138,7 +145,7 @@ git commit -m "feat: send Instagram DM and box GitHub in contact actions"
 
 - [ ] **Step 1: Write the failing rendered checks**
 
-In `NORMAL_SCRIPT_B`, add `390px send brief spans the action row` and `390px send message and github sit side by side`. In `NARROW_SCRIPT`, add the same two checks with the `320px` prefix. Each side-by-side check must assert that the DM and GitHub boxes share a top edge within 1px, do not overlap horizontally (`dm.right <= github.left + 1`), are at least 44px tall, and end at or inside `viewport + 1`. Each primary check must assert the primary button's width is at least 200px at 320px (and 280px at 390px) and that its bottom is above the DM top.
+In `NORMAL_SCRIPT_B`, add `390px email spans the action row` and `390px send message and github sit side by side`. In `NARROW_SCRIPT`, add the same two checks with the `320px` prefix. Each side-by-side check must assert that the DM and GitHub boxes share a top edge within 1px, do not overlap horizontally (`dm.right <= github.left + 1`), are at least 44px tall, and end at or inside `viewport + 1`. Each primary check must assert the primary button's width is at least 200px at 320px (and 280px at 390px) and that its bottom is above the DM top.
 
 - [ ] **Step 2: Run the smoke and verify RED**
 
@@ -197,17 +204,18 @@ git commit -m "feat: pair contact boxes on phone widths"
 
 - [ ] **Step 1: Update the README**
 
-In the showcase bullet, remove `copy-email toast`. In the opening description, replace `Copy email, and EMAIL link all use \`zhahenza666@proton.me\`` with `Send brief uses \`zhahenza666@proton.me\`; Send message opens \`https://ig.me/m/zhahenzar\``. Add one sentence: `GITHUB is now a boxed action beside Send message, and the EMAIL text link is gone.`
+In the showcase bullet, remove `copy-email toast`. In the opening description, replace `Send brief, Copy email, and EMAIL link all use \`zhahenza666@proton.me\`` with `the Email button uses \`zhahenza666@proton.me\`; Send message opens \`https://ig.me/m/zhahenzar\``. Add one sentence: `GITHUB is now a boxed action beside Send message, and the EMAIL text link is gone.`
 
 - [ ] **Step 2: Update the product decisions**
 
-Add these bullets under `## Owner-directed decisions`:
+Rewrite the earlier contact email decision so it names the mobile menu and the `Email` button without `Copy email`, the `EMAIL` link, or the toast. Add these bullets under `## Owner-directed decisions`:
 
 ```markdown
 - Replace the Copy email action with Send message opening `https://ig.me/m/zhahenzar` in a new tab, because the conversation happens in Instagram DM.
-- Keep Send brief at `mailto:zhahenza666@proton.me` and remove the unused copy-email toast path.
+- Rename the primary action from Send brief to Email, because the channel name is clearer than a verb phrase. Keep its `mailto:zhahenza666@proton.me` href, class, and behavior unchanged.
+- Remove the unused copy-email toast path.
 - Box GITHUB beside Send message and remove the EMAIL text link and the empty `.contact-links` row, so the action row has one conversation path and one code path.
-- At phone widths, keep Send brief full width and place Send message and GITHUB side by side, using the existing ghost button style so the compact actions stay readable without overflow.
+- At phone widths, keep Email full width and place Send message and GITHUB side by side, using the existing ghost button style so the compact actions stay readable without overflow.
 - Keep the `↗` glyph on the external action anchors to mark a new tab, following the existing NIGHT//SHIFT button language.
 ```
 
