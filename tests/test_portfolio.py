@@ -105,7 +105,7 @@ class ContentTest(unittest.TestCase):
             ">CAPABILITIES</span>",
             ">PROCESS</span>",
             ">CONTACT</span>",
-            "Three fictional case studies",
+            "Six real demos and three fictional case studies",
             "Four things we take seriously",
             "AVG. TIMELINE 2–4 WEEKS",
             "Brief &amp; discovery",
@@ -239,6 +239,23 @@ class ContentTest(unittest.TestCase):
             with self.subTest(marker=marker):
                 self.assertIn(marker, HTML)
 
+    def test_real_cases_move_into_work(self):
+        for marker in (
+            '>REAL CASES / LIVE DEMOS</span>',
+            '>FICTIONAL CASE STUDIES</span>',
+            '06 REAL / 03 FICTIONAL / 04 MODULES',
+            'CV / PROFILE',
+        ):
+            with self.subTest(marker=marker):
+                self.assertIn(marker, HTML)
+        for phrase in ('CV / SIX DEMOS', '03 FILES / 04 MODULES', 'class="cv-demo-list"'):
+            with self.subTest(absent=phrase):
+                self.assertNotIn(phrase, HTML)
+        cv_block = re.search(r'<section[^>]+id="cv".*?</section>', HTML, re.S).group(0)
+        work_block = re.search(r'<section[^>]+id="work".*?</section>', HTML, re.S).group(0)
+        self.assertNotIn('href="demos/', cv_block)
+        self.assertEqual(work_block.count('href="demos/'), 6)
+
     def test_cv_demo_links(self):
         paths = (
             "demos/ai-lead-capture/dashboard/index.html",
@@ -330,7 +347,7 @@ class CssContractTest(unittest.TestCase):
         for marker in markers:
             with self.subTest(marker=marker):
                 self.assertIn(marker, CSS)
-        for marker in (".cv-grid", ".cv-service", ".cv-demo-list"):
+        for marker in (".cv-grid", ".cv-service", ".real-case-list"):
             with self.subTest(cv_marker=marker):
                 self.assertIn(marker, CSS)
 

@@ -381,15 +381,27 @@ new Promise((resolve) => {
         cvContactParts.every((part) => hrefs.some((href) => href && href.includes(part))),
         cvContactParts.filter((part) => !hrefs.some((href) => href && href.includes(part)))
           .join(',') || 'all present');
-      const cvVisibleAnchors = Array.from(doc.querySelectorAll('.cv-demo-list a'));
-      check('CV demo links are visible',
-        cvVisibleAnchors.length === 6 && cvVisibleAnchors.every((link) => {
+      const realDemoAnchors = Array.from(doc.querySelectorAll('#work .real-case-list a'));
+      check('six real demo links are visible',
+        realDemoAnchors.length === 6 && realDemoAnchors.every((link) => {
           const rect = link.getBoundingClientRect();
           return rect.width > 0 && rect.height > 0;
-        }), 'visible=' + cvVisibleAnchors.filter((link) => {
+        }), 'visible=' + realDemoAnchors.filter((link) => {
           const rect = link.getBoundingClientRect();
           return rect.width > 0 && rect.height > 0;
         }).length + '/6');
+      check('CV holds no demo list',
+        doc.querySelectorAll('#cv a[href^="demos/"]').length === 0 &&
+          !doc.querySelector('#cv .real-case-list'),
+        'cvDemoLinks=' + doc.querySelectorAll('#cv a[href^="demos/"]').length);
+      const workLabels = Array.from(doc.querySelectorAll('#work .section-label'))
+        .map((el) => el.textContent.trim());
+      const realIndex = workLabels.indexOf('REAL CASES / LIVE DEMOS');
+      const fictionalIndex = workLabels.indexOf('FICTIONAL CASE STUDIES');
+      const capabilitiesIndex = workLabels.indexOf('CAPABILITIES');
+      check('case groups are labeled and ordered',
+        realIndex > -1 && fictionalIndex > realIndex && capabilitiesIndex > fictionalIndex,
+        workLabels.join(' | '));
 
       const required = [
         '#main', '#top', '#studio', '#cv', '#work', '#process', '#contact',
@@ -407,11 +419,11 @@ new Promise((resolve) => {
       check('no fictional email or WhatsApp link remains', staleHrefs.length === 0,
         staleHrefs.join(',') || 'none');
       const demoHrefs = required.filter((href) => href && href.startsWith('demos/'));
-      const demoLinks = Array.from(doc.querySelectorAll('a[href^="demos/"]'));
+      const demoLinks = Array.from(doc.querySelectorAll('#work .real-case-list a'));
       const badDemoLinks = demoLinks.filter((link) => link.getAttribute('target') !== '_blank' ||
         !(link.getAttribute('rel') || '').includes('noopener') ||
         !demoHrefs.includes(link.getAttribute('href')));
-      check('six CV demo links open in a new tab',
+      check('six real demo links open in a new tab',
         demoLinks.length === 6 && badDemoLinks.length === 0,
         'links=' + demoLinks.length + ' bad=' + badDemoLinks.length);
 
@@ -499,7 +511,7 @@ new Promise((resolve) => {
       check('combined section fits 320px',
         Boolean(blockRect) && blockRect.left >= -1 && blockRect.right <= 321,
         blockRect ? Math.round(blockRect.left) + '..' + Math.round(blockRect.right) : 'missing');
-      const cvBlocks = [doc.querySelector('.cv-grid'), doc.querySelector('.cv-demo-list')];
+      const cvBlocks = [doc.querySelector('.cv-grid')];
       check('cv section fits 320px', cvBlocks.every(Boolean) && cvBlocks.every((el) => {
         const rect = el.getBoundingClientRect();
         return rect.left >= -1 && rect.right <= 321;
@@ -507,6 +519,11 @@ new Promise((resolve) => {
         const rect = el.getBoundingClientRect();
         return Math.round(rect.left) + '..' + Math.round(rect.right);
       }).join(' | ') || 'missing');
+      const realList320 = doc.querySelector('#work .real-case-list');
+      const realRect320 = realList320 ? realList320.getBoundingClientRect() : null;
+      check('real case list fits 320px',
+        Boolean(realRect320) && realRect320.left >= -1 && realRect320.right <= 321,
+        realRect320 ? Math.round(realRect320.left) + '..' + Math.round(realRect320.right) : 'missing');
       for (const selector of [
         '.brand', '#menu-btn', '.hero-actions .btn--primary', '.hero-actions .btn--ghost',
         '#send-message', '.contact-actions .btn--primary',
@@ -634,8 +651,8 @@ new Promise((resolve) => {
         style ? 'top=' + style.paddingTop + ' bottom=' + style.paddingBottom : 'missing section');
       check('1366px no horizontal overflow', doc.documentElement.scrollWidth <= win.innerWidth,
         'scrollWidth=' + doc.documentElement.scrollWidth);
-      const content = ['#cv .section-head', '#cv .cv-grid', '#cv .cv-demo-list'];
-      check('CV content stays visible', content.every((selector) => {
+      const content = ['#cv .section-head', '#cv .cv-grid', '#work .real-case-list'];
+      check('CV and real case content stays visible', content.every((selector) => {
         const el = doc.querySelector(selector);
         if (!el) return false;
         const rect = el.getBoundingClientRect();
