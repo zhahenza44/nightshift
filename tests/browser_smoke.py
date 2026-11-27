@@ -602,6 +602,7 @@ new Promise((resolve) => {
       const list = doc.getElementById('process-list');
       const fill = doc.getElementById('process-fill');
       const panel = doc.querySelector('.contact-panel');
+      const initialBorder = win.getComputedStyle(panel).borderTopColor;
       win.scrollTo({top: 0, behavior: 'instant'});
       win.dispatchEvent(new win.Event('scroll'));
       await wait(80);
@@ -648,6 +649,17 @@ new Promise((resolve) => {
       check(label + 'process connector keeps terminal color',
         exists && after.backgroundImage === 'none' && after.backgroundColor === endColor,
         'seam=' + after.backgroundColor + ' gradientEnd=' + endColor + ' image=' + after.backgroundImage);
+      const panelStyle = win.getComputedStyle(panel);
+      const frameColors = ['Top', 'Right', 'Bottom', 'Left']
+        .map((side) => panelStyle['border' + side + 'Color']);
+      const cornerColors = ['::before', '::after']
+        .map((pseudo) => win.getComputedStyle(panel, pseudo).borderColor);
+      check(label + 'contact frame unlit before rail completes',
+        initialBorder !== 'rgb(255, 61, 141)', initialBorder);
+      check(label + 'contact frame turns magenta with rail',
+        frameColors.every((color) => color === 'rgb(255, 61, 141)'), frameColors.join(' '));
+      check(label + 'contact frame corners turn magenta with rail',
+        cornerColors.every((color) => color === 'rgb(255, 61, 141)'), cornerColors.join(' '));
 
       resolve(checks);
     } catch (error) {
