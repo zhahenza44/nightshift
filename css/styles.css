@@ -3259,6 +3259,10 @@ html.has-cursor .cursor {
     display: none;
   }
 
+  .hero-foot .scroll-cue {
+    margin-left: auto;
+  }
+
   .section-head {
     gap: 10px;
   }
