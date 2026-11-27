@@ -31,7 +31,7 @@ The page is one static document that can be opened from disk or any static host.
 - Use the NightShift demo literally, not the previous Alan Nawa CV shell as the page design.
 - Translate every visitor-facing string into English and set `lang="en"`.
 - Keep the fictional studio, case studies, metrics, and status. Label the case studies as fictional in the case-file dialog and CV note.
-- Use the owner's real email at every contact point and remove the fictional WhatsApp link.
+- Use the owner's real contact channels and remove the fictional WhatsApp link.
 - Remove the `DEMO CONCEPT / FICTIONAL STUDIO` label from the footer.
 - Keep the Google Fonts requests.
 - Keep the boot sequence, ghost cursor, ticker, magnetic buttons, and other demo motion with no pause control.
@@ -42,7 +42,7 @@ The page is one static document that can be opened from disk or any static host.
 - Label the GitHub contact link `GITHUB` and keep its href at `https://github.com/zhahenza44/otomasi-web`.
 - Ignore only blocked Google Fonts downloads in the rendered console check. Every other console error still fails the run.
 - Remove the contact-section note naming fictional names, metrics, email, and phone number.
-- Replace the demo email with `zhahenza666@proton.me` in the mobile menu, Send brief, Copy email, and EMAIL link, including the copy-email toast.
+- Replace the demo email with `zhahenza666@proton.me` in the mobile menu and the `Email` button.
 - Set the hero tag to `EST. 2026`.
 - Remove the vertical section padding on `#cv.section` so the CV block does not create a wide empty band at 1366px.
 - Reduce the bottom padding on `#work.section` to `clamp(32px, 4vw, 48px)` so CAPABILITIES does not leave a wide empty band before the Process section.
@@ -56,13 +56,19 @@ The page is one static document that can be opened from disk or any static host.
 - Leave every file inside `demos/` unchanged.
 - Keep the demo stylesheet's low-contrast `muted-2` technical labels. The contrast shortfall is an accepted consequence of the literal-copy decision.
 - Publish the static page on GitHub Pages from `zhahenza44/nightshift`. Use `nightshift.is-not-a.dev` as the custom domain and point its DNS CNAME record to `zhahenza44.github.io`.
+- Replace the Copy email action with Send message opening `https://ig.me/m/zhahenzar` in a new tab, because the conversation happens in Instagram DM.
+- Rename the primary action from Send brief to Email, because the channel name is clearer than a verb phrase. Keep its `mailto:zhahenza666@proton.me` href, class, and behavior unchanged.
+- Remove the unused copy-email toast path.
+- Box GITHUB beside Send message and remove the EMAIL text link and the empty `.contact-links` row, so the action row has one conversation path and one code path.
+- At phone widths, keep Email full width and place Send message and GITHUB side by side, using the existing ghost button style so the compact actions stay readable without overflow.
+- Keep the `↗` glyph on the external action anchors to mark a new tab, following the existing NIGHT//SHIFT button language.
 
 ## Capabilities and Constraints
 
 - Root `index.html`, `js/main.js`, and the favicon come from `demos/nightshift/`. Their differences are translated visitor strings, the document language, the CV section, the merged Work & Services section, the Surabaya location, the hero stats and year, the removed contact note, the real contact address, the removed WhatsApp link and footer label, and the `GITHUB` label.
 - `css/styles.css` keeps every demo selector and keyframe, overrides the demo `.work` padding with a compact `#work.section` rule in the Work block, then appends a CV block, padding resets for `#cv.section`, `#process.section`, and `#contact.section`, a zero footer top margin, and a `services-block` spacing rule before the reduced-motion rules.
 - All visitor copy is English. Brand tokens such as `NIGHT//SHIFT`, `N//S`, technical labels, and code-like strings stay as designed.
-- Fictional case studies and metrics stay visible. The case-file dialog and CV note label the showcase as fictional, and every contact point uses the owner's real email.
+- Fictional case studies and metrics stay visible. The case-file dialog and CV note label the showcase as fictional, and the contact actions use the owner's real channels.
 - The CV lists two services, six demo links, and three real contact channels.
 - The `demos/` folder is intact and linked from the CV section only.
 - Motion loops run without a pause control. Reduced-motion users get static content, a hidden cursor and ghost layer, and a skipped boot overlay.
@@ -80,7 +86,7 @@ Motion reasons: the boot sequence frames the page as a NightShift system, the gh
 
 ## Evidence on Hand
 
-NightShift source: `demos/nightshift/`. There are no real customers, testimonials, benchmarks, or contact records for the fictional studio. The case-file dialog and CV note label the showcase as fictional and make no further claim. The contact links carry the owner's real email.
+NightShift source: `demos/nightshift/`. There are no real customers, testimonials, benchmarks, or contact records for the fictional studio. The case-file dialog and CV note label the showcase as fictional and make no further claim. The contact actions carry the owner's real channels.
 
 CV source: `bbebb12:index.html`. It supplies the owner's name, role, bio, two service descriptions, six demo paths, and three contact channels. No new claim was added to the CV section.
 
