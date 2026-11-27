@@ -402,6 +402,42 @@ new Promise((resolve) => {
       check('case groups are labeled and ordered',
         realIndex > -1 && fictionalIndex > realIndex && capabilitiesIndex > fictionalIndex,
         workLabels.join(' | '));
+      check('fictional case cards carry reveal class',
+        doc.querySelectorAll('.project-card.reveal').length === 3,
+        'cards=' + doc.querySelectorAll('.project-card.reveal').length);
+      check('fictional case cards use reveal transition',
+        Array.from(doc.querySelectorAll('.project-card.reveal')).length === 3 &&
+          Array.from(doc.querySelectorAll('.project-card.reveal')).every((el) =>
+            win.getComputedStyle(el).transitionProperty.includes('opacity')),
+        Array.from(doc.querySelectorAll('.project-card.reveal')).map((el) =>
+          win.getComputedStyle(el).transitionProperty).join(' | '));
+      check('process steps carry reveal class',
+        doc.querySelectorAll('.process-step.reveal').length === 5,
+        'steps=' + doc.querySelectorAll('.process-step.reveal').length);
+      check('CV contact links carry reveal class',
+        doc.querySelectorAll('.cv-contact a.reveal').length === 3,
+        'links=' + doc.querySelectorAll('.cv-contact a.reveal').length);
+      check('CV contact links use reveal transition',
+        Array.from(doc.querySelectorAll('.cv-contact a.reveal')).length === 3 &&
+          Array.from(doc.querySelectorAll('.cv-contact a.reveal')).every((el) =>
+            win.getComputedStyle(el).transitionProperty.includes('transform')),
+        Array.from(doc.querySelectorAll('.cv-contact a.reveal')).map((el) =>
+          win.getComputedStyle(el).transitionProperty).join(' | '));
+      check('all three contact actions are magnetic',
+        doc.querySelectorAll('.contact-actions .magnetic').length === 3,
+        'magnetic=' + doc.querySelectorAll('.contact-actions .magnetic').length);
+      check('magnetic setup applies to all three',
+        Array.from(doc.querySelectorAll('.contact-actions .magnetic')).length === 3 &&
+          Array.from(doc.querySelectorAll('.contact-actions .magnetic')).every((el) =>
+            el.style.transition.includes('transform')),
+        Array.from(doc.querySelectorAll('.contact-actions .magnetic')).map((el) =>
+          el.style.transition || 'none').join(' | '));
+      check('real case rows expose hover transform',
+        Array.from(doc.querySelectorAll('.real-case-list > li > div')).length === 6 &&
+          Array.from(doc.querySelectorAll('.real-case-list > li > div')).every((el) =>
+            win.getComputedStyle(el).transitionProperty.includes('transform')),
+        Array.from(doc.querySelectorAll('.real-case-list > li > div')).map((el) =>
+          win.getComputedStyle(el).transitionProperty).join(' | '));
 
       const required = [
         '#main', '#top', '#studio', '#cv', '#work', '#process', '#contact',
@@ -618,6 +654,11 @@ new Promise((resolve) => {
         return el && Number(win.getComputedStyle(el).opacity) < 1;
       });
       check('reduced motion keeps content visible', hidden.length === 0, hidden.join(',') || 'none');
+      check('reduced motion leaves contact magnets inert',
+        Array.from(doc.querySelectorAll('.contact-actions .magnetic')).every((el) =>
+          !el.style.transition),
+        Array.from(doc.querySelectorAll('.contact-actions .magnetic')).map((el) =>
+          el.style.transition || 'none').join(' | '));
       const boot = doc.getElementById('boot');
       check('boot skipped under reduced motion', !boot || boot.classList.contains('is-done'),
         boot ? boot.className : 'removed');

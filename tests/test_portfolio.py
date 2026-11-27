@@ -433,6 +433,39 @@ class InteractionTest(unittest.TestCase):
             with self.subTest(marker=marker):
                 self.assertNotIn(marker, JS)
 
+    def test_entrance_motion_targets_are_marked(self):
+        for marker in (
+            '<article class="project-card reveal" data-project="hypermart">',
+            '<article class="project-card project-card--reverse reveal" data-project="aegis" style="--delay:.08s">',
+            '<article class="project-card reveal" data-project="voidhotel" style="--delay:.16s">',
+            'class="reveal" href="https://instagram.com/zhahenzar" target="_blank" rel="noopener noreferrer" style="--delay:.08s"',
+            'class="reveal" href="https://github.com/zhahenza44" target="_blank" rel="noopener noreferrer" style="--delay:.16s"',
+            'class="reveal" href="mailto:zhahenza666@proton.me" style="--delay:.24s"',
+            '<a class="btn btn--ghost magnetic" id="send-message"',
+            '<a class="btn btn--ghost magnetic" href="https://github.com/zhahenza44/otomasi-web"',
+        ):
+            with self.subTest(marker=marker):
+                self.assertIn(marker, HTML)
+        self.assertEqual(HTML.count('<li class="process-step reveal">'), 5)
+        self.assertEqual(HTML.count('<li class="process-step">'), 0)
+
+    def test_entrance_motion_rules_exist(self):
+        for marker in (
+            '.real-case-list > li:hover {',
+            'background-color: var(--bg-soft);',
+            '.real-case-list > li > div {',
+            'transition: transform 0.3s var(--ease-out);',
+            '.real-case-list > li:hover > div {',
+            'transform: translateY(-2px);',
+            '.real-case-list > li:hover a span {',
+            'transform: translateX(3px);',
+        ):
+            with self.subTest(marker=marker):
+                self.assertIn(marker, CSS)
+        reduced = CSS.split('@media (prefers-reduced-motion: reduce) {', 1)[1]
+        self.assertIn('.real-case-list > li:hover > div', reduced)
+        self.assertIn('transform: none;', reduced)
+
 
 class DeliveryTest(unittest.TestCase):
     def test_docs_exist(self):
