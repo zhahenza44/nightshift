@@ -2583,39 +2583,6 @@ html.has-cursor .cursor {
   margin-top: 28px;
 }
 
-.contact-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px 24px;
-  margin-top: 30px;
-  padding-top: 20px;
-  border-top: 1px solid var(--line);
-}
-
-.contact-links a {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  color: var(--muted);
-  font-family: var(--font-mono);
-  font-size: 0.5625rem;
-  letter-spacing: 0.12em;
-  transition: color 0.25s ease;
-}
-
-.contact-links a span {
-  color: var(--cyan);
-  transition: transform 0.3s var(--ease-out);
-}
-
-.contact-links a:hover {
-  color: var(--ink);
-}
-
-.contact-links a:hover span {
-  transform: translate(2px, -2px);
-}
-
 .terminal {
   position: relative;
   border: 1px solid var(--line-strong);
@@ -3115,38 +3082,6 @@ html.has-cursor .cursor {
 }
 
 /* --------------------------------------------------------------------------
-   Toast
-   -------------------------------------------------------------------------- */
-
-.toast {
-  position: fixed;
-  bottom: 28px;
-  left: 50%;
-  z-index: 250;
-  width: max-content;
-  max-width: calc(100vw - 36px);
-  padding: 12px 18px;
-  border: 1px solid var(--cyan);
-  background: rgba(4, 6, 10, 0.95);
-  color: var(--cyan);
-  font-family: var(--font-mono);
-  font-size: 0.625rem;
-  letter-spacing: 0.08em;
-  overflow-wrap: anywhere;
-  opacity: 0;
-  transform: translate(-50%, 12px);
-  pointer-events: none;
-  transition:
-    opacity 0.3s ease,
-    transform 0.35s var(--ease-out);
-}
-
-.toast.is-visible {
-  opacity: 1;
-  transform: translate(-50%, 0);
-}
-
-/* --------------------------------------------------------------------------
    Responsive
    -------------------------------------------------------------------------- */
 
@@ -3462,11 +3397,6 @@ html.has-cursor .cursor {
 
   .project-metrics span {
     font-size: 0.4rem;
-  }
-
-  .contact-links {
-    display: grid;
-    gap: 14px;
   }
 
   .case-grid {

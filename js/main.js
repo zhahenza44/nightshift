@@ -488,7 +488,7 @@
       } else if (interactive.matches('a[href^="http"]')) {
         text = "VISIT";
       } else if (interactive.matches("button")) {
-        text = interactive.id === "copy-email" ? "COPY" : "CLICK";
+        text = "CLICK";
       }
 
       label.textContent = text;
@@ -727,59 +727,6 @@
     body.classList.remove("has-dialog");
     if (dialogContent) dialogContent.innerHTML = "";
     dialogTrigger?.focus();
-  });
-
-  /* ------------------------------------------------------------------------
-     Copy email + toast
-     ------------------------------------------------------------------------ */
-
-  const toast = $("#toast");
-  const copyButton = $("#copy-email");
-  let toastTimer = null;
-
-  function showToast(message) {
-    if (!toast) return;
-    toast.textContent = message;
-    toast.classList.add("is-visible");
-    window.clearTimeout(toastTimer);
-    toastTimer = window.setTimeout(() => toast.classList.remove("is-visible"), 2600);
-  }
-
-  function legacyCopy(text) {
-    const field = document.createElement("textarea");
-    field.value = text;
-    field.setAttribute("readonly", "");
-    field.style.position = "fixed";
-    field.style.left = "-9999px";
-    body.appendChild(field);
-    field.select();
-    try {
-      document.execCommand("copy");
-    } catch (error) {
-      // Silently ignore; the toast below still tells the user what to do.
-    }
-    field.remove();
-  }
-
-  copyButton?.addEventListener("click", async () => {
-    const email = copyButton.dataset.email;
-    if (!email) return;
-    const label = copyButton.querySelector("span");
-
-    try {
-      await navigator.clipboard.writeText(email);
-    } catch (error) {
-      legacyCopy(email);
-    }
-
-    showToast(`EMAIL COPIED — ${email}`);
-    if (label) {
-      const original = label.textContent;
-      label.textContent = "Copied";
-      window.setTimeout(() => {
-        label.textContent = original;
-      }, 1800);
-    }
   });
 
   /* ------------------------------------------------------------------------
