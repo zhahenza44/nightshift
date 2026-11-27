@@ -3504,15 +3504,15 @@ html.has-cursor .cursor {
   line-height: 1.8;
 }
 
-.cv-demo-list {
+.real-case-list {
   display: grid;
   gap: 1px;
-  margin-top: clamp(36px, 5vw, 72px);
+  margin-top: clamp(24px, 3vw, 40px);
   border: 1px solid var(--line);
   background: var(--line);
 }
 
-.cv-demo-list > li {
+.real-case-list > li {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
@@ -3521,13 +3521,13 @@ html.has-cursor .cursor {
   background: var(--surface);
 }
 
-.cv-demo-list > li h3 {
+.real-case-list > li h3 {
   font-family: var(--font-display);
   font-size: clamp(1.1rem, 1.6vw, 1.45rem);
   font-weight: 600;
 }
 
-.cv-demo-list > li p {
+.real-case-list > li p {
   max-width: 72ch;
   margin-top: 8px;
   color: var(--muted);
@@ -3535,7 +3535,7 @@ html.has-cursor .cursor {
   line-height: 1.6;
 }
 
-.cv-demo-list > li a {
+.real-case-list > li a {
   display: inline-flex;
   min-height: 24px;
   align-items: center;
@@ -3549,9 +3549,13 @@ html.has-cursor .cursor {
 
 @media (max-width: 860px) {
   .cv-grid,
-  .cv-demo-list > li {
+  .real-case-list > li {
     grid-template-columns: 1fr;
   }
+}
+
+.case-group-head {
+  margin-bottom: clamp(24px, 3vw, 40px);
 }
 
 .services-block {
