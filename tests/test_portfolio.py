@@ -195,17 +195,20 @@ class ContentTest(unittest.TestCase):
 
     def test_surabaya_and_github_label(self):
         for marker in (
-            'DIGITAL STUDIO<br>SURABAYA, ID',
+            '<span class="brand-meta">DIGITAL STUDIO</span>',
             '<span>SURABAYA, ID</span>',
             '<dd>Surabaya, ID</dd>',
             '<span class="t-key">location</span>: surabaya, id',
             '<div class="terminal-foot"><span>SURABAYA, ID</span>',
-            '<span class="mono">SURABAYA, ID</span>',
             '<a class="btn btn--ghost" href="https://github.com/zhahenza44/otomasi-web" target="_blank" rel="noopener"><span>GITHUB</span><i>↗</i></a>',
         ):
             with self.subTest(marker=marker):
                 self.assertIn(marker, HTML)
-        for phrase in ('JKT', 'Jakarta', 'jakarta', 'SOURCE <span>↗</span>'):
+        for phrase in (
+            'JKT', 'Jakarta', 'jakarta', 'SOURCE <span>↗</span>',
+            'DIGITAL STUDIO<br>SURABAYA, ID',
+            '<span class="mono">SURABAYA, ID</span>',
+        ):
             with self.subTest(absent=phrase):
                 self.assertNotIn(phrase, HTML)
 

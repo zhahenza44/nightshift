@@ -318,6 +318,20 @@ new Promise((resolve) => {
         bodyText.includes('Surabaya, ID') && bodyText.includes('surabaya, id') &&
           !bodyText.includes('Jakarta') && !bodyText.includes('JKT'),
         'Surabaya=' + bodyText.includes('Surabaya, ID') + ' lower=' + bodyText.includes('surabaya, id'));
+      const brandMeta = doc.querySelector('.brand-meta');
+      const heroFoot = doc.querySelector('.hero-foot');
+      check('header and hero foot omit Surabaya',
+        Boolean(brandMeta) && Boolean(heroFoot) &&
+          brandMeta.textContent.trim() === 'DIGITAL STUDIO' &&
+          !brandMeta.textContent.includes('SURABAYA') &&
+          !heroFoot.textContent.includes('SURABAYA'),
+        (brandMeta ? brandMeta.textContent.trim() : 'missing') + ' | ' +
+          (heroFoot ? heroFoot.textContent.trim() : 'missing'));
+      const scrollCue = heroFoot ? heroFoot.querySelector('.scroll-cue') : null;
+      check('hero foot keeps its remaining copy',
+        Boolean(heroFoot) && heroFoot.textContent.includes('SIGNAL 98.2%') &&
+          Boolean(scrollCue) && scrollCue.textContent.includes('SCROLL TO EXPLORE'),
+        heroFoot ? heroFoot.textContent.trim() : 'missing');
       const statLabels = Array.from(doc.querySelectorAll('.hero-stats dt'))
         .map((el) => el.textContent.trim());
       const statValues = Array.from(doc.querySelectorAll('.hero-stats dd'))
@@ -464,6 +478,13 @@ new Promise((resolve) => {
       check('320px iframe viewport', win.innerWidth === 320, String(win.innerWidth));
       check('320px has no horizontal overflow', doc.documentElement.scrollWidth <= 320,
         'scrollWidth=' + doc.documentElement.scrollWidth);
+      const narrowFoot = doc.querySelector('.hero-foot');
+      const narrowMono = narrowFoot ? narrowFoot.querySelector('.mono') : null;
+      check('320px signal stays hidden',
+        Boolean(narrowFoot) && Boolean(narrowMono) &&
+          win.getComputedStyle(narrowMono).display === 'none' &&
+          !narrowFoot.textContent.includes('SURABAYA'),
+        narrowMono ? 'display=' + win.getComputedStyle(narrowMono).display : 'missing');
       const servicesBlock = doc.querySelector('.services-block');
       const blockRect = servicesBlock ? servicesBlock.getBoundingClientRect() : null;
       check('combined section fits 320px',
