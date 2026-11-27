@@ -332,6 +332,10 @@ new Promise((resolve) => {
         Boolean(heroFoot) && heroFoot.textContent.includes('SIGNAL 98.2%') &&
           Boolean(scrollCue) && scrollCue.textContent.includes('SCROLL TO EXPLORE'),
         heroFoot ? heroFoot.textContent.trim() : 'missing');
+      const cueRect390 = scrollCue ? scrollCue.getBoundingClientRect() : null;
+      check('390px scroll cue stays right aligned',
+        Boolean(cueRect390) && cueRect390.right >= 360 && cueRect390.right <= 371,
+        cueRect390 ? 'right=' + Math.round(cueRect390.right) : 'missing');
       const statLabels = Array.from(doc.querySelectorAll('.hero-stats dt'))
         .map((el) => el.textContent.trim());
       const statValues = Array.from(doc.querySelectorAll('.hero-stats dd'))
@@ -485,6 +489,11 @@ new Promise((resolve) => {
           win.getComputedStyle(narrowMono).display === 'none' &&
           !narrowFoot.textContent.includes('SURABAYA'),
         narrowMono ? 'display=' + win.getComputedStyle(narrowMono).display : 'missing');
+      const narrowCue = narrowFoot ? narrowFoot.querySelector('.scroll-cue') : null;
+      const narrowCueRect = narrowCue ? narrowCue.getBoundingClientRect() : null;
+      check('320px scroll cue stays right aligned',
+        Boolean(narrowCueRect) && narrowCueRect.right >= 290 && narrowCueRect.right <= 301,
+        narrowCueRect ? 'right=' + Math.round(narrowCueRect.right) : 'missing');
       const servicesBlock = doc.querySelector('.services-block');
       const blockRect = servicesBlock ? servicesBlock.getBoundingClientRect() : null;
       check('combined section fits 320px',
