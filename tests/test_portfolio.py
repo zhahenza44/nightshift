@@ -232,12 +232,14 @@ class ContentTest(unittest.TestCase):
             "AI &amp; workflow automation",
             "Websites &amp; landing pages",
             "Webhooks &amp; API integrations",
+            "E-commerce price &amp; catalog scraping, job/property listings, scheduled monitoring, and CSV/Excel/JSON delivery",
             "Google Sheets / CRM",
             "Company profiles &amp; catalogs",
             "Responsive and easy to maintain",
         ):
             with self.subTest(marker=marker):
                 self.assertIn(marker, HTML)
+        self.assertEqual(HTML.count('<article class="cv-service reveal">'), 2)
 
     def test_real_cases_move_into_work(self):
         for marker in (
