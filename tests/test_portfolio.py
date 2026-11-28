@@ -232,14 +232,33 @@ class ContentTest(unittest.TestCase):
             "AI &amp; workflow automation",
             "Websites &amp; landing pages",
             "Webhooks &amp; API integrations",
-            "E-commerce price &amp; catalog scraping, job/property listings, scheduled monitoring, and CSV/Excel/JSON delivery",
             "Google Sheets / CRM",
             "Company profiles &amp; catalogs",
             "Responsive and easy to maintain",
+            "Web Scraping",
+            "Scrapy and Playwright",
+            "CSS and XPath selectors",
+            "JSON APIs and data pipelines",
+            "E-commerce price and catalog scraping, job and property listings, and scheduled monitoring.",
+            "Data is cleaned and saved as CSV, Excel, or JSON.",
         ):
             with self.subTest(marker=marker):
                 self.assertIn(marker, HTML)
-        self.assertEqual(HTML.count('<article class="cv-service reveal">'), 2)
+        cards = re.findall(r'<article class="cv-service[^"]*">(.*?)</article>', HTML, re.S)
+        self.assertEqual(len(cards), 3)
+        if len(cards) != 3:
+            return
+        self.assertLess(cards[0].index("Webhooks &amp; API integrations"), cards[0].index("Google Sheets / CRM"))
+        self.assertNotIn("scraping", cards[0])
+        self.assertNotIn("Scrapy and Playwright", cards[1])
+        self.assertLess(cards[2].index("Scrapy and Playwright"), cards[2].index("CSS and XPath selectors"))
+        self.assertLess(cards[2].index("CSS and XPath selectors"), cards[2].index("JSON APIs and data pipelines"))
+
+    def test_third_service_card_layout(self):
+        self.assertIn('<article class="cv-service cv-service--wide reveal">', HTML)
+        self.assertRegex(CSS, r'\.cv-service--wide\s*\{\s*grid-column:\s*1\s*/\s*-1;')
+        cv_block = re.search(r'<section[^>]+id="cv".*?</section>', HTML, re.S).group(0)
+        self.assertNotIn("<button", cv_block)
 
     def test_real_cases_move_into_work(self):
         for marker in (
