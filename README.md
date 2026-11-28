@@ -49,7 +49,7 @@ Portofolio/
 
 ## The CV section
 
-The section sits between the manifesto and the combined Work & Services section. It holds Alan Nawa's identity, two services, and three real contact channels. A note labels it as the real CV and says the case studies below are fictional.
+The section sits between the manifesto and the combined Work & Services section. It holds Alan Nawa's identity, two services, and three real contact channels. The `AI & workflow automation` service lists e-commerce price and catalog scraping, job and property listings, scheduled monitoring, and CSV/Excel/JSON delivery. A note labels it as the real CV and says the case studies below are fictional.
 
 The real contact channels are Instagram `@zhahenzar`, GitHub `zhahenza44`, and `zhahenza666@proton.me`.
 
