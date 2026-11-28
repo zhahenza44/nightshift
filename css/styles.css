@@ -3492,6 +3492,10 @@ html.has-cursor .cursor {
   background: var(--bg-soft);
 }
 
+.cv-service--wide {
+  grid-column: 1 / -1;
+}
+
 .cv-service .section-index {
   color: var(--muted);
 }
