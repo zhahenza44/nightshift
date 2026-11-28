@@ -105,7 +105,7 @@ class ContentTest(unittest.TestCase):
             ">CAPABILITIES</span>",
             ">PROCESS</span>",
             ">CONTACT</span>",
-            "Six real demos and three fictional case studies",
+            "Seven real cases and three fictional case studies",
             "Four things we take seriously",
             "AVG. TIMELINE 2–4 WEEKS",
             "Brief &amp; discovery",

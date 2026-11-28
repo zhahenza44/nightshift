@@ -389,7 +389,7 @@ new Promise((resolve) => {
         cvContactParts.every((part) => hrefs.some((href) => href && href.includes(part))),
         cvContactParts.filter((part) => !hrefs.some((href) => href && href.includes(part)))
           .join(',') || 'all present');
-      const realDemoAnchors = Array.from(doc.querySelectorAll('#work .real-case-list a'));
+      const realDemoAnchors = Array.from(doc.querySelectorAll('#work .real-case-list a[href^="demos/"]'));
       check('six real demo links are visible',
         realDemoAnchors.length === 6 && realDemoAnchors.every((link) => {
           const rect = link.getBoundingClientRect();
@@ -398,6 +398,11 @@ new Promise((resolve) => {
           const rect = link.getBoundingClientRect();
           return rect.width > 0 && rect.height > 0;
         }).length + '/6');
+      const codeLink = doc.querySelector('#work .real-case-list a[href="https://github.com/zhahenza44/web-scraping-portfolio"]');
+      const codeRect = codeLink ? codeLink.getBoundingClientRect() : null;
+      check('Web Scraping code link is visible',
+        Boolean(codeRect) && codeRect.width > 0 && codeRect.height > 0,
+        codeRect ? 'visible' : 'missing');
       check('CV holds no demo list',
         doc.querySelectorAll('#cv a[href^="demos/"]').length === 0 &&
           !doc.querySelector('#cv .real-case-list'),
@@ -449,7 +454,7 @@ new Promise((resolve) => {
         Array.from(doc.querySelectorAll('.contact-actions .magnetic')).map((el) =>
           el.style.transition || 'none').join(' | '));
       check('real case rows expose hover transform',
-        Array.from(doc.querySelectorAll('.real-case-list > li > div')).length === 6 &&
+        Array.from(doc.querySelectorAll('.real-case-list > li > div')).length === 7 &&
           Array.from(doc.querySelectorAll('.real-case-list > li > div')).every((el) =>
             win.getComputedStyle(el).transitionProperty.includes('transform')),
         Array.from(doc.querySelectorAll('.real-case-list > li > div')).map((el) =>
@@ -462,6 +467,7 @@ new Promise((resolve) => {
         'demos/ai-lead-capture/dashboard/index.html', 'demos/servis-ac/index.html',
         'demos/ruang-rapi/index.html', 'demos/kedai-kopi/index.html',
         'demos/rental-mobil/index.html', 'demos/nightshift/index.html',
+        'https://github.com/zhahenza44/web-scraping-portfolio',
         'https://instagram.com/zhahenzar', 'https://github.com/zhahenza44',
         'mailto:zhahenza666@proton.me',
       ];
@@ -471,13 +477,17 @@ new Promise((resolve) => {
       check('no fictional email or WhatsApp link remains', staleHrefs.length === 0,
         staleHrefs.join(',') || 'none');
       const demoHrefs = required.filter((href) => href && href.startsWith('demos/'));
-      const demoLinks = Array.from(doc.querySelectorAll('#work .real-case-list a'));
+      const demoLinks = Array.from(doc.querySelectorAll('#work .real-case-list a[href^="demos/"]'));
       const badDemoLinks = demoLinks.filter((link) => link.getAttribute('target') !== '_blank' ||
         !(link.getAttribute('rel') || '').includes('noopener') ||
         !demoHrefs.includes(link.getAttribute('href')));
       check('six real demo links open in a new tab',
         demoLinks.length === 6 && badDemoLinks.length === 0,
         'links=' + demoLinks.length + ' bad=' + badDemoLinks.length);
+      check('Web Scraping code link opens in a new tab',
+        Boolean(codeLink) && codeLink.getAttribute('target') === '_blank' &&
+          (codeLink.getAttribute('rel') || '').includes('noopener'),
+        codeLink ? 'target=' + codeLink.getAttribute('target') + ' rel=' + codeLink.getAttribute('rel') : 'missing');
 
       for (const [selector, label] of [
         ['#menu-btn', 'menu button'],
