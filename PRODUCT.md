@@ -16,11 +16,11 @@ Someone opening the owner's link, usually on a phone, who wants a visual stateme
 
 ## Product Purpose
 
-The `NIGHT//SHIFT` demo as the main landing page, with Alan Nawa's real CV inserted after the manifesto. The NightShift part is a design showcase with disclosed fictional data. The CV part carries the owner's real identity, services, and contact channels. Work & Services carries the six real demos first, then the disclosed fictional case studies, then the CAPABILITIES modules.
+The `NIGHT//SHIFT` demo as the main landing page, with Alan Nawa's real CV inserted after the manifesto. The NightShift part is a design showcase with disclosed fictional data. The CV part carries the owner's real identity, services, and contact channels. Work & Services carries the seven real cases first, then the disclosed fictional case studies, then the CAPABILITIES modules.
 
 ## Positioning
 
-One page, two clearly labeled truths. The fictional studio stays intact as a design demo. The real CV stays in its own section with a note that separates it from the case studies below. Work & Services labels the six real demos and the three fictional case studies separately, with the real demos first.
+One page, two clearly labeled truths. The fictional studio stays intact as a design demo. The real CV stays in its own section with a note that separates it from the case studies below. Work & Services labels the seven real cases and the three fictional case studies separately, with the real cases first.
 
 ## Operating Context
 
@@ -64,6 +64,7 @@ The page is one static document that can be opened from disk or any static host.
 - Box GITHUB beside Send message and remove the EMAIL text link and the empty `.contact-links` row, so the action row has one conversation path and one code path.
 - At phone widths, keep Email full width and place Send message and GITHUB side by side, using the existing ghost button style so the compact actions stay readable without overflow.
 - Keep the `↗` glyph on the external action anchors to mark a new tab, following the existing NIGHT//SHIFT button language.
+- Add the Web Scraping Portfolio as one real case with a single link to the owner's `web-scraping-portfolio` repo, covering the five scraper examples and the small business and company use cases from its README.
 
 ## Capabilities and Constraints
 
@@ -71,7 +72,7 @@ The page is one static document that can be opened from disk or any static host.
 - `css/styles.css` keeps the demo selectors and keyframes except for the narrow-width `.hero-foot .mono` rule, which replaces the demo's `.hero-foot .mono:nth-child(2)` selector after the hero-foot location label was removed, and a `margin-left: auto` rule that keeps the scroll cue right aligned on phone widths. It renames the CV demo-list rules to `.real-case-list` and adds a `.case-group-head` spacing rule. It overrides the demo `.work` padding with a compact `#work.section` rule in the Work block, then appends a CV block, padding resets for `#cv.section`, `#process.section`, and `#contact.section`, a zero footer top margin, and a `services-block` spacing rule before the reduced-motion rules. It adds hover lifts to `.real-case-list > li` without transforming the `li` itself and a reduced-motion override that cancels both new transforms.
 - All visitor copy is English. Brand tokens such as `NIGHT//SHIFT`, `N//S`, technical labels, and code-like strings stay as designed.
 - Fictional case studies and metrics stay visible. The case-file dialog and CV note label the showcase as fictional, and the contact actions use the owner's real channels.
-- The CV lists three services and three real contact channels. The `Web Scraping` service covers e-commerce price and catalog scraping, job and property listings, scheduled monitoring, and CSV/Excel/JSON delivery from the owner's `web-scraping-portfolio` repo. Work & Services lists six real demo links and three fictional case studies.
+- The CV lists three services and three real contact channels. The `Web Scraping` service covers e-commerce price and catalog scraping, job and property listings, scheduled monitoring, and CSV/Excel/JSON delivery from the owner's `web-scraping-portfolio` repo. Work & Services lists six real demo links, one Web Scraping code link, and three fictional case studies.
 - The `demos/` folder is intact and linked from the Work & Services section only.
 - Motion loops run without a pause control. Reduced-motion users get static content, a hidden cursor and ghost layer, a skipped boot overlay, and no reveal, hover, or magnetic transforms.
 - Keyboard controls keep visible focus. Header controls use the demo's 38px and 40px sizes, above the WCAG 2.2 AA 24px minimum; that is an accepted override of the 44px preference.
