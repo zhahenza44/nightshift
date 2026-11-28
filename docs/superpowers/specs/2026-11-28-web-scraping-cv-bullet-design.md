@@ -9,7 +9,7 @@ The owner's first job is the now-public `zhahenza44/web-scraping-portfolio` repo
 ## Goals
 
 - Clone the public repo into a new local folder `~/Projects/web-scraping-portfolio`, named after the repo, as a reference copy. Leave that copy unchanged and do not push it again.
-- Add one English bullet under the existing `AI & workflow automation` CV service: `Data scraping &amp; CSV exports (Scrapy, Playwright)`.
+- Add one English bullet under the existing `AI & workflow automation` CV service: `E-commerce price &amp; catalog scraping, job/property listings, scheduled monitoring, and CSV/Excel/JSON delivery`. It translates the four services listed in the repo README.
 - Pin the bullet in the static test suite.
 - Update the owner docs so the service description matches the shipped bullet.
 - Push the verified landing page change to `origin/master`, as requested in the same message.
@@ -39,7 +39,7 @@ The owner's first job is the now-public `zhahenza44/web-scraping-portfolio` repo
 ## Decisions
 
 - Folder name: `web-scraping-portfolio` under `~/Projects`. This is the builder's call from the repo name; the owner did not specify a different name.
-- Bullet text is exactly `Data scraping &amp; CSV exports (Scrapy, Playwright)`. It stays in the first CV service list, between `Webhooks &amp; API integrations` and `Google Sheets / CRM`.
+- Bullet text is exactly `E-commerce price &amp; catalog scraping, job/property listings, scheduled monitoring, and CSV/Excel/JSON delivery`. It stays in the first CV service list, between `Webhooks &amp; API integrations` and `Google Sheets / CRM`. The owner chose the repo's README service list over a tool-name summary, so `Scrapy` and `Playwright` are not named in the bullet.
 - The static test `test_cv_identity_and_services` gains this marker. RED is verified before the HTML edit.
 - `PRODUCT.md` and `README.md` gain one short mention of the scraping capability without changing the two-service count.
 - Work stays on `master` with linear commits. No branch, merge, or PR.
