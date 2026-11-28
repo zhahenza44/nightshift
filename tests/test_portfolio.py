@@ -264,7 +264,8 @@ class ContentTest(unittest.TestCase):
         for marker in (
             '>REAL CASES / LIVE DEMOS</span>',
             '>FICTIONAL CASE STUDIES</span>',
-            '06 REAL / 03 FICTIONAL / 04 MODULES',
+            '07 REAL / 03 FICTIONAL / 04 MODULES',
+            '07 CASES / REAL WORK',
             'CV / PROFILE',
         ):
             with self.subTest(marker=marker):
@@ -276,6 +277,29 @@ class ContentTest(unittest.TestCase):
         work_block = re.search(r'<section[^>]+id="work".*?</section>', HTML, re.S).group(0)
         self.assertNotIn('href="demos/', cv_block)
         self.assertEqual(work_block.count('href="demos/'), 6)
+        self.assertEqual(work_block.count('href="https://github.com/zhahenza44/web-scraping-portfolio"'), 1)
+
+    def test_scraping_real_case_contract(self):
+        work_block = re.search(r'<section[^>]+id="work".*?</section>', HTML, re.S).group(0)
+        blocks = work_block.split('<li class="reveal">')
+        self.assertEqual(len(blocks) - 1, 7)
+        if len(blocks) != 8:
+            return
+        self.assertIn("Web Scraping Portfolio", blocks[-1])
+        row = blocks[-1]
+        for marker in (
+            "Web Scraping Portfolio",
+            "Five working scrapers cover static HTML, pagination, a JSON API, JavaScript rendering, and a 1,000 row catalog export.",
+            "Built for small businesses and companies that need to track competitor prices, watch job and property listings, follow public headlines, and export clean CSV, Excel, or JSON files.",
+            "<li>Scrapy</li>",
+            "<li>Playwright</li>",
+            "<li>CSV</li>",
+            'href="https://github.com/zhahenza44/web-scraping-portfolio"',
+            'target="_blank"',
+            'rel="noopener noreferrer"',
+        ):
+            with self.subTest(marker=marker):
+                self.assertIn(marker, row)
 
     def test_cv_demo_links(self):
         paths = (
