@@ -571,6 +571,11 @@ new Promise((resolve) => {
         const rect = el.getBoundingClientRect();
         return Math.round(rect.left) + '..' + Math.round(rect.right);
       }).join(' | ') || 'missing');
+      const wideCard = doc.querySelector('.cv-service--wide');
+      const wideRect = wideCard ? wideCard.getBoundingClientRect() : null;
+      check('third service card fits 320px',
+        Boolean(wideRect) && wideRect.left >= -1 && wideRect.right <= 321,
+        wideRect ? Math.round(wideRect.left) + '..' + Math.round(wideRect.right) : 'missing');
       const realList320 = doc.querySelector('#work .real-case-list');
       const realRect320 = realList320 ? realList320.getBoundingClientRect() : null;
       check('real case list fits 320px',
